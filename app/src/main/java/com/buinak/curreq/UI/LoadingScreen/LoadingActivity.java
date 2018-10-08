@@ -1,8 +1,10 @@
-package com.buinak.curreq;
+package com.buinak.curreq.UI.LoadingScreen;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+
+import com.buinak.curreq.R;
 
 
 public class LoadingActivity extends AppCompatActivity {
