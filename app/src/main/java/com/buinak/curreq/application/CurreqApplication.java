@@ -3,7 +3,9 @@ package com.buinak.curreq.application;
 import android.app.Application;
 
 import com.buinak.curreq.data.DaggerRepositoryComponent;
+import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.data.RepositoryComponent;
+import com.buinak.curreq.data.RepositoryModule;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -14,14 +16,11 @@ public class CurreqApplication extends Application {
 
     public static final String DATABASE_NAME = "curreq_db.realm";
 
-    private RepositoryComponent repositoryComponent;
-
     @Override
     public void onCreate() {
         super.onCreate();
         application = this;
 
-        initialiseRepositoryComponent();
 
         Realm.init(this);
         RealmConfiguration databaseConfig = new RealmConfiguration.Builder()
@@ -35,12 +34,9 @@ public class CurreqApplication extends Application {
         return application;
     }
 
-    private void initialiseRepositoryComponent(){
-        repositoryComponent = DaggerRepositoryComponent.builder()
+    public RepositoryComponent getRepositoryComponent(DataSource.DataSourceListener listener){
+        return DaggerRepositoryComponent.builder()
+                .repositoryModule(new RepositoryModule(listener))
                 .build();
-    }
-
-    public RepositoryComponent getRepositoryComponent(){
-        return repositoryComponent;
     }
 }

@@ -4,14 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.buinak.curreq.application.CurreqApplication;
-import com.buinak.curreq.data.DaggerRepositoryComponent;
-import com.buinak.curreq.data.DataSource;
-import com.buinak.curreq.data.Remote.Fixer.FixerIOApi;
-import com.buinak.curreq.data.RepositoryComponent;
-import com.buinak.curreq.data.RepositoryModule;
-import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 import com.buinak.curreq.R;
+import com.buinak.curreq.application.CurreqApplication;
+import com.buinak.curreq.data.DataSource;
+import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
 import javax.inject.Inject;
 
@@ -26,9 +22,8 @@ public class LoadingActivity extends AppCompatActivity implements DataSource.Dat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        CurreqApplication.getApplication().getRepositoryComponent().inject(this);
+        CurreqApplication.getApplication().getRepositoryComponent(this).inject(this);
 
-        source.setListener(this);
         source.requestRecord();
     }
 

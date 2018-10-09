@@ -1,8 +1,6 @@
 package com.buinak.curreq.data;
 
-import com.buinak.curreq.data.Local.CurrencyDatabase;
 import com.buinak.curreq.data.Local.LocalDataSource;
-import com.buinak.curreq.data.Remote.CurrencyRepository;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
 
 import javax.inject.Inject;
@@ -25,7 +23,8 @@ public class Repository implements DataSource {
     private Disposable openRequest;
 
     @Inject
-    public Repository(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
+    public Repository(DataSourceListener listener, LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
+        this.listener = listener;
         this.localDataSource = localDataSource;
         this.remoteDataSource = remoteDataSource;
     }
