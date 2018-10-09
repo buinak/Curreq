@@ -1,5 +1,7 @@
 package com.buinak.curreq.data;
 
+import android.support.v7.app.AppCompatActivity;
+
 import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.Fixer.FixerIOApi;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
@@ -13,9 +15,6 @@ import dagger.Component;
 @Component (modules = RepositoryModule.class)
 public interface RepositoryComponent {
     DataSource getDataSource();
-    FixerIOApi getApi();
-    LocalDataSource getLocalDataSource();
-    RemoteDataSource getRemoteDataSource();
 
     void inject(LoadingActivity activity);
 }

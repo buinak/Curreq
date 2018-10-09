@@ -11,16 +11,8 @@ import dagger.Provides;
 @Module (includes = {ApiModule.class})
 public class RemoteDataSourceModule {
 
-    @Inject
-    FixerIOApi api;
-
-    @Inject
-    public RemoteDataSourceModule(FixerIOApi api) {
-        this.api = api;
-    }
-
     @Provides
-    public RemoteDataSource provideRemoteDataSource() {
+    public RemoteDataSource provideRemoteDataSource(FixerIOApi api) {
         return new CurrencyRepository(api);
     }
 }

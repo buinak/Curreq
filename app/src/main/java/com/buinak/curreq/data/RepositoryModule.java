@@ -11,6 +11,7 @@ import com.buinak.curreq.data.Remote.RemoteDataSourceModule;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,20 +23,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module (includes = {LocalDataSourceModule.class, RemoteDataSourceModule.class})
 public class RepositoryModule {
 
-    @Inject
-    LocalDataSource localDataSource;
-
-    @Inject
-    RemoteDataSource remoteDataSource;
-
-    @Inject
-    public RepositoryModule(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
-        this.localDataSource = localDataSource;
-        this.remoteDataSource = remoteDataSource;
-    }
-
     @Provides
-    public DataSource provideDataSource() {
-        return new Repository(localDataSource, remoteDataSource);
+    @Singleton
+    public DataSource provideDataSource(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
+        Repository result = new Repository(localDataSource, remoteDataSource);
+        return result;
     }
 }
