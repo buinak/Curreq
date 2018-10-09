@@ -1,12 +1,18 @@
-package com.buinak.curreq.Entities;
+package com.buinak.curreq.Entities.CurreqEntity;
+
+import io.realm.RealmObject;
 
 public class RateRecord {
+
     private String currency;
     private Double value;
 
     public RateRecord(String currency, Double value) {
         this.currency = currency;
         this.value = value;
+    }
+
+    public RateRecord() {
     }
 
     public String getCurrency() {

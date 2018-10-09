@@ -1,20 +1,21 @@
-package com.buinak.curreq.Entities;
+package com.buinak.curreq.Entities.CurreqEntity;
 
 import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmList;
+import io.realm.annotations.Ignore;
 
 public class RateRequestRecord {
 
     private List<RateRecord> rateRecords;
-    private String date;
 
+    private Date date;
 
     public RateRequestRecord() {
     }
 
-    public RateRequestRecord(List<RateRecord> rateRecord, String date) {
+    public RateRequestRecord(List<RateRecord> rateRecord, Date date) {
         this.rateRecords = rateRecord;
         this.date = date;
     }
@@ -27,11 +28,11 @@ public class RateRequestRecord {
         this.rateRecords = rateRecord;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }
