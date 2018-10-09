@@ -23,6 +23,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RepositoryModule {
 
     @Inject
+    LocalDataSource localDataSource;
+
+    @Inject
+    RemoteDataSource remoteDataSource;
+
+    @Inject
     public RepositoryModule(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
         this.localDataSource = localDataSource;
         this.remoteDataSource = remoteDataSource;
