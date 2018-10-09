@@ -1,33 +1,33 @@
-package com.buinak.curreq.Data;
+package com.buinak.curreq.data;
 
-import com.buinak.curreq.Data.Local.CurrencyDatabase;
-import com.buinak.curreq.Data.Local.LocalDataSource;
-import com.buinak.curreq.Data.Remote.CurrencyRepository;
-import com.buinak.curreq.Data.Remote.RemoteDataSource;
-import com.buinak.curreq.Entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.data.Local.CurrencyDatabase;
+import com.buinak.curreq.data.Local.LocalDataSource;
+import com.buinak.curreq.data.Remote.CurrencyRepository;
+import com.buinak.curreq.data.Remote.RemoteDataSource;
 
-import io.reactivex.Single;
+import javax.inject.Inject;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class Repository implements DataSource {
 
 
-    private LocalDataSource localDataSource;
-    private RemoteDataSource remoteDataSource;
+    @Inject
+    public LocalDataSource localDataSource;
 
-    private DataSourceListener listener;
+    @Inject
+    public RemoteDataSource remoteDataSource;
+
+    @Inject
+    DataSourceListener listener;
 
     private Disposable openRequest;
 
-    public Repository(DataSourceListener listener) {
-        this.listener = listener;
-        localDataSource = CurrencyDatabase.getInstance();
-        remoteDataSource = CurrencyRepository.getInstance();
-    }
-
-    public static DataSource getNewInstance(DataSourceListener listener){
-        return new Repository(listener);
+    @Inject
+    public Repository(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
+        this.localDataSource = localDataSource;
+        this.remoteDataSource = remoteDataSource;
     }
 
     @Override
@@ -58,5 +58,10 @@ public class Repository implements DataSource {
             openRequest.dispose();
             openRequest = null;
         }
+    }
+
+    @Override
+    public void setListener(DataSourceListener listener) {
+        this.listener = listener;
     }
 }

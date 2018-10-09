@@ -1,6 +1,6 @@
-package com.buinak.curreq.Data.Local;
+package com.buinak.curreq.data.Local;
 
-import com.buinak.curreq.Entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
 import io.reactivex.Single;
 

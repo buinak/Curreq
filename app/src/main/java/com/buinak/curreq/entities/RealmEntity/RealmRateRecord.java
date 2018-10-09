@@ -1,4 +1,4 @@
-package com.buinak.curreq.Entities.RealmEntity;
+package com.buinak.curreq.entities.RealmEntity;
 
 import io.realm.RealmObject;
 

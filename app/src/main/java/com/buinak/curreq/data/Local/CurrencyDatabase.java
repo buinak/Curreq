@@ -1,30 +1,25 @@
-package com.buinak.curreq.Data.Local;
+package com.buinak.curreq.data.Local;
 
 import android.support.annotation.NonNull;
 
-import com.buinak.curreq.Entities.CurreqEntity.RateRecord;
-import com.buinak.curreq.Entities.CurreqEntity.RateRequestRecord;
-import com.buinak.curreq.Entities.RealmEntity.RealmRateRecord;
-import com.buinak.curreq.Entities.RealmEntity.RealmRateRequestRecord;
+import com.buinak.curreq.entities.CurreqEntity.RateRecord;
+import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.RealmEntity.RealmRateRecord;
+import com.buinak.curreq.entities.RealmEntity.RealmRateRequestRecord;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
 import io.realm.Realm;
 import io.realm.RealmList;
 
 public class CurrencyDatabase implements LocalDataSource {
 
-    private static LocalDataSource instance;
-
-    public static LocalDataSource getInstance(){
-        if (instance == null){
-            instance = new CurrencyDatabase();
-        }
-        return instance;
+    @Inject
+    public CurrencyDatabase() {
     }
 
     @Override

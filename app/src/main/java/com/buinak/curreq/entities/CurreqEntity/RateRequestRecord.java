@@ -1,10 +1,7 @@
-package com.buinak.curreq.Entities.CurreqEntity;
+package com.buinak.curreq.entities.CurreqEntity;
 
 import java.util.Date;
 import java.util.List;
-
-import io.realm.RealmList;
-import io.realm.annotations.Ignore;
 
 public class RateRequestRecord {
 

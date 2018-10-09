@@ -1,11 +1,9 @@
-package com.buinak.curreq.Entities.RealmEntity;
+package com.buinak.curreq.entities.RealmEntity;
 
 import java.util.Date;
-import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 
 public class RealmRateRequestRecord extends RealmObject {
 

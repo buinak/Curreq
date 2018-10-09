@@ -1,7 +1,7 @@
-package com.buinak.curreq.Data.Remote.Api;
+package com.buinak.curreq.data.Remote.Api;
 
-import com.buinak.curreq.Data.Remote.RemoteDataSource;
-import com.buinak.curreq.Data.Remote.CurrencyRepository;
+import com.buinak.curreq.data.Remote.RemoteDataSource;
+import com.buinak.curreq.data.Remote.CurrencyRepository;
 
 import org.junit.Test;
 

@@ -1,6 +1,4 @@
-package com.buinak.curreq.Entities.CurreqEntity;
-
-import io.realm.RealmObject;
+package com.buinak.curreq.entities.CurreqEntity;
 
 public class RateRecord {
 

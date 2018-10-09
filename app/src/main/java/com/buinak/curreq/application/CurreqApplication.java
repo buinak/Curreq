@@ -1,4 +1,4 @@
-package com.buinak.curreq.Application;
+package com.buinak.curreq.application;
 
 import android.app.Application;
 
