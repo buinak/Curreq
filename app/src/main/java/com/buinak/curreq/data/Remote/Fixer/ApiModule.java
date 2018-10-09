@@ -12,12 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class ApiModule {
     @Provides
-    static FixerIOApi provideApi() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(FixerIOApi.TIMEOUT_READ, TimeUnit.SECONDS)
-                .connectTimeout(FixerIOApi.TIMEOUT_CONNECT, TimeUnit.SECONDS)
-                .build();
-
+    static FixerIOApi provideApi(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(FixerIOApi.SERVICE_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -25,5 +20,15 @@ public class ApiModule {
                 .client(okHttpClient)
                 .build()
                 .create(FixerIOApi.class);
+    }
+
+    @Provides
+    static OkHttpClient provideOkHttpClient(){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(FixerIOApi.TIMEOUT_READ, TimeUnit.SECONDS)
+                .connectTimeout(FixerIOApi.TIMEOUT_CONNECT, TimeUnit.SECONDS)
+                .build();
+
+        return okHttpClient;
     }
 }

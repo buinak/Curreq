@@ -10,16 +10,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import io.reactivex.Single;
 
 public class CurrencyRepository implements RemoteDataSource {
 
-    @Inject
     FixerIOApi fixerIOApi;
 
-    @Inject
     public CurrencyRepository(FixerIOApi fixerIOApi) {
         this.fixerIOApi = fixerIOApi;
     }

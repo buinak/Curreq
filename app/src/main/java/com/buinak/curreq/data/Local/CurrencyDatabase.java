@@ -10,15 +10,12 @@ import com.buinak.curreq.entities.RealmEntity.RealmRateRequestRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmList;
 
 public class CurrencyDatabase implements LocalDataSource {
 
-    @Inject
     public CurrencyDatabase() {
     }
 

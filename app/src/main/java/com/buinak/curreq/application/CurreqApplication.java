@@ -30,11 +30,7 @@ public class CurreqApplication extends Application {
         Realm.setDefaultConfiguration(databaseConfig);
     }
 
-    public static CurreqApplication getApplication() {
-        return application;
-    }
-
-    public RepositoryComponent getRepositoryComponent(DataSource.DataSourceListener listener){
+    public static RepositoryComponent getRepositoryComponent(DataSource.DataSourceListener listener){
         return DaggerRepositoryComponent.builder()
                 .repositoryModule(new RepositoryModule(listener))
                 .build();

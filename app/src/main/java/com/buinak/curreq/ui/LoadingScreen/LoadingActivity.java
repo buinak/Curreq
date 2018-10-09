@@ -22,7 +22,7 @@ public class LoadingActivity extends AppCompatActivity implements DataSource.Dat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        CurreqApplication.getApplication().getRepositoryComponent(this).inject(this);
+        CurreqApplication.getRepositoryComponent(this).inject(this);
 
         source.requestRecord();
     }

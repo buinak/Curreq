@@ -3,26 +3,19 @@ package com.buinak.curreq.data;
 import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
 
-import javax.inject.Inject;
-
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class Repository implements DataSource {
 
 
-    @Inject
     public LocalDataSource localDataSource;
-
-    @Inject
     public RemoteDataSource remoteDataSource;
 
-    @Inject
     DataSourceListener listener;
 
     private Disposable openRequest;
 
-    @Inject
     public Repository(DataSourceListener listener, LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
         this.listener = listener;
         this.localDataSource = localDataSource;
