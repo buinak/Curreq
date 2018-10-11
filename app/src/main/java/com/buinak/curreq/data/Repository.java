@@ -43,15 +43,17 @@ public class Repository implements DataSource {
                         listener.onRateRequestRecordReceived(result);
                     });
         } else {
-            //if the remote data source doesn't have the currency list set up
-            //we send a request first and then recall this method
-            openRequest = remoteDataSource.getCurrencyList()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(result -> {
-                        localDataSource.saveCurrencies(result);
-                        requestNewRecord();
-                    });
+            prepareRemoteDataSource();
         }
+    }
+
+    private void prepareRemoteDataSource() {
+        openRequest = remoteDataSource.getCurrencyList()
+                .subscribeOn(Schedulers.io())
+                .subscribe(result -> {
+                    localDataSource.saveCurrencies(result);
+                    requestNewRecord();
+                });
     }
 
 

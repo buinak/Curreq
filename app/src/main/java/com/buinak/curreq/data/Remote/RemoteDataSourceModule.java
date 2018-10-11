@@ -13,7 +13,7 @@ public class RemoteDataSourceModule {
 
     @Provides
     @Singleton
-    public RemoteDataSource provideRemoteDataSource(FixerIOApi api) {
+    static RemoteDataSource provideRemoteDataSource(FixerIOApi api) {
         return new CurrencyRepository(api);
     }
 }
