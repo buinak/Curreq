@@ -13,10 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 public class CurrencyRepository implements RemoteDataSource {
 
     FixerIOApi fixerIOApi;
+
+    private Map<String, CurrencyRecord> currencyRecordMap;
 
     public CurrencyRepository(FixerIOApi fixerIOApi) {
         this.fixerIOApi = fixerIOApi;
@@ -24,8 +27,12 @@ public class CurrencyRepository implements RemoteDataSource {
 
     @Override
     public Single<RateRequestRecord> getRates(){
-        return fixerIOApi.getLatestRates(FixerIOApi.ACCESS_KEY)
-                .map(this::parseApiRateResponse);
+        if (currencyRecordMap != null) {
+            return fixerIOApi.getLatestRates(FixerIOApi.ACCESS_KEY)
+                    .map(this::parseApiRateResponse);
+        }
+        //shouldn't happen normally, should be initialised
+        return null;
     }
 
     @Override
@@ -38,9 +45,11 @@ public class CurrencyRepository implements RemoteDataSource {
         List<RateRecord> record = new ArrayList<>(response.getRates().entrySet().size());
         for (Map.Entry<String, Double> entry :
                 response.getRates().entrySet()) {
-            //fix FIX
-            //FIX!!!!
-            record.add(null);
+            CurrencyRecord currency = currencyRecordMap.get(entry.getKey());
+            //FIX!!!
+            //fix fiXFIX
+            CurrencyRecord baseCurrency = currencyRecordMap.get("EUR");
+            record.add(new RateRecord(currency, baseCurrency, entry.getValue()));
         }
 
         return new RateRequestRecord(record, new Date());
