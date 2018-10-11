@@ -15,6 +15,9 @@ public class RealmCurrencyRecord extends RealmObject {
         this.name = name;
     }
 
+    public RealmCurrencyRecord() {
+    }
+
     public String getCode() {
         return code;
     }

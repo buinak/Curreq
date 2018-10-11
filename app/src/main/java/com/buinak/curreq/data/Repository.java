@@ -35,17 +35,25 @@ public class Repository implements DataSource {
 
     @Override
     public void requestNewRecord() {
-        openRequest = remoteDataSource.getRates()
-                .subscribeOn(Schedulers.io())
-                .subscribe(result -> {
-                    localDataSource.saveRecord(result);
-                    listener.onRateRequestRecordReceived(result);
-                });
-        remoteDataSource.getCurrencyList().subscribeOn(Schedulers.io()).subscribe(r -> System.out.println(), e -> {
-            System.out.println();
-            System.out.println();
-        });
+        if (remoteDataSource.isReady()) {
+            openRequest = remoteDataSource.getRates()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(result -> {
+                        localDataSource.saveRecord(result);
+                        listener.onRateRequestRecordReceived(result);
+                    });
+        } else {
+            //if the remote data source doesn't have the currency list set up
+            //we send a request first and then recall this method
+            openRequest = remoteDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(result -> {
+                        localDataSource.saveCurrencies(result);
+                        requestNewRecord();
+                    });
+        }
     }
+
 
     @Override
     public void dispose() {

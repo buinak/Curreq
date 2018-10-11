@@ -9,6 +9,8 @@ public interface FixerIOApi {
 
     String ACCESS_KEY = "9304adb0c7afee9210aaabe79cae43a2";
 
+    String BASE_CURRENCY = "EUR";
+
     int TIMEOUT_READ = 60;
     int TIMEOUT_CONNECT = 60;
 

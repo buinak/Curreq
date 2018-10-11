@@ -10,4 +10,6 @@ import io.reactivex.Single;
 public interface RemoteDataSource {
     Single<RateRequestRecord> getRates();
     Single<List<CurrencyRecord>> getCurrencyList();
+
+    boolean isReady();
 }

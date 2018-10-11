@@ -9,11 +9,11 @@ import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 
 public class CurrencyRepository implements RemoteDataSource {
 
@@ -27,13 +27,11 @@ public class CurrencyRepository implements RemoteDataSource {
 
     @Override
     public Single<RateRequestRecord> getRates(){
-        if (currencyRecordMap != null) {
-            return fixerIOApi.getLatestRates(FixerIOApi.ACCESS_KEY)
+        return fixerIOApi.getLatestRates(FixerIOApi.ACCESS_KEY)
                     .map(this::parseApiRateResponse);
-        }
-        //shouldn't happen normally, should be initialised
-        return null;
     }
+
+
 
     @Override
     public Single<List<CurrencyRecord>> getCurrencyList() {
@@ -41,14 +39,17 @@ public class CurrencyRepository implements RemoteDataSource {
                 .map(this::parseApiCurrencyListResponse);
     }
 
+    @Override
+    public boolean isReady() {
+        return (currencyRecordMap != null);
+    }
+
     private RateRequestRecord parseApiRateResponse(RateResponse response){
         List<RateRecord> record = new ArrayList<>(response.getRates().entrySet().size());
+        CurrencyRecord baseCurrency = currencyRecordMap.get(FixerIOApi.BASE_CURRENCY);
         for (Map.Entry<String, Double> entry :
                 response.getRates().entrySet()) {
             CurrencyRecord currency = currencyRecordMap.get(entry.getKey());
-            //FIX!!!
-            //fix fiXFIX
-            CurrencyRecord baseCurrency = currencyRecordMap.get("EUR");
             record.add(new RateRecord(currency, baseCurrency, entry.getValue()));
         }
 
@@ -57,9 +58,18 @@ public class CurrencyRepository implements RemoteDataSource {
 
     private List<CurrencyRecord> parseApiCurrencyListResponse(CurrencyListResponse response){
         List<CurrencyRecord> currencyList = new ArrayList<>();
+        boolean fillMap = false;
+        if (currencyRecordMap == null){
+            currencyRecordMap = new HashMap<>();
+            fillMap = true;
+        }
         for (Map.Entry<String, String> entry :
                 response.getCurrencyNames().entrySet()) {
-            currencyList.add(new CurrencyRecord(entry.getKey(), entry.getValue()));
+            CurrencyRecord currencyRecord = new CurrencyRecord(entry.getKey(), entry.getValue());
+            currencyList.add(currencyRecord);
+            if (fillMap) {
+                currencyRecordMap.put(entry.getKey(), currencyRecord);
+            }
         }
         return currencyList;
     }

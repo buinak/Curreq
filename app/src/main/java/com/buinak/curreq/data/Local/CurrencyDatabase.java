@@ -2,8 +2,10 @@ package com.buinak.curreq.data.Local;
 
 import android.support.annotation.NonNull;
 
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.RealmEntity.RealmCurrencyRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmRateRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmRateRequestRecord;
 
@@ -46,7 +48,13 @@ public class CurrencyDatabase implements LocalDataSource {
             List<RateRecord> records = new ArrayList<>();
             for (RealmRateRecord rateRecord :
                  record.getRealmRateRecords()) {
-                records.add(new RateRecord(rateRecord.getCurrency(), rateRecord.getValue()));
+                CurrencyRecord baseCurrency = new CurrencyRecord(rateRecord.getBaseCurrency().getCode(),
+                        rateRecord.getBaseCurrency().getName());
+
+                CurrencyRecord currency = new CurrencyRecord(rateRecord.getCurrency().getCode(),
+                        rateRecord.getCurrency().getName());
+
+                records.add(new RateRecord(currency, baseCurrency, rateRecord.getValue()));
             }
             newRecord.setRateRecords(records);
         }
@@ -62,11 +70,34 @@ public class CurrencyDatabase implements LocalDataSource {
                 RealmList<RealmRateRecord> list = new RealmList<>();
                 for (RateRecord rateRecord :
                         record.getRateRecords()) {
-                    list.add(new RealmRateRecord(rateRecord.getCurrency(), rateRecord.getValue()));
+                    RealmCurrencyRecord baseCurrency = new RealmCurrencyRecord(rateRecord.getBaseCurrency().getCode(),
+                            rateRecord.getBaseCurrency().getName());
+
+                    RealmCurrencyRecord currency = new RealmCurrencyRecord(rateRecord.getCurrency().getCode(),
+                            rateRecord.getCurrency().getName());
+
+                    list.add(new RealmRateRecord(currency, baseCurrency, rateRecord.getValue()));
                 }
                 requestRecord.setRealmRateRecords(list);
 
                 r.copyToRealm(requestRecord);
+            });
+        }
+    }
+
+    @Override
+    public void saveCurrencies(List<CurrencyRecord> currencyRecordList) {
+        try (Realm realm = Realm.getDefaultInstance()){
+            realm.executeTransaction(r -> {
+                if (r.where(RealmCurrencyRecord.class).findAll().size() > 0){
+                    return;
+                }
+                for (CurrencyRecord record:
+                     currencyRecordList) {
+                    RealmCurrencyRecord realmCurrencyRecord =
+                            new RealmCurrencyRecord(record.getCode(), record.getName());
+                    r.copyToRealm(realmCurrencyRecord);
+                }
             });
         }
     }
