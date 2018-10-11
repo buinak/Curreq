@@ -24,7 +24,7 @@ public class LoadingActivity extends AppCompatActivity implements DataSource.Dat
 
         CurreqApplication.getRepositoryComponent(this).inject(this);
 
-        source.requestRecord();
+        source.requestNewRecord();
     }
 
     @Override

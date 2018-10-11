@@ -41,7 +41,10 @@ public class Repository implements DataSource {
                     localDataSource.saveRecord(result);
                     listener.onRateRequestRecordReceived(result);
                 });
-
+        remoteDataSource.getCurrencyList().subscribeOn(Schedulers.io()).subscribe(r -> System.out.println(), e -> {
+            System.out.println();
+            System.out.println();
+        });
     }
 
     @Override

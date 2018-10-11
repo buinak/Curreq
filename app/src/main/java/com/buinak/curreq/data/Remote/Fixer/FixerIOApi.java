@@ -13,5 +13,8 @@ public interface FixerIOApi {
     int TIMEOUT_CONNECT = 60;
 
     @GET("/latest")
-    Single<RateResponse> getCurrency(@Query("access_key") String accessKey);
+    Single<RateResponse> getLatestRates(@Query("access_key") String accessKey);
+
+    @GET("/symbols")
+    Single<CurrencyListResponse> getCurrencyList(@Query("access_key") String accessKey);
 }
