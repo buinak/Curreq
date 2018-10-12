@@ -1,5 +1,6 @@
 package com.buinak.curreq.data;
 
+import com.buinak.curreq.ui.AddScreen.AddRepository;
 import com.buinak.curreq.ui.LoadingScreen.LoadingRepository;
 
 import javax.inject.Singleton;
@@ -12,4 +13,5 @@ public interface RepositoryComponent {
     DataSource getDataSource();
 
     void inject(LoadingRepository loadingRepository);
+    void inject(AddRepository addRepository);
 }

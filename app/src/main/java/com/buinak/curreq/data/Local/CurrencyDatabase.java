@@ -15,6 +15,7 @@ import java.util.List;
 import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class CurrencyDatabase implements LocalDataSource {
 
@@ -24,6 +25,32 @@ public class CurrencyDatabase implements LocalDataSource {
     @Override
     public Single<RateRequestRecord> getLatestRecord() {
         return Single.just(getLatestRealmRecord());
+    }
+
+    @Override
+    public Single<List<CurrencyRecord>> getCurrencyList() {
+        return Single.just(getAllCurrencies());
+    }
+
+    @NonNull
+    private List<CurrencyRecord> getAllCurrencies(){
+        Realm realm = null;
+        List<CurrencyRecord> currencyRecords = new ArrayList<>();
+        try {
+            realm = Realm.getDefaultInstance();
+            RealmResults<RealmCurrencyRecord> realmResults = realm.where(RealmCurrencyRecord.class)
+                    .distinct("code")
+                    .findAll();
+            for (RealmCurrencyRecord realmCurrencyRecord :
+                    realmResults) {
+                currencyRecords.add(new CurrencyRecord(realmCurrencyRecord.getCode(), realmCurrencyRecord.getName()));
+            }
+        } finally {
+            if (realm != null){
+                realm.close();
+            }
+        }
+        return currencyRecords;
     }
 
     @NonNull
@@ -89,26 +116,49 @@ public class CurrencyDatabase implements LocalDataSource {
     public void saveCurrencies(List<CurrencyRecord> currencyRecordList) {
         try (Realm realm = Realm.getDefaultInstance()){
             realm.executeTransaction(r -> {
+                RealmResults<RealmCurrencyRecord> results = r.where(RealmCurrencyRecord.class).findAll();
                 if (r.where(RealmCurrencyRecord.class).findAll().size() > 0){
                     return;
                 }
                 for (CurrencyRecord record:
                      currencyRecordList) {
-                    RealmCurrencyRecord realmCurrencyRecord =
-                            new RealmCurrencyRecord(record.getCode(), record.getName());
-                    r.copyToRealm(realmCurrencyRecord);
+                    if (r.where(RealmCurrencyRecord.class)
+                            .equalTo("code", record.getCode())
+                            .findAll()
+                            .size() == 0) {
+                        RealmCurrencyRecord realmCurrencyRecord =
+                                new RealmCurrencyRecord(record.getCode(), record.getName());
+                        r.copyToRealm(realmCurrencyRecord);
+                    }
                 }
             });
         }
     }
 
     @Override
-    public boolean hasRecords() {
+    public boolean hasCurrencyRateRecords() {
         Realm realm = null;
         boolean result = false;
         try {
             realm = Realm.getDefaultInstance();
             if (realm.where(RealmRateRequestRecord.class).findAll().size() > 0){
+                result = true;
+            }
+        } finally {
+            if (realm != null){
+                realm.close();
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean hasCurrencyRecords() {
+        Realm realm = null;
+        boolean result = false;
+        try {
+            realm = Realm.getDefaultInstance();
+            if (realm.where(RealmCurrencyRecord.class).findAll().size() > 0){
                 result = true;
             }
         } finally {

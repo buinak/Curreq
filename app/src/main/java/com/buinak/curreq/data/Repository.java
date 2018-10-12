@@ -24,7 +24,7 @@ public class Repository implements DataSource {
 
     @Override
     public void requestRecord() {
-        if (localDataSource.hasRecords()) {
+        if (localDataSource.hasCurrencyRateRecords()) {
             openRequest = localDataSource.getLatestRecord()
                     .subscribeOn(Schedulers.io())
                     .subscribe(result -> listener.onRateRequestRecordReceived(result));
@@ -44,6 +44,22 @@ public class Repository implements DataSource {
                     });
         } else {
             prepareRemoteDataSource();
+        }
+    }
+
+    @Override
+    public void requestCurrencyList() {
+        if (localDataSource.hasCurrencyRecords()){
+            openRequest = localDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(result -> listener.onCurrencyRecordsReceived(result));
+        } else {
+            openRequest = remoteDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(result -> {
+                        localDataSource.saveCurrencies(result);
+                        listener.onCurrencyRecordsReceived(result);
+                    });
         }
     }
 

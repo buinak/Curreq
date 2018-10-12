@@ -9,9 +9,11 @@ import io.reactivex.Single;
 
 public interface LocalDataSource {
     Single<RateRequestRecord> getLatestRecord();
+    Single<List<CurrencyRecord>> getCurrencyList();
 
     void saveRecord(RateRequestRecord record);
     void saveCurrencies(List<CurrencyRecord> currencyRecordList);
 
-    boolean hasRecords();
+    boolean hasCurrencyRateRecords();
+    boolean hasCurrencyRecords();
 }

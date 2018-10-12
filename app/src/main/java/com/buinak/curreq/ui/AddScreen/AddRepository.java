@@ -1,4 +1,4 @@
-package com.buinak.curreq.ui.LoadingScreen;
+package com.buinak.curreq.ui.AddScreen;
 
 import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.data.DataSource;
@@ -9,26 +9,27 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class LoadingRepository implements DataSource.DataSourceListener {
+public class AddRepository implements DataSource.DataSourceListener {
 
     @Inject
     DataSource dataSource;
 
-    private LoadingViewModel viewModel;
+    private AddViewModel viewModel;
 
-    public LoadingRepository(LoadingViewModel viewModel) {
+    public AddRepository(AddViewModel viewModel) {
         this.viewModel = viewModel;
+
         CurreqApplication.getRepositoryComponent(this).inject(this);
-        dataSource.requestRecord();
+        dataSource.requestCurrencyList();
     }
 
     @Override
     public void onRateRequestRecordReceived(RateRequestRecord record) {
-        viewModel.setIsReady(true);
+
     }
 
     @Override
     public void onCurrencyRecordsReceived(List<CurrencyRecord> records) {
-
+        System.out.println();
     }
 }
