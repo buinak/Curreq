@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainScreen.MainActivity"></activity>
+        <activity android:name=".ui.MainScreen.MainActivity" />
+        <activity android:name=".ui.AddScreen.AddActivity"
+            android:parentActivityName=".ui.MainScreen.MainActivity"></activity>
     </application>
 
 </manifest>
