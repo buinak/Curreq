@@ -8,7 +8,7 @@ import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 import java.util.List;
 
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.SingleSubject;
 
@@ -18,15 +18,17 @@ public class Repository implements DataSource {
     public LocalDataSource localDataSource;
     public RemoteDataSource remoteDataSource;
 
-    private Disposable openRequest;
+    private CompositeDisposable disposable;
 
     public Repository(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
         this.localDataSource = localDataSource;
         this.remoteDataSource = remoteDataSource;
 
+        disposable = new CompositeDisposable();
+
         if (localDataSource.hasCurrencyRecords()){
-            Disposable disposable = localDataSource.getCurrencyList()
-                    .subscribe(remoteDataSource::setCurrencyList);
+            disposable.add(localDataSource.getCurrencyList()
+                    .subscribe(remoteDataSource::setCurrencyList));
         }
     }
 
@@ -46,8 +48,8 @@ public class Repository implements DataSource {
                 return remoteDataSource.getRates()
                         .doAfterSuccess(result -> localDataSource.saveRecord(result));
             } else {
-                Disposable disposable = initialiseRemoteDataSourceAndGetResult()
-                        .subscribe(subject::onSuccess);
+                disposable.add(initialiseRemoteDataSourceAndGetResult()
+                        .subscribe(subject::onSuccess));
             }
 
             return subject;
@@ -70,36 +72,36 @@ public class Repository implements DataSource {
         }
 
         SingleSubject<Boolean> readySubject = SingleSubject.create();
-        openRequest = remoteDataSource.getCurrencyList()
+        disposable.add(remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())
                 .subscribe(result -> {
                     localDataSource.saveCurrencies(result);
-                    Disposable request = remoteDataSource.getRates()
+                    disposable.add(remoteDataSource.getRates()
                             .subscribeOn(Schedulers.io())
                             .subscribe(r -> {
                                 localDataSource.saveRecord(r);
                                 readySubject.onSuccess(true);
-                            });
+                            }));
 
-                });
+                }));
 
         return readySubject;
     }
 
     private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult(){
         SingleSubject<RateRequestRecord> readySubject = SingleSubject.create();
-        openRequest = remoteDataSource.getCurrencyList()
+        disposable.add(remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())
                 .subscribe(result -> {
                     localDataSource.saveCurrencies(result);
-                    Disposable request = remoteDataSource.getRates()
+                    disposable.add(remoteDataSource.getRates()
                             .subscribeOn(Schedulers.io())
                             .subscribe(r -> {
                                 localDataSource.saveRecord(r);
                                 readySubject.onSuccess(r);
-                            });
+                            }));
 
-                });
+                }));
 
         return readySubject;
     }
@@ -107,9 +109,9 @@ public class Repository implements DataSource {
 
     @Override
     public void dispose() {
-        if (openRequest != null) {
-            openRequest.dispose();
-            openRequest = null;
+        if (disposable != null) {
+            disposable.dispose();
+            disposable = null;
         }
     }
 }

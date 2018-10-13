@@ -10,7 +10,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LoadingRepository{
 
-    DataSource dataSource;
+    private DataSource dataSource;
+    
     private Disposable openRequest;
 
     private MutableLiveData<Boolean> isReady;
