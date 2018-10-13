@@ -1,6 +1,5 @@
 package com.buinak.curreq.ui.LoadingScreen;
 
-import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
@@ -18,7 +17,9 @@ public class LoadingRepository implements DataSource.DataSourceListener {
 
     public LoadingRepository(LoadingViewModel viewModel) {
         this.viewModel = viewModel;
-        CurreqApplication.getRepositoryComponent(this).inject(this);
+    }
+
+    public void initialise(){
         dataSource.requestRecord();
     }
 

@@ -76,6 +76,7 @@ public class CurrencyDatabase implements LocalDataSource {
                 List<RateRecord> records = new ArrayList<>();
                 for (RealmRateRecord rateRecord :
                         record.getRealmRateRecords()) {
+
                     RealmCurrencyRecord baseCurrencyRecord = realm.where(RealmCurrencyRecord.class)
                             .equalTo("id", rateRecord.getBaseCurrencyId())
                             .findFirst();
@@ -128,7 +129,6 @@ public class CurrencyDatabase implements LocalDataSource {
     public void saveCurrencies(List<CurrencyRecord> currencyRecordList) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.executeTransaction(r -> {
-                RealmResults<RealmCurrencyRecord> results = r.where(RealmCurrencyRecord.class).findAll();
                 if (r.where(RealmCurrencyRecord.class).findAll().size() > 0) {
                     return;
                 }
@@ -138,10 +138,21 @@ public class CurrencyDatabase implements LocalDataSource {
                             .equalTo("code", record.getCode())
                             .findAll()
                             .size() == 0) {
+
+                        //generate a new, unique UUID
+                        long newUUID = UUID.randomUUID().getMostSignificantBits();
+                        //make sure there's no other records with the same UUID, there can't be any collision
+                        while ((r.where(RealmCurrencyRecord.class)
+                                .equalTo("id", newUUID)
+                                .findAll()).size() != 0) {
+                            newUUID = UUID.randomUUID().getMostSignificantBits();
+                        }
+
                         RealmCurrencyRecord realmCurrencyRecord =
-                                new RealmCurrencyRecord(UUID.randomUUID().getMostSignificantBits(),
+                                new RealmCurrencyRecord(newUUID,
                                         record.getCode(),
                                         record.getName());
+
                         r.copyToRealm(realmCurrencyRecord);
                     }
                 }
