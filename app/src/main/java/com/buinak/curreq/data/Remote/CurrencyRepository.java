@@ -68,7 +68,7 @@ public class CurrencyRepository implements RemoteDataSource {
     private List<CurrencyRecord> parseApiCurrencyListResponse(CurrencyListResponse response){
         List<CurrencyRecord> currencyList = new ArrayList<>();
         boolean fillMap = false;
-        if (currencyRecordMap == null){
+        if (currencyRecordMap == null || currencyRecordMap.size() == 0){
             currencyRecordMap = new HashMap<>();
             fillMap = true;
         }
