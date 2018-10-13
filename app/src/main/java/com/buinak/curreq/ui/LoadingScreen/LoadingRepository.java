@@ -1,35 +1,37 @@
 package com.buinak.curreq.ui.LoadingScreen;
 
+import android.arch.lifecycle.MutableLiveData;
+
 import com.buinak.curreq.data.DataSource;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
-import java.util.List;
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-import javax.inject.Inject;
+public class LoadingRepository{
 
-public class LoadingRepository implements DataSource.DataSourceListener {
-
-    @Inject
     DataSource dataSource;
+    private Disposable openRequest;
 
-    private LoadingViewModel viewModel;
+    private MutableLiveData<Boolean> isReady;
 
-    public LoadingRepository(LoadingViewModel viewModel) {
-        this.viewModel = viewModel;
+    public LoadingRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+        isReady = new MutableLiveData<>();
+
+        openRequest = dataSource.initialiseRepositoryIfFirstStart()
+                .subscribeOn(Schedulers.io())
+                .subscribe(result -> isReady.postValue(result));
     }
 
-    public void initialise(){
-        dataSource.requestRecord();
+    public Single<Boolean> getIsReady() {
+        return dataSource.initialiseRepositoryIfFirstStart();
     }
 
-    @Override
-    public void onRateRequestRecordReceived(RateRequestRecord record) {
-        viewModel.setIsReady(true);
-    }
-
-    @Override
-    public void onCurrencyRecordsReceived(List<CurrencyRecord> records) {
-
+    public void dispose(){
+        if (openRequest != null){
+            openRequest.dispose();
+            openRequest = null;
+        }
     }
 }

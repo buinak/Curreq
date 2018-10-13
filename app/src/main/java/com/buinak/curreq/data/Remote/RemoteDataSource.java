@@ -11,5 +11,7 @@ public interface RemoteDataSource {
     Single<RateRequestRecord> getRates();
     Single<List<CurrencyRecord>> getCurrencyList();
 
+    void setCurrencyList(List<CurrencyRecord> currencies);
+
     boolean isReady();
 }

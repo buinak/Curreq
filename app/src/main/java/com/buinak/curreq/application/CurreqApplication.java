@@ -3,9 +3,9 @@ package com.buinak.curreq.application;
 import android.app.Application;
 
 import com.buinak.curreq.data.DaggerRepositoryComponent;
-import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.data.RepositoryComponent;
-import com.buinak.curreq.data.RepositoryModule;
+import com.buinak.curreq.ui.LoadingScreen.DaggerLoadingComponent;
+import com.buinak.curreq.ui.LoadingScreen.LoadingViewModel;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -30,9 +30,12 @@ public class CurreqApplication extends Application {
         Realm.setDefaultConfiguration(databaseConfig);
     }
 
-    public static RepositoryComponent getRepositoryComponent(DataSource.DataSourceListener listener){
-        return DaggerRepositoryComponent.builder()
-                .repositoryModule(new RepositoryModule(listener))
-                .build();
+    public static void inject(LoadingViewModel viewModel){
+        RepositoryComponent repositoryComponent = DaggerRepositoryComponent.builder().build();
+
+        DaggerLoadingComponent.builder()
+                .repositoryComponent(repositoryComponent)
+                .build()
+                .inject(viewModel);
     }
 }

@@ -2,9 +2,15 @@ package com.buinak.curreq.data;
 
 import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
+import java.util.List;
+
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.SingleSubject;
 
 public class Repository implements DataSource {
 
@@ -12,64 +18,90 @@ public class Repository implements DataSource {
     public LocalDataSource localDataSource;
     public RemoteDataSource remoteDataSource;
 
-    DataSourceListener listener;
-
     private Disposable openRequest;
 
-    public Repository(DataSourceListener listener, LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
-        this.listener = listener;
+    public Repository(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
         this.localDataSource = localDataSource;
         this.remoteDataSource = remoteDataSource;
-    }
 
-    @Override
-    public void requestRecord() {
-        if (localDataSource.hasCurrencyRateRecords()) {
-            openRequest = localDataSource.getLatestRecord()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(result -> listener.onRateRequestRecordReceived(result));
-        } else {
-            requestNewRecord();
-        }
-    }
-
-    @Override
-    public void requestNewRecord() {
-        if (remoteDataSource.isReady()) {
-            openRequest = remoteDataSource.getRates()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(result -> {
-                        localDataSource.saveRecord(result);
-                        listener.onRateRequestRecordReceived(result);
-                    });
-        } else {
-            prepareRemoteDataSource();
-        }
-    }
-
-    @Override
-    public void requestCurrencyList() {
         if (localDataSource.hasCurrencyRecords()){
-            openRequest = localDataSource.getCurrencyList()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(result -> listener.onCurrencyRecordsReceived(result));
-        } else {
-            openRequest = remoteDataSource.getCurrencyList()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(result -> {
-                        localDataSource.saveCurrencies(result);
-                        listener.onCurrencyRecordsReceived(result);
-                    });
+            Disposable disposable = localDataSource.getCurrencyList()
+                    .subscribe(remoteDataSource::setCurrencyList);
         }
     }
 
-    private void prepareRemoteDataSource() {
+    @Override
+    public Single<RateRequestRecord> requestRecord() {
+        if (localDataSource.hasCurrencyRateRecords()) {
+            return localDataSource.getLatestRecord();
+        } else {
+            return requestNewRecord();
+        }
+    }
+
+    @Override
+    public Single<RateRequestRecord> requestNewRecord() {
+            SingleSubject<RateRequestRecord> subject = SingleSubject.create();
+            if (remoteDataSource.isReady()) {
+                return remoteDataSource.getRates()
+                        .doAfterSuccess(result -> localDataSource.saveRecord(result));
+            } else {
+                Disposable disposable = initialiseRemoteDataSourceAndGetResult()
+                        .subscribe(subject::onSuccess);
+            }
+
+            return subject;
+    }
+
+    @Override
+    public Single<List<CurrencyRecord>> requestCurrencyList() {
+        if (localDataSource.hasCurrencyRecords()){
+            return localDataSource.getCurrencyList();
+        } else {
+            return remoteDataSource.getCurrencyList()
+                    .doAfterSuccess(result -> localDataSource.saveCurrencies(result));
+        }
+    }
+
+    @Override
+    public Single<Boolean> initialiseRepositoryIfFirstStart() {
+        if (localDataSource.hasCurrencyRateRecords()){
+            return Single.just(true);
+        }
+
+        SingleSubject<Boolean> readySubject = SingleSubject.create();
         openRequest = remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())
                 .subscribe(result -> {
                     localDataSource.saveCurrencies(result);
-                    requestNewRecord();
+                    Disposable request = remoteDataSource.getRates()
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(r -> {
+                                localDataSource.saveRecord(r);
+                                readySubject.onSuccess(true);
+                            });
+
                 });
+
+        return readySubject;
+    }
+
+    private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult(){
+        SingleSubject<RateRequestRecord> readySubject = SingleSubject.create();
+        openRequest = remoteDataSource.getCurrencyList()
+                .subscribeOn(Schedulers.io())
+                .subscribe(result -> {
+                    localDataSource.saveCurrencies(result);
+                    Disposable request = remoteDataSource.getRates()
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(r -> {
+                                localDataSource.saveRecord(r);
+                                readySubject.onSuccess(r);
+                            });
+
+                });
+
+        return readySubject;
     }
 
 
@@ -79,10 +111,5 @@ public class Repository implements DataSource {
             openRequest.dispose();
             openRequest = null;
         }
-    }
-
-    @Override
-    public void setListener(DataSourceListener listener) {
-        this.listener = listener;
     }
 }

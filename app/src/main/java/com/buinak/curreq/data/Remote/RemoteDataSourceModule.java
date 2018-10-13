@@ -3,8 +3,6 @@ package com.buinak.curreq.data.Remote;
 import com.buinak.curreq.data.Remote.Fixer.ApiModule;
 import com.buinak.curreq.data.Remote.Fixer.FixerIOApi;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -12,7 +10,6 @@ import dagger.Provides;
 public class RemoteDataSourceModule {
 
     @Provides
-    @Singleton
     static RemoteDataSource provideRemoteDataSource(FixerIOApi api) {
         return new CurrencyRepository(api);
     }

@@ -17,12 +17,13 @@ import io.reactivex.Single;
 
 public class CurrencyRepository implements RemoteDataSource {
 
-    FixerIOApi fixerIOApi;
+    private FixerIOApi fixerIOApi;
 
     private Map<String, CurrencyRecord> currencyRecordMap;
 
     public CurrencyRepository(FixerIOApi fixerIOApi) {
         this.fixerIOApi = fixerIOApi;
+        currencyRecordMap = new HashMap<>();
     }
 
     @Override
@@ -37,6 +38,14 @@ public class CurrencyRepository implements RemoteDataSource {
     public Single<List<CurrencyRecord>> getCurrencyList() {
         return fixerIOApi.getCurrencyList(FixerIOApi.ACCESS_KEY)
                 .map(this::parseApiCurrencyListResponse);
+    }
+
+    @Override
+    public void setCurrencyList(List<CurrencyRecord> currencies) {
+        for (CurrencyRecord currencyRecord :
+                currencies) {
+            currencyRecordMap.put(currencyRecord.getCode(), currencyRecord);
+        }
     }
 
     @Override

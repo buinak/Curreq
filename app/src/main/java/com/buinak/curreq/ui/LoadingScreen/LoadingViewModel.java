@@ -6,27 +6,37 @@ import android.arch.lifecycle.ViewModel;
 
 import com.buinak.curreq.application.CurreqApplication;
 
+import javax.inject.Inject;
+
+import io.reactivex.disposables.Disposable;
+
 public class LoadingViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> isReadyLiveData;
 
+    private Disposable isReadySubscription;
+
+    @Inject
     LoadingRepository repository;
 
     public LoadingViewModel() {
         isReadyLiveData = new MutableLiveData<>();
 
-        //we inject so that the repository does not know about any android components
-        //considering Application class is an Android component
-        repository = new LoadingRepository(this);
-        CurreqApplication.getRepositoryComponent(repository).inject(repository);
-        repository.initialise();
+        CurreqApplication.inject(this);
+        isReadySubscription = repository.getIsReady().subscribe(result -> isReadyLiveData.postValue(result));
     }
 
     public LiveData<Boolean> getIsReady(){
         return isReadyLiveData;
     }
 
-    public void setIsReady(Boolean isReady){
-        isReadyLiveData.postValue(isReady);
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        repository.dispose();
+        if (isReadySubscription != null){
+            isReadySubscription.dispose();
+            isReadySubscription = null;
+        }
     }
 }

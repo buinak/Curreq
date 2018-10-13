@@ -5,18 +5,17 @@ import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
 import java.util.List;
 
-public interface DataSource {
-    void requestRecord();
-    void requestNewRecord();
+import io.reactivex.Single;
 
-    void requestCurrencyList();
+public interface DataSource {
+    Single<RateRequestRecord> requestRecord();
+
+    Single<RateRequestRecord> requestNewRecord();
+
+    Single<Boolean> initialiseRepositoryIfFirstStart();
+
+    Single<List<CurrencyRecord>> requestCurrencyList();
 
     void dispose();
 
-    void setListener(DataSourceListener listener);
-
-    interface DataSourceListener {
-        void onRateRequestRecordReceived(RateRequestRecord record);
-        void onCurrencyRecordsReceived(List<CurrencyRecord> records);
-    }
 }
