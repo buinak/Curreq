@@ -1,16 +1,22 @@
 package com.buinak.curreq.entities.RealmEntity;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Foreseer on 11-Oct-18.
  */
 
 public class RealmCurrencyRecord extends RealmObject {
+
+    @PrimaryKey
+    private long id;
+
     private String code;
     private String name;
 
-    public RealmCurrencyRecord(String code, String name) {
+    public RealmCurrencyRecord(long id, String code, String name) {
+        this.id = id;
         this.code = code;
         this.name = name;
     }
@@ -32,6 +38,14 @@ public class RealmCurrencyRecord extends RealmObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
 

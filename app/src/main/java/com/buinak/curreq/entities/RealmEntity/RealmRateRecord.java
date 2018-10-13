@@ -4,33 +4,33 @@ import io.realm.RealmObject;
 
 public class RealmRateRecord extends RealmObject {
 
-    private RealmCurrencyRecord currency;
-    private RealmCurrencyRecord baseCurrency;
+    private long currencyId;
+    private long baseCurrencyId;
     private Double value;
 
-    public RealmRateRecord(RealmCurrencyRecord currency, RealmCurrencyRecord baseCurrency, Double value) {
-        this.currency = currency;
-        this.baseCurrency = baseCurrency;
+    public RealmRateRecord(long currencyId, long baseCurrencyId, Double value) {
+        this.currencyId = currencyId;
+        this.baseCurrencyId = baseCurrencyId;
         this.value = value;
     }
 
     public RealmRateRecord() {
     }
 
-    public RealmCurrencyRecord getCurrency() {
-        return currency;
+    public long getCurrencyId() {
+        return currencyId;
     }
 
-    public void setCurrency(RealmCurrencyRecord currency) {
-        this.currency = currency;
+    public void setCurrencyId(long currencyId) {
+        this.currencyId = currencyId;
     }
 
-    public RealmCurrencyRecord getBaseCurrency() {
-        return baseCurrency;
+    public long getBaseCurrencyId() {
+        return baseCurrencyId;
     }
 
-    public void setBaseCurrency(RealmCurrencyRecord baseCurrency) {
-        this.baseCurrency = baseCurrency;
+    public void setBaseCurrencyId(long baseCurrencyId) {
+        this.baseCurrencyId = baseCurrencyId;
     }
 
     public Double getValue() {

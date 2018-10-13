@@ -21,11 +21,12 @@ public class AddRepository implements DataSource.DataSourceListener {
 
         CurreqApplication.getRepositoryComponent(this).inject(this);
         dataSource.requestCurrencyList();
+        dataSource.requestRecord();
     }
 
     @Override
     public void onRateRequestRecordReceived(RateRequestRecord record) {
-
+        System.out.println();
     }
 
     @Override
