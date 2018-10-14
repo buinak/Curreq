@@ -3,6 +3,7 @@ package com.buinak.curreq.ui.LoadingScreen;
 import com.buinak.curreq.data.DataSource;
 
 import io.reactivex.Completable;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoadingRepository{
 
@@ -13,7 +14,8 @@ public class LoadingRepository{
     }
 
     public Completable getIsReady() {
-        return dataSource.initialiseRepositoryIfFirstStart();
+        return dataSource.initialiseRepositoryIfFirstStart()
+                .subscribeOn(Schedulers.io());
     }
 
 }

@@ -14,15 +14,12 @@ import io.realm.RealmConfiguration;
 
 public class CurreqApplication extends Application {
 
-    private static CurreqApplication application;
 
     public static final String DATABASE_NAME = "curreq_db.realm";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        application = this;
-
 
         Realm.init(this);
         RealmConfiguration databaseConfig = new RealmConfiguration.Builder()
