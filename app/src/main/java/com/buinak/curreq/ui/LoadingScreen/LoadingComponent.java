@@ -12,6 +12,5 @@ public interface LoadingComponent {
 
     LoadingRepository provideLoadingRepository();
 
-
     void inject(LoadingViewModel viewModel);
 }

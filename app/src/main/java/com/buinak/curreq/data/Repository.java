@@ -4,12 +4,15 @@ import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.utils.RepositoryUtils;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.CompletableSubject;
 import io.reactivex.subjects.SingleSubject;
 
 public class Repository implements DataSource {
@@ -26,7 +29,7 @@ public class Repository implements DataSource {
 
         disposable = new CompositeDisposable();
 
-        if (localDataSource.hasCurrencyRecords()){
+        if (localDataSource.hasCurrencyRecords()) {
             disposable.add(localDataSource.getCurrencyList()
                     .subscribe(remoteDataSource::setCurrencyList));
         }
@@ -43,21 +46,21 @@ public class Repository implements DataSource {
 
     @Override
     public Single<RateRequestRecord> requestNewRecord() {
-            SingleSubject<RateRequestRecord> subject = SingleSubject.create();
-            if (remoteDataSource.isReady()) {
-                return remoteDataSource.getRates()
-                        .doAfterSuccess(result -> localDataSource.saveRecord(result));
-            } else {
-                disposable.add(initialiseRemoteDataSourceAndGetResult()
-                        .subscribe(subject::onSuccess));
-            }
+        SingleSubject<RateRequestRecord> subject = SingleSubject.create();
+        if (remoteDataSource.isReady()) {
+            return remoteDataSource.getRates()
+                    .doAfterSuccess(result -> localDataSource.saveRecord(result));
+        } else {
+            disposable.add(initialiseRemoteDataSourceAndGetResult()
+                    .subscribe(subject::onSuccess));
+        }
 
-            return subject;
+        return subject;
     }
 
     @Override
-    public Single<List<CurrencyRecord>> requestCurrencyList() {
-        if (localDataSource.hasCurrencyRecords()){
+    public Single<List<CurrencyRecord>> requestFullCurrencyList() {
+        if (localDataSource.hasCurrencyRecords()) {
             return localDataSource.getCurrencyList();
         } else {
             return remoteDataSource.getCurrencyList()
@@ -66,12 +69,34 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Single<Boolean> initialiseRepositoryIfFirstStart() {
-        if (localDataSource.hasCurrencyRateRecords()){
-            return Single.just(true);
+    public Single<List<CurrencyRecord>> requestFilteredCurrencyList() {
+        SingleSubject<List<CurrencyRecord>> subject = SingleSubject.create();
+
+        if (localDataSource.hasCurrencyRecords()) {
+            disposable.add(localDataSource.getCurrencyList()
+                    .map(RepositoryUtils::filterList)
+                    .subscribe(subject::onSuccess));
+        } else {
+            disposable.add(remoteDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io())
+                    .map(RepositoryUtils::filterList)
+                    .subscribe(result -> {
+                                localDataSource.saveCurrencies(result);
+                                subject.onSuccess(result);
+                            }
+                    ));
         }
 
-        SingleSubject<Boolean> readySubject = SingleSubject.create();
+        return subject;
+    }
+
+    @Override
+    public Completable initialiseRepositoryIfFirstStart() {
+        if (localDataSource.hasCurrencyRateRecords()) {
+            return Completable.complete();
+        }
+
+        CompletableSubject completable = CompletableSubject.create();
         disposable.add(remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())
                 .subscribe(result -> {
@@ -80,15 +105,15 @@ public class Repository implements DataSource {
                             .subscribeOn(Schedulers.io())
                             .subscribe(r -> {
                                 localDataSource.saveRecord(r);
-                                readySubject.onSuccess(true);
+                                completable.onComplete();
                             }));
 
                 }));
 
-        return readySubject;
+        return completable;
     }
 
-    private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult(){
+    private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult() {
         SingleSubject<RateRequestRecord> readySubject = SingleSubject.create();
         disposable.add(remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())

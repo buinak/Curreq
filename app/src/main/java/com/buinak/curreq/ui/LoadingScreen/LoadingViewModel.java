@@ -23,7 +23,9 @@ public class LoadingViewModel extends ViewModel {
         isReadyLiveData = new MutableLiveData<>();
 
         CurreqApplication.inject(this);
-        isReadySubscription = repository.getIsReady().subscribe(result -> isReadyLiveData.postValue(result));
+
+        isReadySubscription = repository.getIsReady()
+                .subscribe(() -> isReadyLiveData.postValue(true));
     }
 
     public LiveData<Boolean> getIsReady(){
@@ -33,7 +35,6 @@ public class LoadingViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        repository.dispose();
         if (isReadySubscription != null){
             isReadySubscription.dispose();
             isReadySubscription = null;

@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.buinak.curreq.data.DaggerRepositoryComponent;
 import com.buinak.curreq.data.RepositoryComponent;
+import com.buinak.curreq.ui.AddScreen.AddViewModel;
+import com.buinak.curreq.ui.AddScreen.DaggerAddComponent;
 import com.buinak.curreq.ui.LoadingScreen.DaggerLoadingComponent;
 import com.buinak.curreq.ui.LoadingScreen.LoadingViewModel;
 
@@ -34,6 +36,15 @@ public class CurreqApplication extends Application {
         RepositoryComponent repositoryComponent = DaggerRepositoryComponent.builder().build();
 
         DaggerLoadingComponent.builder()
+                .repositoryComponent(repositoryComponent)
+                .build()
+                .inject(viewModel);
+    }
+
+    public static void inject(AddViewModel viewModel){
+        RepositoryComponent repositoryComponent = DaggerRepositoryComponent.builder().build();
+
+        DaggerAddComponent.builder()
                 .repositoryComponent(repositoryComponent)
                 .build()
                 .inject(viewModel);

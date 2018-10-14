@@ -1,19 +1,21 @@
 package com.buinak.curreq.ui.AddScreen;
 
 import com.buinak.curreq.data.DataSource;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 
-import javax.inject.Inject;
+import java.util.List;
+
+import io.reactivex.Single;
 
 public class AddRepository{
 
-    @Inject
-    DataSource dataSource;
+    private DataSource dataSource;
 
-    private AddViewModel viewModel;
-
-    public AddRepository(AddViewModel viewModel) {
-        this.viewModel = viewModel;
-
+    public AddRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
+    public Single<List<CurrencyRecord>> getCurrencyList(){
+        return dataSource.requestFilteredCurrencyList();
+    }
 }
