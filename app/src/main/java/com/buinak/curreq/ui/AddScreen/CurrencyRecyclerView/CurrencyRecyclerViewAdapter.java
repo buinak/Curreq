@@ -15,8 +15,11 @@ public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyVi
 
     private List<CurrencyRecord> currencyRecordList;
 
-    public CurrencyRecyclerViewAdapter(List<CurrencyRecord> currencyRecordList) {
+    private int maxWidth;
+
+    public CurrencyRecyclerViewAdapter(List<CurrencyRecord> currencyRecordList, int maxWidth) {
         this.currencyRecordList = currencyRecordList;
+        this.maxWidth = maxWidth;
     }
 
     @NonNull
@@ -25,7 +28,9 @@ public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyVi
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         View view = inflater.inflate(R.layout.activity_add_currency_item, parent, false);
-        return new CurrencyViewHolder(view);
+        CurrencyViewHolder viewHolder = new CurrencyViewHolder(view);
+        viewHolder.setMaxWidth(maxWidth);
+        return viewHolder;
     }
 
     @Override

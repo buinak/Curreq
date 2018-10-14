@@ -8,7 +8,6 @@ import com.buinak.curreq.application.CurreqApplication;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class LoadingViewModel extends ViewModel {
@@ -26,7 +25,6 @@ public class LoadingViewModel extends ViewModel {
         CurreqApplication.inject(this);
 
         isReadySubscription = repository.getIsReady()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> isReadyLiveData.postValue(true));
     }
 

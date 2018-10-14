@@ -31,6 +31,7 @@ public class Repository implements DataSource {
 
         if (localDataSource.hasCurrencyRecords()) {
             disposable.add(localDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io())
                     .subscribe(remoteDataSource::setCurrencyList));
         }
     }
@@ -38,7 +39,8 @@ public class Repository implements DataSource {
     @Override
     public Single<RateRequestRecord> requestRecord() {
         if (localDataSource.hasCurrencyRateRecords()) {
-            return localDataSource.getLatestRecord();
+            return localDataSource.getLatestRecord()
+                    .subscribeOn(Schedulers.io());
         } else {
             return requestNewRecord();
         }
@@ -49,9 +51,11 @@ public class Repository implements DataSource {
         SingleSubject<RateRequestRecord> subject = SingleSubject.create();
         if (remoteDataSource.isReady()) {
             return remoteDataSource.getRates()
+                    .subscribeOn(Schedulers.io())
                     .doAfterSuccess(result -> localDataSource.saveRecord(result));
         } else {
             disposable.add(initialiseRemoteDataSourceAndGetResult()
+                    .subscribeOn(Schedulers.io())
                     .subscribe(subject::onSuccess));
         }
 
@@ -61,9 +65,11 @@ public class Repository implements DataSource {
     @Override
     public Single<List<CurrencyRecord>> requestFullCurrencyList() {
         if (localDataSource.hasCurrencyRecords()) {
-            return localDataSource.getCurrencyList();
+            return localDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io());
         } else {
             return remoteDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io())
                     .doAfterSuccess(result -> localDataSource.saveCurrencies(result));
         }
     }
@@ -74,6 +80,7 @@ public class Repository implements DataSource {
 
         if (localDataSource.hasCurrencyRecords()) {
             disposable.add(localDataSource.getCurrencyList()
+                    .subscribeOn(Schedulers.io())
                     .map(RepositoryUtils::filterList)
                     .subscribe(subject::onSuccess));
         } else {
@@ -120,7 +127,6 @@ public class Repository implements DataSource {
                 .subscribe(result -> {
                     localDataSource.saveCurrencies(result);
                     disposable.add(remoteDataSource.getRates()
-                            .subscribeOn(Schedulers.io())
                             .subscribe(r -> {
                                 localDataSource.saveRecord(r);
                                 readySubject.onSuccess(r);

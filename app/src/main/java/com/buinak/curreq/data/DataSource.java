@@ -10,7 +10,6 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 
 public interface DataSource {
-    List<String> PERMITTED_CODES = Arrays.asList("EUR", "USD", "CZK");
 
     Single<RateRequestRecord> requestRecord();
 

@@ -1,7 +1,5 @@
 package com.buinak.curreq.entities.CurreqEntity;
 
-import com.buinak.curreq.entities.RealmEntity.RealmCurrencyRecord;
-
 public class RateRecord {
 
     private CurrencyRecord currency;
@@ -24,6 +22,18 @@ public class RateRecord {
 
     public Double getValue() {
         return value;
+    }
+
+    public void setCurrency(CurrencyRecord currency) {
+        this.currency = currency;
+    }
+
+    public void setBaseCurrency(CurrencyRecord baseCurrency) {
+        this.baseCurrency = baseCurrency;
+    }
+
+    public void setValue(Double value) {
+        this.value = value;
     }
 }
 

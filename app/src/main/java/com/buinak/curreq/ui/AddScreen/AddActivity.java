@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.buinak.curreq.R;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyRecyclerViewAdapter;
+import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ import butterknife.ButterKnife;
 
 public class AddActivity extends AppCompatActivity {
 
-    @BindView(R.id.recyclerView)
+    @BindView(R.id.recyclerView_main_rows)
     RecyclerView recyclerView;
-    CurrencyRecyclerViewAdapter adapter;
+    RowRecyclerViewAdapter adapter;
 
     private AddViewModel viewModel;
 
@@ -34,13 +34,13 @@ public class AddActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(AddViewModel.class);
 
-        viewModel.getCurrencyList()
+        viewModel.getCurrencyLists()
                 .observe(this, this::updateRecyclerView);
 
     }
 
-    private void updateRecyclerView(List<CurrencyRecord> list){
-        adapter.setCurrencyRecordList(list);
+    private void updateRecyclerView(List<List<CurrencyRecord>> list){
+        adapter.setRows(list);
         adapter.notifyDataSetChanged();
     }
 
@@ -48,7 +48,7 @@ public class AddActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new CurrencyRecyclerViewAdapter(new ArrayList<>());
+        adapter = new RowRecyclerViewAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
     }
 }
