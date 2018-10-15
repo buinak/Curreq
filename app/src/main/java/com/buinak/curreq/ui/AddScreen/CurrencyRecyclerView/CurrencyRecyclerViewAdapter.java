@@ -11,15 +11,17 @@ import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 
 import java.util.List;
 
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+
 public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyViewHolder> {
 
     private List<CurrencyRecord> currencyRecordList;
 
-    private int maxWidth;
+    private Single<Integer> maxWidthObservable;
 
-    public CurrencyRecyclerViewAdapter(List<CurrencyRecord> currencyRecordList, int maxWidth) {
-        this.currencyRecordList = currencyRecordList;
-        this.maxWidth = maxWidth;
+    public CurrencyRecyclerViewAdapter(Single<Integer> maxWidthObservable) {
+        this.maxWidthObservable = maxWidthObservable;
     }
 
     @NonNull
@@ -27,9 +29,12 @@ public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyVi
     public CurrencyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
+
         View view = inflater.inflate(R.layout.activity_add_currency_item, parent, false);
         CurrencyViewHolder viewHolder = new CurrencyViewHolder(view);
-        viewHolder.setMaxWidth(maxWidth);
+        Disposable disposable = maxWidthObservable.subscribe
+                (i -> viewHolder.setMaxWidth(i / currencyRecordList.size()));
+
         return viewHolder;
     }
 

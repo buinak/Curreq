@@ -11,16 +11,19 @@ import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 
 import java.util.List;
 
+import io.reactivex.subjects.SingleSubject;
+
 public class RowRecyclerViewAdapter extends RecyclerView.Adapter<RowViewHolder> {
 
     private List<List<CurrencyRecord>> rows;
 
-    private int maxWidth;
-
     private View view;
+
+    private final SingleSubject<Integer> maxWidthSubject;
 
     public RowRecyclerViewAdapter(List<List<CurrencyRecord>> rows) {
         this.rows = rows;
+        maxWidthSubject = SingleSubject.create();
     }
 
     @NonNull
@@ -29,14 +32,13 @@ public class RowRecyclerViewAdapter extends RecyclerView.Adapter<RowViewHolder> 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         view = inflater.inflate(R.layout.activity_add_row, parent, false);
 
-        maxWidth = (int) ((parent.getMeasuredWidth() / 3) * 0.90);
-        return new RowViewHolder(view);
+        //int maxHeight = parent.getMeasuredHeight() / Constants.ADD_SCREEN_AMOUNT_OF_ROWS_PER_SCREEN;
+        return new RowViewHolder(view, maxWidthSubject);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RowViewHolder holder, int position) {
-
-        holder.bindCurrencies(rows.get(position), maxWidth);
+        holder.bindCurrencies(rows.get(position));
     }
 
     @Override

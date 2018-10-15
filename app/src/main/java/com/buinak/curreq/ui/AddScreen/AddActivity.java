@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 
 public class AddActivity extends AppCompatActivity {
 
-    @BindView(R.id.recyclerView_main_rows)
+    @BindView(R.id.recycler_view_add_allrows)
     RecyclerView recyclerView;
     RowRecyclerViewAdapter adapter;
 
