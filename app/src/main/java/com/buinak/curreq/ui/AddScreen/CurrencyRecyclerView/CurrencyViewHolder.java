@@ -1,7 +1,5 @@
 package com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -43,8 +41,6 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
         textViewCurrency.setText(currency.getCode());
 
         String code = currency.getCode().substring(0, 2).toLowerCase();
-        int bitmapId = imageViewCurrency.getResources().getIdentifier(code, "drawable", imageViewCurrency.getContext().getPackageName());
-        Bitmap bitmap = BitmapFactory.decodeResource(imageViewCurrency.getResources(), bitmapId);
-        imageViewCurrency.setImageBitmap(bitmap);
+
     }
 }

@@ -16,4 +16,7 @@ public class LoadingRepository{
         return dataSource.initialiseRepositoryIfFirstStart();
     }
 
+    public Completable getAreBitmapsCached() {
+        return dataSource.initialiseBitmaps();
+    }
 }

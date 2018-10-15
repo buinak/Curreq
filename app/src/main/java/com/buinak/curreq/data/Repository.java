@@ -1,5 +1,7 @@
 package com.buinak.curreq.data;
 
+import android.graphics.Bitmap;
+
 import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
@@ -18,8 +20,8 @@ import io.reactivex.subjects.SingleSubject;
 public class Repository implements DataSource {
 
 
-    public LocalDataSource localDataSource;
-    public RemoteDataSource remoteDataSource;
+    private LocalDataSource localDataSource;
+    private RemoteDataSource remoteDataSource;
 
     private CompositeDisposable disposable;
 
@@ -118,6 +120,16 @@ public class Repository implements DataSource {
                 }));
 
         return completable;
+    }
+
+    @Override
+    public Completable initialiseBitmaps() {
+        return localDataSource.cacheBitmaps();
+    }
+
+    @Override
+    public Single<Bitmap> getBitmap(String code) {
+        return localDataSource.getBitmap(code);
     }
 
     private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult() {

@@ -24,8 +24,12 @@ public class LoadingViewModel extends ViewModel {
 
         CurreqApplication.inject(this);
 
+        repository.getAreBitmapsCached();
+
         isReadySubscription = repository.getIsReady()
                 .subscribe(() -> isReadyLiveData.postValue(true));
+
+
     }
 
     public LiveData<Boolean> getIsReady(){

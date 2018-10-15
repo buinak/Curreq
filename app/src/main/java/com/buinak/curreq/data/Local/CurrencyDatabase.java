@@ -13,28 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-public class CurrencyDatabase implements LocalDataSource {
+public class CurrencyDatabase {
 
     public CurrencyDatabase() {
     }
 
-    @Override
-    public Single<RateRequestRecord> getLatestRecord() {
-        return Single.just(getLatestRealmRecord());
-    }
-
-    @Override
-    public Single<List<CurrencyRecord>> getCurrencyList() {
-        return Single.just(getAllCurrencies());
-    }
-
     @NonNull
-    private List<CurrencyRecord> getAllCurrencies() {
+    public List<CurrencyRecord> getAllCurrencies() {
         Realm realm = null;
         List<CurrencyRecord> currencyRecords = new ArrayList<>();
         try {
@@ -54,7 +43,7 @@ public class CurrencyDatabase implements LocalDataSource {
     }
 
     @NonNull
-    private RateRequestRecord getLatestRealmRecord() {
+    public RateRequestRecord getLatestRealmRecord() {
         Realm realm = null;
         RateRequestRecord record;
         try {
@@ -97,7 +86,6 @@ public class CurrencyDatabase implements LocalDataSource {
         return newRecord;
     }
 
-    @Override
     public void saveRecord(RateRequestRecord record) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.executeTransaction(r -> {
@@ -125,7 +113,6 @@ public class CurrencyDatabase implements LocalDataSource {
         }
     }
 
-    @Override
     public void saveCurrencies(List<CurrencyRecord> currencyRecordList) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.executeTransaction(r -> {
@@ -160,7 +147,6 @@ public class CurrencyDatabase implements LocalDataSource {
         }
     }
 
-    @Override
     public boolean hasCurrencyRateRecords() {
         Realm realm = null;
         boolean result = false;
@@ -177,7 +163,6 @@ public class CurrencyDatabase implements LocalDataSource {
         return result;
     }
 
-    @Override
     public boolean hasCurrencyRecords() {
         Realm realm = null;
         boolean result = false;
