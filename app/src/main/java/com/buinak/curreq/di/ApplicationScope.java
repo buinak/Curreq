@@ -1,4 +1,4 @@
-package com.buinak.curreq.application;
+package com.buinak.curreq.di;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
