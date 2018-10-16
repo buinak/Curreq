@@ -2,12 +2,9 @@ package com.buinak.curreq.application;
 
 import android.app.Application;
 
-import com.buinak.curreq.data.Local.LocalDataSourceModule;
 import com.buinak.curreq.di.ApplicationComponent;
-import com.buinak.curreq.di.ApplicationModule;
 import com.buinak.curreq.di.DaggerApplicationComponent;
 import com.buinak.curreq.ui.AddScreen.AddViewModel;
-import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.LoadingScreen.LoadingViewModel;
 
 import io.realm.Realm;

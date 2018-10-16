@@ -1,4 +1,4 @@
-package com.buinak.curreq.di;
+package com.buinak.curreq.application;
 
 import android.content.Context;
 
