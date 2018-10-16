@@ -1,8 +1,11 @@
 package com.buinak.curreq.ui.AddScreen;
 
+import android.graphics.Bitmap;
+
 import com.buinak.curreq.data.DataSource;
+import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
+import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,28 +20,29 @@ public class AddRepository{
         this.dataSource = dataSource;
     }
 
-    public Single<List<List<CurrencyRecord>>> getCurrencyList(){
-        return dataSource.requestFilteredCurrencyList()
-                .map(this::separateIntoLists);
+    public Single<List<BitmappedCurrencyRecord>> getBitmappedCurrencyRecords(){
+        return getCurrencyList()
+                .zipWith(getBitmaps(), (currencyRecords, bitmapWrappers) -> {
+            List<BitmappedCurrencyRecord> bitmappedCurrencyRecords = new ArrayList<>();
+            for (CurrencyRecord currencyRecord : currencyRecords) {
+                Bitmap bitmap = null;
+                for (BitmapWrapper bitmapWrapper :  bitmapWrappers) {
+                    if (bitmapWrapper.getCode().equalsIgnoreCase(currencyRecord.getCode().substring(0, 2))){
+                        bitmap = bitmapWrapper.getBitmap();
+                        break;
+                    }
+                }
+                bitmappedCurrencyRecords.add(new BitmappedCurrencyRecord(currencyRecord, bitmap));
+            }
+            return bitmappedCurrencyRecords;
+        });
     }
 
-    List<List<CurrencyRecord>> separateIntoLists(List<CurrencyRecord> list){
-        List<List<CurrencyRecord>> resultList = new ArrayList<>();
-        List<CurrencyRecord> tempList = new ArrayList<>();
+    public Single<List<BitmapWrapper>> getBitmaps(){
+        return dataSource.getAllBitmaps();
+    }
 
-        for (int i = 0; i < list.size(); i++) {
-            tempList.add(list.get(i));
-            if ((i + 1) % Constants.ADD_SCREEN_AMOUNT_OF_CURRENCIES_PER_ROW == 0){
-                resultList.add(tempList);
-                tempList = new ArrayList<>();
-            }
-            if ((i + 1) == list.size()){
-                if (tempList.size() != 0) {
-                    resultList.add(tempList);
-                }
-            }
-        }
-
-        return resultList;
+    public Single<List<CurrencyRecord>> getCurrencyList(){
+        return dataSource.requestFilteredCurrencyList();
     }
 }

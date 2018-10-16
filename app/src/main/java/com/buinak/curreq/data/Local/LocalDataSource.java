@@ -2,6 +2,7 @@ package com.buinak.curreq.data.Local;
 
 import android.graphics.Bitmap;
 
+import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
@@ -13,7 +14,9 @@ import io.reactivex.Single;
 public interface LocalDataSource {
     Single<RateRequestRecord> getLatestRecord();
     Single<List<CurrencyRecord>> getCurrencyList();
+
     Single<Bitmap> getBitmap(String code);
+    Single<List<BitmapWrapper>> getAllBitmaps();
 
     Completable cacheBitmaps();
 

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
 import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyRecyclerViewAdapter;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.recycler_view_add_row)
     RecyclerView recyclerView;
 
-    private List<CurrencyRecord> currencies;
+    private List<BitmappedCurrencyRecord> currencies;
 
     private CurrencyRecyclerViewAdapter adapter;
 
@@ -46,7 +46,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void bindCurrencies(List<CurrencyRecord> currencies) {
+    public void bindCurrencies(List<BitmappedCurrencyRecord> currencies) {
         this.currencies = currencies;
 
         adapter.setCurrencyRecordList(currencies);

@@ -5,7 +5,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.buinak.curreq.application.CurreqApplication;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.utils.Constants;
+import com.buinak.curreq.utils.ListUtils;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class AddViewModel extends ViewModel {
     @Inject
     AddRepository repository;
 
-    private MutableLiveData<List<List<CurrencyRecord>>> currencyList;
+    private MutableLiveData<List<List<BitmappedCurrencyRecord>>> currencyList;
 
     private Disposable currencyListSubscription;
 
@@ -27,12 +29,13 @@ public class AddViewModel extends ViewModel {
         CurreqApplication.inject(this);
 
         currencyList = new MutableLiveData<>();
-        currencyListSubscription = repository.getCurrencyList()
+        currencyListSubscription = repository.getBitmappedCurrencyRecords()
                 .subscribeOn(Schedulers.io())
+                .map(result -> ListUtils.separateIntoLists(result, Constants.ADD_SCREEN_AMOUNT_OF_CURRENCIES_PER_ROW))
                 .subscribe(result -> currencyList.postValue(result));
     }
 
-    public LiveData<List<List<CurrencyRecord>>> getCurrencyLists() {
+    public LiveData<List<List<BitmappedCurrencyRecord>>> getCurrencyLists() {
         return currencyList;
     }
 

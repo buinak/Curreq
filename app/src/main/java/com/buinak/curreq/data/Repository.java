@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
+import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 import com.buinak.curreq.utils.RepositoryUtils;
@@ -130,6 +131,11 @@ public class Repository implements DataSource {
     @Override
     public Single<Bitmap> getBitmap(String code) {
         return localDataSource.getBitmap(code);
+    }
+
+    @Override
+    public Single<List<BitmapWrapper>> getAllBitmaps() {
+        return localDataSource.getAllBitmaps();
     }
 
     private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult() {

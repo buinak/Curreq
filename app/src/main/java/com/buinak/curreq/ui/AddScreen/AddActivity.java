@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
 import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
-    private void updateRecyclerView(List<List<CurrencyRecord>> list){
+    private void updateRecyclerView(List<List<BitmappedCurrencyRecord>> list){
         adapter.setRows(list);
         adapter.notifyDataSetChanged();
     }

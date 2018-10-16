@@ -2,6 +2,7 @@ package com.buinak.curreq.data.Local;
 
 import android.graphics.Bitmap;
 
+import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
@@ -31,6 +32,11 @@ public class LocalDataHandler implements LocalDataSource{
     @Override
     public Single<Bitmap> getBitmap(String code) {
         return Single.just(localCacheHandler.getBitmap(code));
+    }
+
+    @Override
+    public Single<List<BitmapWrapper>> getAllBitmaps() {
+        return Single.just(localCacheHandler.getBitmaps());
     }
 
     @Override

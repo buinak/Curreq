@@ -2,6 +2,7 @@ package com.buinak.curreq.data;
 
 import android.graphics.Bitmap;
 
+import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 
@@ -20,6 +21,7 @@ public interface DataSource {
     Completable initialiseBitmaps();
 
     Single<Bitmap> getBitmap(String code);
+    Single<List<BitmapWrapper>> getAllBitmaps();
 
     Single<List<CurrencyRecord>> requestFullCurrencyList();
     Single<List<CurrencyRecord>> requestFilteredCurrencyList();

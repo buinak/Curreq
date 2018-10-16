@@ -7,15 +7,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.application.CurreqApplication;
-import com.buinak.curreq.data.DataSource;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-
-import javax.inject.Inject;
+import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.schedulers.Schedulers;
 
 public class CurrencyViewHolder extends RecyclerView.ViewHolder{
 
@@ -28,7 +23,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.imageView_currency)
     ImageView imageViewCurrency;
 
-    private CurrencyRecord currency;
+    private BitmappedCurrencyRecord currency;
 
 
     public CurrencyViewHolder(View itemView) {
@@ -41,11 +36,11 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
         constraintLayout.setMaxWidth(maxWidth);
     }
 
-    public void bindCurrency(CurrencyRecord currency){
+    public void bindCurrency(BitmappedCurrencyRecord currency){
         this.currency = currency;
         textViewCurrency.setText(currency.getCode());
 
         String code = currency.getCode().substring(0, 2).toLowerCase();
-
+        imageViewCurrency.setImageBitmap(currency.getBitmap());
     }
 }
