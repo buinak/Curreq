@@ -7,10 +7,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
+import com.buinak.curreq.application.CurreqApplication;
+import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.schedulers.Schedulers;
 
 public class CurrencyViewHolder extends RecyclerView.ViewHolder{
 

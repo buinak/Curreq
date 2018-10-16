@@ -42,7 +42,11 @@ public class LocalCacheHandler {
 
     public Bitmap getBitmap(String code){
         Bitmap bitmap = bitmaps.get(code);
-        return bitmaps.get(code);
+        if (bitmap != null) {
+            return bitmap;
+        } else {
+            return bitmaps.entrySet().iterator().next().getValue();
+        }
     }
 
     private Map<String, Bitmap> loadBitmaps() {
@@ -52,7 +56,14 @@ public class LocalCacheHandler {
             code = code.substring(0, 2).toLowerCase();
             int bitmapId = context.getResources().getIdentifier(code, "drawable", context.getPackageName());
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
-            map.put(code, bitmap);
+            if (bitmap != null) {
+                Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, 100, 60, false);
+                bitmap.recycle();
+                map.put(code, newBitmap);
+            } else {
+                map.put(code, bitmap);
+            }
+
         }
         bitmaps = map;
         return map;
