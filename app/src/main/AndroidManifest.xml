@@ -25,6 +25,7 @@
 
         <activity
             android:name=".ui.AddScreen.AddActivity"
+            android:theme="@style/DialogTheme"
             android:excludeFromRecents="true"
             android:parentActivityName=".ui.MainScreen.MainActivity" />
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-public class AddRepository{
+public class AddRepository {
 
     private DataSource dataSource;
 

@@ -9,8 +9,8 @@
     </style>
 
     <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowMinWidthMajor">96%</item>
-        <item name="android:windowMinWidthMinor">96%</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
 </resources>
