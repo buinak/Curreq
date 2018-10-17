@@ -13,18 +13,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.SingleSubject;
 
 public class RowViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.recycler_view_add_row)
     RecyclerView recyclerView;
 
-    private List<BitmappedCurrencyRecord> currencies;
-
     private CurrencyRecyclerViewAdapter adapter;
 
 
-    public RowViewHolder(View itemView, SingleSubject<Integer> maxWidthSubject) {
+    public RowViewHolder(View itemView, SingleSubject<Integer> maxWidthSubject, PublishSubject<String> selectedCodesSubject) {
         super(itemView);
 
         ButterKnife.bind(this, itemView);
@@ -39,7 +38,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        adapter = new CurrencyRecyclerViewAdapter(maxWidthSubject);
+        adapter = new CurrencyRecyclerViewAdapter(maxWidthSubject, selectedCodesSubject);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -47,8 +46,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindCurrencies(List<BitmappedCurrencyRecord> currencies) {
-        this.currencies = currencies;
-
         adapter.setCurrencyRecordList(currencies);
         recyclerView.setAdapter(adapter);
     }

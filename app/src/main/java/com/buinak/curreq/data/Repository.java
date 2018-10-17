@@ -1,6 +1,7 @@
 package com.buinak.curreq.data;
 
 import android.graphics.Bitmap;
+import android.util.Pair;
 
 import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
@@ -98,6 +99,11 @@ public class Repository implements DataSource {
         }
 
         return subject;
+    }
+
+    @Override
+    public Completable saveRatePair(Pair<String, String> pair) {
+        return Completable.complete();
     }
 
     @Override

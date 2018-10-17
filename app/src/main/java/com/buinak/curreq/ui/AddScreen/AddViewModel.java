@@ -3,17 +3,16 @@ package com.buinak.curreq.ui.AddScreen;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Pair;
 
 import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
-import com.buinak.curreq.utils.Constants;
-import com.buinak.curreq.utils.ListUtils;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class AddViewModel extends ViewModel {
@@ -21,28 +20,53 @@ public class AddViewModel extends ViewModel {
     @Inject
     AddRepository repository;
 
-    private MutableLiveData<List<List<BitmappedCurrencyRecord>>> currencyList;
+    private MutableLiveData<List<BitmappedCurrencyRecord>> currencyList;
+    private MutableLiveData<Boolean> finished;
 
-    private Disposable currencyListSubscription;
+    private CompositeDisposable subscriptions;
 
     public AddViewModel() {
         CurreqApplication.inject(this);
 
-        currencyList = new MutableLiveData<>();
-        currencyListSubscription = repository.getBitmappedCurrencyRecords()
-                .subscribeOn(Schedulers.io())
-                .map(result -> ListUtils.separateIntoLists(result, Constants.ADD_SCREEN_AMOUNT_OF_CURRENCIES_PER_ROW))
-                .subscribe(result -> currencyList.postValue(result));
+        subscriptions = new CompositeDisposable();
+
+        initialiseLiveData();
     }
 
-    public LiveData<List<List<BitmappedCurrencyRecord>>> getCurrencyLists() {
+    public void reset(){
+        repository.reset();
+        initialiseLiveData();
+    }
+
+    private void initialiseLiveData() {
+        currencyList = new MutableLiveData<>();
+        subscriptions.add(repository.getBitmappedCurrencyRecords()
+                .subscribeOn(Schedulers.io())
+                .subscribe(result -> currencyList.postValue(result)));
+
+        finished = new MutableLiveData<>();
+        subscriptions.add(repository.getFinished()
+                .subscribe(() -> finished.postValue(true)));
+    }
+
+    public LiveData<List<BitmappedCurrencyRecord>> getCurrencyLists() {
         return currencyList;
+    }
+
+    public LiveData<Boolean> getFinished() {
+        return finished;
+    }
+
+    public void onRatePairSelected(Pair<String, String> ratePair){
+        repository.saveRatePair(ratePair);
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        currencyListSubscription.dispose();
-        currencyListSubscription = null;
+        subscriptions.dispose();
+        subscriptions = null;
+
+        repository.dispose();
     }
 }

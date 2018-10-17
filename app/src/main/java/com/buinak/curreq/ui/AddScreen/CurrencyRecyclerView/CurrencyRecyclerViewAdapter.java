@@ -13,15 +13,18 @@ import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyViewHolder> {
 
     private List<BitmappedCurrencyRecord> currencyRecordList;
 
     private Single<Integer> maxWidthObservable;
+    private PublishSubject<String> selectedCodesSubject;
 
-    public CurrencyRecyclerViewAdapter(Single<Integer> maxWidthObservable) {
+    public CurrencyRecyclerViewAdapter(Single<Integer> maxWidthObservable, PublishSubject<String> selectedCodesSubject) {
         this.maxWidthObservable = maxWidthObservable;
+        this.selectedCodesSubject = selectedCodesSubject;
     }
 
     @NonNull
@@ -31,7 +34,7 @@ public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyVi
 
 
         View view = inflater.inflate(R.layout.activity_add_currency_item, parent, false);
-        CurrencyViewHolder viewHolder = new CurrencyViewHolder(view);
+        CurrencyViewHolder viewHolder = new CurrencyViewHolder(view, selectedCodesSubject);
         Disposable disposable = maxWidthObservable.subscribe
                 (i -> viewHolder.setMaxWidth(i / currencyRecordList.size()));
 

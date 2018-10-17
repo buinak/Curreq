@@ -1,6 +1,7 @@
 package com.buinak.curreq.data;
 
 import android.graphics.Bitmap;
+import android.util.Pair;
 
 import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
@@ -14,7 +15,6 @@ import io.reactivex.Single;
 public interface DataSource {
 
     Single<RateRequestRecord> requestRecord();
-
     Single<RateRequestRecord> requestNewRecord();
 
     Completable initialiseRepositoryIfFirstStart();
@@ -25,6 +25,8 @@ public interface DataSource {
 
     Single<List<CurrencyRecord>> requestFullCurrencyList();
     Single<List<CurrencyRecord>> requestFilteredCurrencyList();
+
+    Completable saveRatePair(Pair<String, String> pair);
 
     void dispose();
 
