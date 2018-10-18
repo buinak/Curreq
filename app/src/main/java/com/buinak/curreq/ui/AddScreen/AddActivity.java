@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
 import com.buinak.curreq.R;
+import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
 import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
 import com.buinak.curreq.utils.Constants;
@@ -80,6 +81,7 @@ public class AddActivity extends AppCompatActivity {
 
         PublishSubject<String> selectedRatesSubject = PublishSubject.create();
         selectedRates = selectedRatesSubject;
+        CurreqApplication.setUpAddModule(selectedRatesSubject);
 
         disposable = selectedRates
                 .buffer(2)
@@ -89,7 +91,7 @@ public class AddActivity extends AppCompatActivity {
                     viewModel.onRatePairSelected(result);
                 });
 
-        adapter = new RowRecyclerViewAdapter(new ArrayList<>(), selectedRatesSubject);
+        adapter = new RowRecyclerViewAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
     }
 

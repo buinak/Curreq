@@ -4,15 +4,21 @@ import android.app.Application;
 
 import com.buinak.curreq.di.ApplicationComponent;
 import com.buinak.curreq.di.DaggerApplicationComponent;
+import com.buinak.curreq.ui.AddScreen.AddModule;
 import com.buinak.curreq.ui.AddScreen.AddViewModel;
+import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.LoadingScreen.LoadingViewModel;
 
+import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 public class CurreqApplication extends Application {
 
     private static ApplicationComponent repositoryComponent;
+    private static ApplicationModule applicationModule;
+
+    private static AddModule addModule;
 
     public static final String DATABASE_NAME = "curreq_db.realm";
 
@@ -27,8 +33,11 @@ public class CurreqApplication extends Application {
                 .build();
         Realm.setDefaultConfiguration(databaseConfig);
 
+        applicationModule = new ApplicationModule(this);
+
         repositoryComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
+                .addModule(new AddModule())
+                .applicationModule(applicationModule)
                 .build();
     }
 
@@ -38,6 +47,18 @@ public class CurreqApplication extends Application {
 
     public static void inject(AddViewModel viewModel){
         repositoryComponent.inject(viewModel);
+    }
+
+    public static void setUpAddModule(PublishSubject<String> subject){
+        addModule = new AddModule(subject);
+    }
+
+    public static void inject(CurrencyViewHolder viewHolder){
+        DaggerApplicationComponent.builder()
+                .applicationModule(applicationModule)
+                .addModule(addModule)
+                .build()
+                .inject(viewHolder);
     }
 
 }

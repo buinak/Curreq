@@ -8,8 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
+import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
 import com.buinak.curreq.utils.ViewUtils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,15 +34,16 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
 
     private boolean isToggled;
 
-    private PublishSubject<String> selectedCodesSubject;
+    @Inject
+    PublishSubject<String> selectedCodesSubject;
 
     private BitmappedCurrencyRecord currency;
 
 
-    public CurrencyViewHolder(View itemView, PublishSubject<String> selectedCodesSubject) {
+    public CurrencyViewHolder(View itemView) {
         super(itemView);
 
-        this.selectedCodesSubject = selectedCodesSubject;
+        CurreqApplication.inject(this);
 
         ButterKnife.bind(this, itemView);
         isToggled = false;

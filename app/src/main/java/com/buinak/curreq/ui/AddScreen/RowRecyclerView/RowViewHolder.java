@@ -23,7 +23,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder {
     private CurrencyRecyclerViewAdapter adapter;
 
 
-    public RowViewHolder(View itemView, SingleSubject<Integer> maxWidthSubject, PublishSubject<String> selectedCodesSubject) {
+    public RowViewHolder(View itemView, SingleSubject<Integer> maxWidthSubject) {
         super(itemView);
 
         ButterKnife.bind(this, itemView);
@@ -38,7 +38,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        adapter = new CurrencyRecyclerViewAdapter(maxWidthSubject, selectedCodesSubject);
+        adapter = new CurrencyRecyclerViewAdapter(maxWidthSubject);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
