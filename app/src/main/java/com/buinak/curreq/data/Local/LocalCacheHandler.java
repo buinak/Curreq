@@ -21,8 +21,6 @@ public class LocalCacheHandler {
 
     private List<BitmapWrapper> bitmaps;
 
-    Disposable disposable;
-
     public LocalCacheHandler(Context context) {
         this.context = context;
         bitmaps = new ArrayList<>();
@@ -31,13 +29,8 @@ public class LocalCacheHandler {
     public Completable initialiseBitmaps() {
         bitmaps = new ArrayList<>();
 
-        CompletableSubject completable = CompletableSubject.create();
-
-        disposable = Completable.fromCallable(this::loadBitmaps)
-                .subscribeOn(Schedulers.computation())
-                .subscribe(completable::onComplete);
-
-        return completable;
+        return Completable.fromCallable(this::loadBitmaps)
+                .subscribeOn(Schedulers.computation());
     }
 
 

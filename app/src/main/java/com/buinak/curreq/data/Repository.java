@@ -52,18 +52,14 @@ public class Repository implements DataSource {
 
     @Override
     public Single<RateRequestRecord> requestNewRecord() {
-        SingleSubject<RateRequestRecord> subject = SingleSubject.create();
         if (remoteDataSource.isReady()) {
             return remoteDataSource.getRates()
                     .subscribeOn(Schedulers.io())
                     .doAfterSuccess(result -> localDataSource.saveRecord(result));
         } else {
-            disposable.add(initialiseRemoteDataSourceAndGetResult()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(subject::onSuccess));
+            return initialiseRemoteDataSourceAndGetResult()
+                    .subscribeOn(Schedulers.io());
         }
-
-        return subject;
     }
 
     @Override
@@ -80,25 +76,17 @@ public class Repository implements DataSource {
 
     @Override
     public Single<List<CurrencyRecord>> requestFilteredCurrencyList() {
-        SingleSubject<List<CurrencyRecord>> subject = SingleSubject.create();
 
         if (localDataSource.hasCurrencyRecords()) {
-            disposable.add(localDataSource.getCurrencyList()
+            return localDataSource.getCurrencyList()
                     .subscribeOn(Schedulers.io())
-                    .map(RepositoryUtils::filterList)
-                    .subscribe(subject::onSuccess));
+                    .map(RepositoryUtils::filterList);
         } else {
-            disposable.add(remoteDataSource.getCurrencyList()
+            return remoteDataSource.getCurrencyList()
                     .subscribeOn(Schedulers.io())
                     .map(RepositoryUtils::filterList)
-                    .subscribe(result -> {
-                                localDataSource.saveCurrencies(result);
-                                subject.onSuccess(result);
-                            }
-                    ));
+                    .doOnSuccess(result -> localDataSource.saveCurrencies(result));
         }
-
-        return subject;
     }
 
     @Override
@@ -112,21 +100,11 @@ public class Repository implements DataSource {
             return Completable.complete();
         }
 
-        CompletableSubject completable = CompletableSubject.create();
-        disposable.add(remoteDataSource.getCurrencyList()
+        return Completable.fromSingle(remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())
-                .subscribe(result -> {
-                    localDataSource.saveCurrencies(result);
-                    disposable.add(remoteDataSource.getRates()
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(r -> {
-                                localDataSource.saveRecord(r);
-                                completable.onComplete();
-                            }));
-
-                }));
-
-        return completable;
+                .doOnSuccess(result -> localDataSource.saveCurrencies(result))
+                .flatMap(result -> remoteDataSource.getRates())
+                .doOnSuccess(rateRecord -> localDataSource.saveRecord(rateRecord)));
     }
 
     @Override
@@ -145,20 +123,11 @@ public class Repository implements DataSource {
     }
 
     private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult() {
-        SingleSubject<RateRequestRecord> readySubject = SingleSubject.create();
-        disposable.add(remoteDataSource.getCurrencyList()
+        return remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())
-                .subscribe(result -> {
-                    localDataSource.saveCurrencies(result);
-                    disposable.add(remoteDataSource.getRates()
-                            .subscribe(r -> {
-                                localDataSource.saveRecord(r);
-                                readySubject.onSuccess(r);
-                            }));
-
-                }));
-
-        return readySubject;
+                .doOnSuccess(currencyRecords -> localDataSource.saveCurrencies(currencyRecords))
+                .flatMap(r -> remoteDataSource.getRates())
+                .doOnSuccess(result -> localDataSource.saveRecord(result));
     }
 
 
