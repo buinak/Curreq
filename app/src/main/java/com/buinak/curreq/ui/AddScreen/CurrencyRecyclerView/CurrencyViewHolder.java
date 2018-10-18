@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.buinak.curreq.R;
 import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.ui.AddScreen.AddActivity;
 import com.buinak.curreq.utils.ViewUtils;
 
 import javax.inject.Inject;
@@ -43,7 +44,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
     public CurrencyViewHolder(View itemView) {
         super(itemView);
 
-        CurreqApplication.inject(this);
+        AddActivity.inject(this);
 
         ButterKnife.bind(this, itemView);
         isToggled = false;

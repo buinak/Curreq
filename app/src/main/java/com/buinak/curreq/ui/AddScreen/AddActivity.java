@@ -11,6 +11,7 @@ import android.util.Pair;
 import com.buinak.curreq.R;
 import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
 import com.buinak.curreq.utils.Constants;
 import com.buinak.curreq.utils.ListUtils;
@@ -34,6 +35,8 @@ public class AddActivity extends AppCompatActivity {
 
     private Observable<String> selectedRates;
     private Disposable disposable;
+
+    private static AddScreenObservablesModule addScreenObservablesModule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,7 @@ public class AddActivity extends AppCompatActivity {
 
         PublishSubject<String> selectedRatesSubject = PublishSubject.create();
         selectedRates = selectedRatesSubject;
-        CurreqApplication.setUpAddModule(selectedRatesSubject);
+        addScreenObservablesModule = new AddScreenObservablesModule(selectedRatesSubject);
 
         disposable = selectedRates
                 .buffer(2)
@@ -100,5 +103,12 @@ public class AddActivity extends AppCompatActivity {
         super.onDestroy();
         disposable.dispose();
         disposable = null;
+    }
+
+    public static void inject(CurrencyViewHolder viewHolder){
+        DaggerAddComponent.builder()
+                .addScreenObservablesModule(addScreenObservablesModule)
+                .build()
+                .inject(viewHolder);
     }
 }
