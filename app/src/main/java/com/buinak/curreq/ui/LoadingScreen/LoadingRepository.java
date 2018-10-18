@@ -3,6 +3,9 @@ package com.buinak.curreq.ui.LoadingScreen;
 import com.buinak.curreq.data.DataSource;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.CompletableSubject;
 
@@ -14,8 +17,11 @@ public class LoadingRepository {
 
     private int completedAmount;
 
+    private CompositeDisposable disposable;
+
     public LoadingRepository(DataSource dataSource) {
         this.dataSource = dataSource;
+        disposable = new CompositeDisposable();
 
         completedAmount = 0;
     }
@@ -23,23 +29,23 @@ public class LoadingRepository {
     public Completable getIsReady() {
         CompletableSubject completable = CompletableSubject.create();
 
-        dataSource.initialiseRepositoryIfFirstStart()
+        disposable.add(dataSource.initialiseRepositoryIfFirstStart()
                 .subscribeOn(Schedulers.io())
                 .subscribe(() -> {
                     this.completedAmount++;
                     if (completedAmount == AMOUNT_OF_INITIALISATIONS){
                         completable.onComplete();
                     }
-                });
+                }));
 
-        dataSource.initialiseBitmaps()
+        disposable.add(dataSource.initialiseBitmaps()
                 .subscribeOn(Schedulers.computation())
                 .subscribe(() -> {
                     this.completedAmount++;
                     if (completedAmount == AMOUNT_OF_INITIALISATIONS){
                         completable.onComplete();
                     }
-                });
+                }));
 
         return completable;
     }
