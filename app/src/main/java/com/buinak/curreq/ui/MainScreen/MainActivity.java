@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        dataSource.getAllSavedRecords().subscribe(result -> {
+        dataSource.getAllSavedRecords().observe(this, result -> {
             System.out.println();
             System.out.println();
         });

@@ -1,5 +1,6 @@
 package com.buinak.curreq.data.Local;
 
+import android.arch.lifecycle.LiveData;
 import android.graphics.Bitmap;
 import android.util.Pair;
 
@@ -11,7 +12,6 @@ import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface LocalDataSource {
@@ -21,7 +21,7 @@ public interface LocalDataSource {
     Single<Bitmap> getBitmap(String code);
     Single<List<BitmapWrapper>> getAllBitmaps();
 
-    Observable<List<SavedRateRecord>> getAllSavedRecords();
+    LiveData<List<SavedRateRecord>> getAllSavedRecords();
 
     Completable cacheBitmaps();
 

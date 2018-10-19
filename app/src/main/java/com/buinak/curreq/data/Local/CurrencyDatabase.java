@@ -1,5 +1,7 @@
 package com.buinak.curreq.data.Local;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
@@ -15,9 +17,7 @@ import com.buinak.curreq.entities.RealmEntity.RealmSavedRateRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
@@ -203,7 +203,7 @@ public class CurrencyDatabase {
         }
     }
 
-    Observable<List<SavedRateRecord>> getAllSavedRecords() {
+    LiveData<List<SavedRateRecord>> getAllSavedRecords() {
         if (disposable != null){
             disposable.dispose();
             disposable = null;
@@ -212,7 +212,7 @@ public class CurrencyDatabase {
         disposable = new CompositeDisposable();
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmQuery<RealmSavedRateRecord> records = realm.where(RealmSavedRateRecord.class);
-            PublishSubject<List<SavedRateRecord>> publishSubject = PublishSubject.create();
+            MutableLiveData<List<SavedRateRecord>> liveData = new MutableLiveData<>();
             if (realm.isAutoRefresh()) {
                 disposable.add(records.findAllAsync()
                         .asFlowable()
@@ -228,9 +228,9 @@ public class CurrencyDatabase {
                                 SavedRateRecord savedRateRecord = new SavedRateRecord(baseCurrency, currency, rate);
                                 newList.add(savedRateRecord);
                             }
-                            publishSubject.onNext(newList);
+                            liveData.postValue(newList);
                         }));
-                return publishSubject;
+                return liveData;
             } else {
                 disposable.add(records.findAll()
                         .asFlowable()
@@ -246,9 +246,9 @@ public class CurrencyDatabase {
                                 SavedRateRecord savedRateRecord = new SavedRateRecord(baseCurrency, currency, rate);
                                 newList.add(savedRateRecord);
                             }
-                            publishSubject.onNext(newList);
+                            liveData.postValue(newList);
                         }));
-                return publishSubject;
+                return liveData;
             }
         }
     }
