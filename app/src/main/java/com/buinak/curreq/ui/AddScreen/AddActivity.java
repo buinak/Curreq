@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
@@ -51,11 +51,11 @@ public class AddActivity extends AppCompatActivity {
 
         viewModel.getCurrencyLists()
                 .observe(this, list -> {
-                    if (list == null  || list.isEmpty()){
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     int orientation = getResources().getConfiguration().orientation;
-                    if (orientation == Configuration.ORIENTATION_PORTRAIT){
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                         updateRecyclerView(ListUtils.separateIntoLists
                                 (list, Constants.ADD_SCREEN_AMOUNT_OF_CURRENCIES_PER_ROW_PORTRAIT));
                     } else {
@@ -66,19 +66,21 @@ public class AddActivity extends AppCompatActivity {
 
         viewModel.getFinished()
                 .observe(this, isFinished -> {
-                    if (isFinished){
-                        finish();
+                    if (isFinished != null) {
+                        if (isFinished) {
+                            finish();
+                        }
                     }
                 });
 
     }
 
-    private void updateRecyclerView(List<List<BitmappedCurrencyRecord>> list){
+    private void updateRecyclerView(List<List<CurrencyRecordBitmapWrapper>> list) {
         adapter.setRows(list);
         adapter.notifyDataSetChanged();
     }
 
-    private void initialiseRecyclerView(){
+    private void initialiseRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -106,7 +108,7 @@ public class AddActivity extends AppCompatActivity {
         disposable = null;
     }
 
-    public static void inject(CurrencyViewHolder viewHolder){
+    public static void inject(CurrencyViewHolder viewHolder) {
         DaggerAddComponent.builder()
                 .addScreenObservablesModule(addScreenObservablesModule)
                 .build()

@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
 import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyRecyclerViewAdapter;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.SingleSubject;
 
 public class RowViewHolder extends RecyclerView.ViewHolder {
@@ -45,7 +44,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void bindCurrencies(List<BitmappedCurrencyRecord> currencies) {
+    public void bindCurrencies(List<CurrencyRecordBitmapWrapper> currencies) {
         adapter.setCurrencyRecordList(currencies);
         recyclerView.setAdapter(adapter);
     }

@@ -7,17 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
 
 import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.subjects.PublishSubject;
 
 public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyViewHolder> {
 
-    private List<BitmappedCurrencyRecord> currencyRecordList;
+    private List<CurrencyRecordBitmapWrapper> currencyRecordList;
 
     private Single<Integer> maxWidthObservable;
 
@@ -49,7 +48,7 @@ public class CurrencyRecyclerViewAdapter extends RecyclerView.Adapter<CurrencyVi
         return currencyRecordList.size();
     }
 
-    public void setCurrencyRecordList(List<BitmappedCurrencyRecord> currencyRecordList) {
+    public void setCurrencyRecordList(List<CurrencyRecordBitmapWrapper> currencyRecordList) {
         this.currencyRecordList = currencyRecordList;
     }
 }

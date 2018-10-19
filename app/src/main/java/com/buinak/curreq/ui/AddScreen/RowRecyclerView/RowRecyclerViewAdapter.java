@@ -7,22 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
 
 import java.util.List;
 
-import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.SingleSubject;
 
 public class RowRecyclerViewAdapter extends RecyclerView.Adapter<RowViewHolder> {
 
-    private List<List<BitmappedCurrencyRecord>> rows;
+    private List<List<CurrencyRecordBitmapWrapper>> rows;
 
     private View view;
 
     private final SingleSubject<Integer> maxWidthSubject;
 
-    public RowRecyclerViewAdapter(List<List<BitmappedCurrencyRecord>> rows) {
+    public RowRecyclerViewAdapter(List<List<CurrencyRecordBitmapWrapper>> rows) {
         this.rows = rows;
         maxWidthSubject = SingleSubject.create();
     }
@@ -47,7 +46,7 @@ public class RowRecyclerViewAdapter extends RecyclerView.Adapter<RowViewHolder> 
         return rows.size();
     }
 
-    public void setRows(List<List<BitmappedCurrencyRecord>> rows) {
+    public void setRows(List<List<CurrencyRecordBitmapWrapper>> rows) {
         this.rows = rows;
     }
 }

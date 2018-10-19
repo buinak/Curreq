@@ -10,7 +10,6 @@ public class RealmSavedRateRecord extends RealmObject {
     private long baseCurrency;
     private long currency;
 
-
     @Ignore
     private CurrencyRecord baseCurrencyRecord;
 

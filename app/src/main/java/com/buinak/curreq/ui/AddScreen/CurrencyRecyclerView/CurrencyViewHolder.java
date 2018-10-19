@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
 import com.buinak.curreq.utils.ViewUtils;
@@ -38,7 +38,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
     @Inject
     PublishSubject<CurrencyRecord> selectedCodesSubject;
 
-    private BitmappedCurrencyRecord currency;
+    private CurrencyRecordBitmapWrapper currency;
 
 
     public CurrencyViewHolder(View itemView) {
@@ -71,7 +71,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
         constraintLayout.setMaxWidth(maxWidth);
     }
 
-    public void bindCurrency(BitmappedCurrencyRecord currency){
+    public void bindCurrency(CurrencyRecordBitmapWrapper currency){
         this.currency = currency;
         textViewCurrency.setText(currency.getCode());
 

@@ -5,7 +5,7 @@ import android.util.Pair;
 
 import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 
 import java.util.ArrayList;
@@ -33,10 +33,10 @@ public class AddRepository {
         finished = CompletableSubject.create();
     }
 
-    public Single<List<BitmappedCurrencyRecord>> getBitmappedCurrencyRecords(){
+    public Single<List<CurrencyRecordBitmapWrapper>> getBitmappedCurrencyRecords(){
         return getCurrencyList()
                 .zipWith(getBitmaps(), (currencyRecords, bitmapWrappers) -> {
-            List<BitmappedCurrencyRecord> bitmappedCurrencyRecords = new ArrayList<>();
+            List<CurrencyRecordBitmapWrapper> currencyRecordBitmapWrappers = new ArrayList<>();
             for (CurrencyRecord currencyRecord : currencyRecords) {
                 Bitmap bitmap = null;
                 for (BitmapWrapper bitmapWrapper :  bitmapWrappers) {
@@ -45,9 +45,9 @@ public class AddRepository {
                         break;
                     }
                 }
-                bitmappedCurrencyRecords.add(new BitmappedCurrencyRecord(currencyRecord, bitmap));
+                currencyRecordBitmapWrappers.add(new CurrencyRecordBitmapWrapper(currencyRecord, bitmap));
             }
-            return bitmappedCurrencyRecords;
+            return currencyRecordBitmapWrappers;
         });
     }
 
