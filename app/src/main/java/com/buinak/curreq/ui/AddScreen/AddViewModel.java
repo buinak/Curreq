@@ -7,6 +7,7 @@ import android.util.Pair;
 
 import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class AddViewModel extends ViewModel {
         return finished;
     }
 
-    public void onRatePairSelected(Pair<String, String> ratePair){
+    public void onRatePairSelected(Pair<CurrencyRecord, CurrencyRecord> ratePair){
         repository.saveRatePair(ratePair);
     }
 

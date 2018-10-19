@@ -26,7 +26,7 @@ public interface DataSource {
     Single<List<CurrencyRecord>> requestFullCurrencyList();
     Single<List<CurrencyRecord>> requestFilteredCurrencyList();
 
-    Completable saveRatePair(Pair<String, String> pair);
+    Completable saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair);
 
     void dispose();
 

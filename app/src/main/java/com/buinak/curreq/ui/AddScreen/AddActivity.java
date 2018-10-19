@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.BitmappedCurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
 import com.buinak.curreq.utils.Constants;
@@ -33,7 +33,7 @@ public class AddActivity extends AppCompatActivity {
 
     private AddViewModel viewModel;
 
-    private Observable<String> selectedRates;
+    private Observable<CurrencyRecord> selectedRates;
     private Disposable disposable;
 
     private static AddScreenObservablesModule addScreenObservablesModule;
@@ -82,13 +82,14 @@ public class AddActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        PublishSubject<String> selectedRatesSubject = PublishSubject.create();
+        PublishSubject<CurrencyRecord> selectedRatesSubject = PublishSubject.create();
         selectedRates = selectedRatesSubject;
         addScreenObservablesModule = new AddScreenObservablesModule(selectedRatesSubject);
 
         disposable = selectedRates
                 .buffer(2)
-                .filter(bufferedList -> !bufferedList.get(0).equals(bufferedList.get(1)))
+                .filter(bufferedList -> !bufferedList.get(0).getCode()
+                        .equalsIgnoreCase(bufferedList.get(1).getCode()))
                 .map(bufferedList -> new Pair<>(bufferedList.get(0), bufferedList.get(1)))
                 .subscribe(result -> {
                     viewModel.onRatePairSelected(result);

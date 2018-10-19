@@ -16,8 +16,6 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.CompletableSubject;
-import io.reactivex.subjects.SingleSubject;
 
 public class Repository implements DataSource {
 
@@ -90,8 +88,8 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Completable saveRatePair(Pair<String, String> pair) {
-        return Completable.complete();
+    public Completable saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair) {
+        return Completable.fromAction(() -> localDataSource.saveRate(pair));
     }
 
     @Override

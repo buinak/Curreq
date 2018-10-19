@@ -1,6 +1,7 @@
 package com.buinak.curreq.data.Local;
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRecord;
@@ -8,13 +9,16 @@ import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmCurrencyRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmRateRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmRateRequestRecord;
+import com.buinak.curreq.entities.RealmEntity.RealmSavedRateRecord;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.reactivex.Flowable;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class CurrencyDatabase {
@@ -145,6 +149,73 @@ public class CurrencyDatabase {
                 }
             });
         }
+    }
+
+    public void saveRate(Pair<CurrencyRecord, CurrencyRecord> pair) {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            long baseCurrencyId = realm.where(RealmCurrencyRecord.class).equalTo("code", pair.first.getCode()).findFirst().getId();
+            long currencyId = realm.where(RealmCurrencyRecord.class).equalTo("code", pair.second.getCode()).findFirst().getId();
+
+            RealmSavedRateRecord record = new RealmSavedRateRecord(baseCurrencyId, currencyId);
+            realm.executeTransaction(r -> r.copyToRealm(record));
+        }
+    }
+
+
+    private double getRate(long baseCurrencyId, long currencyId) {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            RealmCurrencyRecord realmBaseCurrency = realm.where(RealmCurrencyRecord.class)
+                    .equalTo("id", baseCurrencyId)
+                    .findFirst();
+            RealmCurrencyRecord realmCurrency = realm.where(RealmCurrencyRecord.class)
+                    .equalTo("id", currencyId)
+                    .findFirst();
+
+            if (realmBaseCurrency.getCode().equalsIgnoreCase("EUR")) {
+                double rate = realm.where(RealmRateRecord.class)
+                        .equalTo("currencyId", currencyId)
+                        .findFirst()
+                        .getValue();
+                return rate;
+            } else if (realmCurrency.getCode().equalsIgnoreCase("EUR")) {
+                double rate = (1 / realm.where(RealmRateRecord.class)
+                        .equalTo("currencyId", currencyId)
+                        .findFirst()
+                        .getValue());
+                return rate;
+            } else {
+
+                double realmBaseRecord = realm.where(RealmRateRecord.class)
+                        .equalTo("currencyId", baseCurrencyId)
+                        .findFirst()
+                        .getValue();
+
+                double realmCurrencyRecord = realm.where(RealmRateRecord.class)
+                        .equalTo("currencyId", currencyId)
+                        .findFirst()
+                        .getValue();
+
+                return realmCurrencyRecord / realmBaseRecord;
+            }
+        }
+    }
+
+    Flowable<List<RealmSavedRateRecord>> getAllSavedRecords() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            RealmQuery<RealmSavedRateRecord> records = realm.where(RealmSavedRateRecord.class);
+            Flowable<RealmResults<RealmSavedRateRecord>> flowable;
+            if (realm.isAutoRefresh()) {
+                records.findAllAsync()
+                        .asFlowable()
+                        .flatMap(result -> Flowable.fromIterable(result))
+                        .map(result -> {
+                            double rate = result.getRate();
+                            System.out.println();
+                            return null;
+                        });
+            }
+        }
+        return null;
     }
 
     public boolean hasCurrencyRateRecords() {

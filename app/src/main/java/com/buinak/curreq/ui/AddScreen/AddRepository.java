@@ -59,9 +59,12 @@ public class AddRepository {
         return dataSource.requestFilteredCurrencyList();
     }
 
-    public void saveRatePair(Pair<String, String> pair){
+    public void saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair){
         disposable = dataSource.saveRatePair(pair)
-                .subscribe(() -> finished.onComplete());
+                .subscribe(() -> finished.onComplete(), e -> {
+                    System.out.println();
+                    System.out.println();
+                });
     }
 
     public Completable getFinished() {

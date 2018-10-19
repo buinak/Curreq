@@ -1,14 +1,17 @@
 package com.buinak.curreq.data.Local;
 
 import android.graphics.Bitmap;
+import android.util.Pair;
 
 import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.RealmEntity.RealmSavedRateRecord;
 
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 public class LocalDataHandler implements LocalDataSource{
@@ -40,6 +43,11 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
+    public Flowable<List<RealmSavedRateRecord>> getAllSavedRecords() {
+        return null;
+    }
+
+    @Override
     public Completable cacheBitmaps() {
         return localCacheHandler.initialiseBitmaps();
     }
@@ -52,6 +60,11 @@ public class LocalDataHandler implements LocalDataSource{
     @Override
     public void saveCurrencies(List<CurrencyRecord> currencyRecordList) {
         database.saveCurrencies(currencyRecordList);
+    }
+
+    @Override
+    public void saveRate(Pair<CurrencyRecord, CurrencyRecord> pair) {
+        database.saveRate(pair);
     }
 
     @Override
