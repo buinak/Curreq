@@ -4,12 +4,10 @@ import android.app.Application;
 
 import com.buinak.curreq.di.ApplicationComponent;
 import com.buinak.curreq.di.DaggerApplicationComponent;
-import com.buinak.curreq.ui.AddScreen.AddScreenModule;
 import com.buinak.curreq.ui.AddScreen.AddViewModel;
-import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.LoadingScreen.LoadingViewModel;
+import com.buinak.curreq.ui.MainScreen.MainActivity;
 
-import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -44,6 +42,10 @@ public class CurreqApplication extends Application {
 
     public static void inject(AddViewModel viewModel){
         repositoryComponent.inject(viewModel);
+    }
+
+    public static void inject(MainActivity activity){
+        repositoryComponent.inject(activity);
     }
 
 }

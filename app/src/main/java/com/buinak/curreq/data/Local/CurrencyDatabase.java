@@ -6,6 +6,7 @@ import android.util.Pair;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmCurrencyRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmRateRecord;
 import com.buinak.curreq.entities.RealmEntity.RealmRateRequestRecord;
@@ -13,15 +14,18 @@ import com.buinak.curreq.entities.RealmEntity.RealmSavedRateRecord;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class CurrencyDatabase {
+
+    private CompositeDisposable disposable;
 
     public CurrencyDatabase() {
     }
@@ -52,7 +56,8 @@ public class CurrencyDatabase {
         RateRequestRecord record;
         try {
             realm = Realm.getDefaultInstance();
-            record = processRecord(realm.where(RealmRateRequestRecord.class).findAll().last());
+            record = processRecord(realm.copyFromRealm(realm.where(RealmRateRequestRecord.class).findAll().last()));
+            System.out.println();
         } finally {
             if (realm != null) {
                 realm.close();
@@ -98,12 +103,12 @@ public class CurrencyDatabase {
                 RealmList<RealmRateRecord> list = new RealmList<>();
                 for (RateRecord rateRecord :
                         record.getRateRecords()) {
-                    long baseCurrencyId = r.where(RealmCurrencyRecord.class)
+                    String baseCurrencyId = r.where(RealmCurrencyRecord.class)
                             .equalTo("code", rateRecord.getBaseCurrency().getCode())
                             .findFirst()
                             .getId();
 
-                    long currencyId = r.where(RealmCurrencyRecord.class)
+                    String currencyId = r.where(RealmCurrencyRecord.class)
                             .equalTo("code", rateRecord.getCurrency().getCode())
                             .findFirst()
                             .getId();
@@ -130,19 +135,8 @@ public class CurrencyDatabase {
                             .findAll()
                             .size() == 0) {
 
-                        //generate a new, unique UUID
-                        long newUUID = UUID.randomUUID().getMostSignificantBits();
-                        //make sure there's no other records with the same UUID, there can't be any collision
-                        while ((r.where(RealmCurrencyRecord.class)
-                                .equalTo("id", newUUID)
-                                .findAll()).size() != 0) {
-                            newUUID = UUID.randomUUID().getMostSignificantBits();
-                        }
-
                         RealmCurrencyRecord realmCurrencyRecord =
-                                new RealmCurrencyRecord(newUUID,
-                                        record.getCode(),
-                                        record.getName());
+                                new RealmCurrencyRecord(record.getCode(), record.getName());
 
                         r.copyToRealm(realmCurrencyRecord);
                     }
@@ -153,8 +147,8 @@ public class CurrencyDatabase {
 
     public void saveRate(Pair<CurrencyRecord, CurrencyRecord> pair) {
         try (Realm realm = Realm.getDefaultInstance()) {
-            long baseCurrencyId = realm.where(RealmCurrencyRecord.class).equalTo("code", pair.first.getCode()).findFirst().getId();
-            long currencyId = realm.where(RealmCurrencyRecord.class).equalTo("code", pair.second.getCode()).findFirst().getId();
+            String baseCurrencyId = realm.where(RealmCurrencyRecord.class).equalTo("code", pair.first.getCode()).findFirst().getId();
+            String currencyId = realm.where(RealmCurrencyRecord.class).equalTo("code", pair.second.getCode()).findFirst().getId();
 
             RealmSavedRateRecord record = new RealmSavedRateRecord(baseCurrencyId, currencyId);
             realm.executeTransaction(r -> r.copyToRealm(record));
@@ -162,7 +156,7 @@ public class CurrencyDatabase {
     }
 
 
-    private double getRate(long baseCurrencyId, long currencyId) {
+    private double getRate(String baseCurrencyId, String currencyId) {
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmCurrencyRecord realmBaseCurrency = realm.where(RealmCurrencyRecord.class)
                     .equalTo("id", baseCurrencyId)
@@ -200,22 +194,63 @@ public class CurrencyDatabase {
         }
     }
 
-    Flowable<List<RealmSavedRateRecord>> getAllSavedRecords() {
+    private CurrencyRecord getCurrencyRecord(String currencyId) {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            RealmCurrencyRecord realmCurrencyRecord = realm.where(RealmCurrencyRecord.class)
+                    .equalTo("id", currencyId)
+                    .findFirst();
+            return new CurrencyRecord(realmCurrencyRecord.getCode(), realmCurrencyRecord.getName());
+        }
+    }
+
+    Observable<List<SavedRateRecord>> getAllSavedRecords() {
+        if (disposable != null){
+            disposable.dispose();
+            disposable = null;
+        }
+
+        disposable = new CompositeDisposable();
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmQuery<RealmSavedRateRecord> records = realm.where(RealmSavedRateRecord.class);
-            Flowable<RealmResults<RealmSavedRateRecord>> flowable;
+            PublishSubject<List<SavedRateRecord>> publishSubject = PublishSubject.create();
             if (realm.isAutoRefresh()) {
-                records.findAllAsync()
+                disposable.add(records.findAllAsync()
                         .asFlowable()
-                        .flatMap(result -> Flowable.fromIterable(result))
-                        .map(result -> {
-                            double rate = result.getRate();
-                            System.out.println();
-                            return null;
-                        });
+                        .subscribe(list -> {
+                            List<SavedRateRecord> newList = new ArrayList<>(list.size());
+                            for (RealmSavedRateRecord result :
+                                    list) {
+                                double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
+
+                                CurrencyRecord baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
+                                CurrencyRecord currency = getCurrencyRecord(result.getCurrencyId());
+
+                                SavedRateRecord savedRateRecord = new SavedRateRecord(baseCurrency, currency, rate);
+                                newList.add(savedRateRecord);
+                            }
+                            publishSubject.onNext(newList);
+                        }));
+                return publishSubject;
+            } else {
+                disposable.add(records.findAll()
+                        .asFlowable()
+                        .subscribe(list -> {
+                            List<SavedRateRecord> newList = new ArrayList<>(list.size());
+                            for (RealmSavedRateRecord result :
+                                    list) {
+                                double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
+
+                                CurrencyRecord baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
+                                CurrencyRecord currency = getCurrencyRecord(result.getCurrencyId());
+
+                                SavedRateRecord savedRateRecord = new SavedRateRecord(baseCurrency, currency, rate);
+                                newList.add(savedRateRecord);
+                            }
+                            publishSubject.onNext(newList);
+                        }));
+                return publishSubject;
             }
         }
-        return null;
     }
 
     public boolean hasCurrencyRateRecords() {

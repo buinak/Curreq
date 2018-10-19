@@ -6,10 +6,12 @@ import android.util.Pair;
 import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
 
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface DataSource {
@@ -27,6 +29,7 @@ public interface DataSource {
     Single<List<CurrencyRecord>> requestFilteredCurrencyList();
 
     Completable saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair);
+    Observable<List<SavedRateRecord>> getAllSavedRecords();
 
     void dispose();
 

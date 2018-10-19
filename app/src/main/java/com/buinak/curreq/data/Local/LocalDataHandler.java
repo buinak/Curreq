@@ -6,12 +6,12 @@ import android.util.Pair;
 import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
-import com.buinak.curreq.entities.RealmEntity.RealmSavedRateRecord;
+import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
 
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class LocalDataHandler implements LocalDataSource{
@@ -43,8 +43,8 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
-    public Flowable<List<RealmSavedRateRecord>> getAllSavedRecords() {
-        return null;
+    public Observable<List<SavedRateRecord>> getAllSavedRecords() {
+        return database.getAllSavedRecords();
     }
 
     @Override

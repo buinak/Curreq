@@ -8,11 +8,13 @@ import com.buinak.curreq.data.Remote.RemoteDataSource;
 import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
 import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
 import com.buinak.curreq.utils.RepositoryUtils;
 
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -90,6 +92,11 @@ public class Repository implements DataSource {
     @Override
     public Completable saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair) {
         return Completable.fromAction(() -> localDataSource.saveRate(pair));
+    }
+
+    @Override
+    public Observable<List<SavedRateRecord>> getAllSavedRecords() {
+        return localDataSource.getAllSavedRecords();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.buinak.curreq.entities.RealmEntity;
 
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -10,18 +12,25 @@ import io.realm.annotations.PrimaryKey;
 public class RealmCurrencyRecord extends RealmObject {
 
     @PrimaryKey
-    private long id;
+    private String id = UUID.randomUUID().toString();
 
     private String code;
     private String name;
 
-    public RealmCurrencyRecord(long id, String code, String name) {
-        this.id = id;
+    public RealmCurrencyRecord(String code, String name) {
         this.code = code;
         this.name = name;
     }
 
     public RealmCurrencyRecord() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCode() {
@@ -38,14 +47,6 @@ public class RealmCurrencyRecord extends RealmObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }
 
