@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.buinak.curreq.R;
+import com.buinak.curreq.entities.ActivityState;
 import com.buinak.curreq.ui.MainScreen.MainActivity;
 
 
@@ -26,6 +27,12 @@ public class LoadingActivity extends AppCompatActivity{
                 if (ready) {
                     startMainActivity();
                 }
+            }
+        });
+
+        viewModel.getActivityState().observe(this, activityState -> {
+            if (activityState == ActivityState.FINISHED){
+                finish();
             }
         });
     }

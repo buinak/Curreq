@@ -1,6 +1,5 @@
 package com.buinak.curreq.data.Local;
 
-import android.arch.lifecycle.LiveData;
 import android.graphics.Bitmap;
 import android.util.Pair;
 
@@ -12,6 +11,7 @@ import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class LocalDataHandler implements LocalDataSource{
@@ -43,7 +43,7 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
-    public LiveData<List<SavedRateRecord>> getAllSavedRecords() {
+    public Observable<List<SavedRateRecord>> getAllSavedRecords() {
         return database.getAllSavedRecords();
     }
 
@@ -65,6 +65,11 @@ public class LocalDataHandler implements LocalDataSource{
     @Override
     public void saveRate(Pair<CurrencyRecord, CurrencyRecord> pair) {
         database.saveRate(pair);
+    }
+
+    @Override
+    public void swapRecord(String recordId) {
+        database.swapRecord(recordId);
     }
 
     @Override

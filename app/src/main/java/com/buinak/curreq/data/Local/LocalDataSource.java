@@ -1,6 +1,5 @@
 package com.buinak.curreq.data.Local;
 
-import android.arch.lifecycle.LiveData;
 import android.graphics.Bitmap;
 import android.util.Pair;
 
@@ -12,6 +11,7 @@ import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface LocalDataSource {
@@ -21,13 +21,15 @@ public interface LocalDataSource {
     Single<Bitmap> getBitmap(String code);
     Single<List<BitmapWrapper>> getAllBitmaps();
 
-    LiveData<List<SavedRateRecord>> getAllSavedRecords();
+    Observable<List<SavedRateRecord>> getAllSavedRecords();
 
     Completable cacheBitmaps();
 
     void saveRecord(RateRequestRecord record);
     void saveCurrencies(List<CurrencyRecord> currencyRecordList);
     void saveRate(Pair<CurrencyRecord, CurrencyRecord> pair);
+
+    void swapRecord(String recordId);
 
     boolean hasCurrencyRateRecords();
     boolean hasCurrencyRecords();

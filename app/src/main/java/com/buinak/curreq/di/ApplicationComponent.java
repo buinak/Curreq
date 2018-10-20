@@ -10,13 +10,15 @@ import com.buinak.curreq.ui.AddScreen.AddViewModel;
 import com.buinak.curreq.ui.LoadingScreen.LoadingRepository;
 import com.buinak.curreq.ui.LoadingScreen.LoadingScreenModule;
 import com.buinak.curreq.ui.LoadingScreen.LoadingViewModel;
-import com.buinak.curreq.ui.MainScreen.MainActivity;
+import com.buinak.curreq.ui.MainScreen.MainRepository;
+import com.buinak.curreq.ui.MainScreen.MainScreenModule;
+import com.buinak.curreq.ui.MainScreen.MainViewModel;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
 
-@Component (modules = {RepositoryModule.class, AddScreenModule.class, LoadingScreenModule.class, ApplicationModule.class})
+@Component (modules = {RepositoryModule.class, AddScreenModule.class, LoadingScreenModule.class, MainScreenModule.class, ApplicationModule.class})
 @Singleton
 public interface ApplicationComponent {
     AddRepository provideAddRepository();
@@ -25,7 +27,8 @@ public interface ApplicationComponent {
     LoadingRepository provideLoadingRepository();
     void inject(LoadingViewModel viewModel);
 
-    void inject(MainActivity activity);
+    MainRepository provideMainRepository();
+    void inject(MainViewModel viewModel);
 
     Context provideContext();
 }

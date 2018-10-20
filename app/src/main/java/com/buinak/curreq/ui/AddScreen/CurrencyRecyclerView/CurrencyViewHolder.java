@@ -35,7 +35,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
 
     private boolean isToggled;
 
-    private static final int DURATION = 150;
+    private static final int DURATION = 250;
 
     @Inject
     PublishSubject<CurrencyRecord> selectedCodesSubject;
@@ -54,22 +54,22 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
         cardView.setOnClickListener(v -> {
             if (!isToggled) {
                 ViewUtils.animateCardViewColourChange(cardView,
-                        cardView.getResources().getColor(R.color.lighter_gray),
+                        cardView.getResources().getColor(R.color.colorPrimaryLight),
                         cardView.getResources().getColor(R.color.colorAccent),
                         DURATION);
                 ViewUtils.animateTextColourChange(textViewCurrency,
-                        textViewCurrency.getResources().getColor(R.color.colorPrimaryDark),
                         textViewCurrency.getResources().getColor(R.color.white),
+                        textViewCurrency.getResources().getColor(R.color.colorPrimary),
                         DURATION);
                 isToggled = true;
             } else {
                 ViewUtils.animateCardViewColourChange(cardView,
                         cardView.getResources().getColor(R.color.colorAccent),
-                        cardView.getResources().getColor(R.color.lighter_gray),
+                        cardView.getResources().getColor(R.color.colorPrimaryLight),
                         DURATION);
                 ViewUtils.animateTextColourChange(textViewCurrency,
+                        textViewCurrency.getResources().getColor(R.color.colorPrimary),
                         textViewCurrency.getResources().getColor(R.color.white),
-                        textViewCurrency.getResources().getColor(R.color.colorPrimaryDark),
                         DURATION);
                 isToggled = false;
             }

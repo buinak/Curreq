@@ -1,6 +1,5 @@
 package com.buinak.curreq.data;
 
-import android.arch.lifecycle.LiveData;
 import android.graphics.Bitmap;
 import android.util.Pair;
 
@@ -15,6 +14,7 @@ import com.buinak.curreq.utils.RepositoryUtils;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -95,8 +95,13 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public LiveData<List<SavedRateRecord>> getAllSavedRecords() {
+    public Observable<List<SavedRateRecord>> getAllSavedRecords() {
         return localDataSource.getAllSavedRecords();
+    }
+
+    @Override
+    public void swapRecord(String recordId) {
+        localDataSource.swapRecord(recordId);
     }
 
     @Override

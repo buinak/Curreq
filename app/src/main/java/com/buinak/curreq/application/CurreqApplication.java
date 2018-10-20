@@ -6,7 +6,7 @@ import com.buinak.curreq.di.ApplicationComponent;
 import com.buinak.curreq.di.DaggerApplicationComponent;
 import com.buinak.curreq.ui.AddScreen.AddViewModel;
 import com.buinak.curreq.ui.LoadingScreen.LoadingViewModel;
-import com.buinak.curreq.ui.MainScreen.MainActivity;
+import com.buinak.curreq.ui.MainScreen.MainViewModel;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -44,8 +44,9 @@ public class CurreqApplication extends Application {
         repositoryComponent.inject(viewModel);
     }
 
-    public static void inject(MainActivity activity){
-        repositoryComponent.inject(activity);
+    public static void inject(MainViewModel viewModel){
+        repositoryComponent.inject(viewModel);
     }
+
 
 }

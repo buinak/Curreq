@@ -13,7 +13,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="2dp"
-        app:cardBackgroundColor="@color/lighter_gray"
+        app:cardBackgroundColor="@color/colorPrimaryLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/es" />
+                app:srcCompat="@color/white" />
 
             <TextView
                 android:id="@+id/textView_currency"
@@ -41,7 +41,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:layout_weight="1"
                 android:text="Euro"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 

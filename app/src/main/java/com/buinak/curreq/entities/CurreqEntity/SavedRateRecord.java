@@ -2,12 +2,14 @@ package com.buinak.curreq.entities.CurreqEntity;
 
 public class SavedRateRecord {
 
+    private String id;
     private CurrencyRecord baseCurrencyRecord;
     private CurrencyRecord currencyRecord;
 
     private double rate;
 
-    public SavedRateRecord(CurrencyRecord baseCurrencyRecord, CurrencyRecord currencyRecord, double rate) {
+    public SavedRateRecord(String id, CurrencyRecord baseCurrencyRecord, CurrencyRecord currencyRecord, double rate) {
+        this.id = id;
         this.baseCurrencyRecord = baseCurrencyRecord;
         this.currencyRecord = currencyRecord;
         this.rate = rate;
@@ -23,5 +25,9 @@ public class SavedRateRecord {
 
     public double getRate() {
         return rate;
+    }
+
+    public String getId() {
+        return id;
     }
 }

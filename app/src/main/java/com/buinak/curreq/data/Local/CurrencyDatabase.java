@@ -1,7 +1,5 @@
 package com.buinak.curreq.data.Local;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
@@ -17,7 +15,9 @@ import com.buinak.curreq.entities.RealmEntity.RealmSavedRateRecord;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
@@ -172,10 +172,11 @@ public class CurrencyDatabase {
                         .getValue();
                 return rate;
             } else if (realmCurrency.getCode().equalsIgnoreCase("EUR")) {
-                double rate = (1 / realm.where(RealmRateRecord.class)
-                        .equalTo("currencyId", currencyId)
+                double initRate = realm.where(RealmRateRecord.class)
+                        .equalTo("currencyId", baseCurrencyId)
                         .findFirst()
-                        .getValue());
+                        .getValue();
+                double rate = 1 / initRate;
                 return rate;
             } else {
 
@@ -203,7 +204,7 @@ public class CurrencyDatabase {
         }
     }
 
-    LiveData<List<SavedRateRecord>> getAllSavedRecords() {
+    Observable<List<SavedRateRecord>> getAllSavedRecords() {
         if (disposable != null){
             disposable.dispose();
             disposable = null;
@@ -212,7 +213,7 @@ public class CurrencyDatabase {
         disposable = new CompositeDisposable();
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmQuery<RealmSavedRateRecord> records = realm.where(RealmSavedRateRecord.class);
-            MutableLiveData<List<SavedRateRecord>> liveData = new MutableLiveData<>();
+            PublishSubject<List<SavedRateRecord>> publishSubject = PublishSubject.create();
             if (realm.isAutoRefresh()) {
                 disposable.add(records.findAllAsync()
                         .asFlowable()
@@ -225,12 +226,12 @@ public class CurrencyDatabase {
                                 CurrencyRecord baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
                                 CurrencyRecord currency = getCurrencyRecord(result.getCurrencyId());
 
-                                SavedRateRecord savedRateRecord = new SavedRateRecord(baseCurrency, currency, rate);
+                                SavedRateRecord savedRateRecord = new SavedRateRecord(result.getId(), baseCurrency, currency, rate);
                                 newList.add(savedRateRecord);
                             }
-                            liveData.postValue(newList);
+                            publishSubject.onNext(newList);
                         }));
-                return liveData;
+                return publishSubject;
             } else {
                 disposable.add(records.findAll()
                         .asFlowable()
@@ -243,12 +244,15 @@ public class CurrencyDatabase {
                                 CurrencyRecord baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
                                 CurrencyRecord currency = getCurrencyRecord(result.getCurrencyId());
 
-                                SavedRateRecord savedRateRecord = new SavedRateRecord(baseCurrency, currency, rate);
+                                SavedRateRecord savedRateRecord = new SavedRateRecord(result.getId(), baseCurrency, currency, rate);
                                 newList.add(savedRateRecord);
                             }
-                            liveData.postValue(newList);
+                            publishSubject.onNext(newList);
+                        }, e -> {
+                            System.out.println();
+                            System.out.println();
                         }));
-                return liveData;
+                return publishSubject;
             }
         }
     }
@@ -283,5 +287,23 @@ public class CurrencyDatabase {
             }
         }
         return result;
+    }
+
+    public void swapRecord(String recordId){
+        Realm realm = null;
+        try {
+            realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            RealmSavedRateRecord record = realm.where(RealmSavedRateRecord.class).equalTo("id", recordId).findFirst();
+            String baseCurrencyId = record.getBaseCurrencyId();
+            String currencyId = record.getCurrencyId();
+            record.setBaseCurrencyId(currencyId);
+            record.setCurrencyId(baseCurrencyId);
+            realm.commitTransaction();
+        } finally {
+             if (realm != null){
+                 realm.close();
+             }
+        }
     }
 }
