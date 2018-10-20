@@ -72,4 +72,8 @@ public class MainRepository {
     public void replaceRecordWithNew(String recordId){
         dataSource.swapRecord(recordId);
     }
+
+    public void onResetPressed(){
+        dataSource.resetAllSavedRecords();
+    }
 }

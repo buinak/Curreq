@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
 
 import com.buinak.curreq.R;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.main_screen_recycler_view)
     RecyclerView recyclerView;
+
+    @BindView(R.id.RESET_REMOVE_DEBUG_BUTTON)
+    Button button;
 
     private MainViewModel viewModel;
 
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
             adapter.setRateRecords(results);
             adapter.notifyDataSetChanged();
         });
+
+        button.setOnClickListener(v -> viewModel.onResetPressed());
     }
 
 

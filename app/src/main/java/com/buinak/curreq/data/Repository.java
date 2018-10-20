@@ -105,6 +105,11 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public void resetAllSavedRecords() {
+        localDataSource.resetAllSavedRecords();
+    }
+
+    @Override
     public Completable initialiseRepositoryIfFirstStart() {
         if (localDataSource.hasCurrencyRateRecords()) {
             return Completable.complete();

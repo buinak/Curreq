@@ -257,6 +257,14 @@ public class CurrencyDatabase {
         }
     }
 
+    public void resetAllSavedRecords(){
+        try (Realm realm = Realm.getDefaultInstance()){
+            realm.executeTransaction(r -> {
+                r.where(RealmSavedRateRecord.class).findAll().deleteAllFromRealm();
+            });
+        }
+    }
+
     public boolean hasCurrencyRateRecords() {
         Realm realm = null;
         boolean result = false;

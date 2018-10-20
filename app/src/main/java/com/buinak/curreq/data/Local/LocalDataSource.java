@@ -31,6 +31,8 @@ public interface LocalDataSource {
 
     void swapRecord(String recordId);
 
+    void resetAllSavedRecords();
+
     boolean hasCurrencyRateRecords();
     boolean hasCurrencyRecords();
 }

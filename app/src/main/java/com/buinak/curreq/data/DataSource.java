@@ -31,6 +31,7 @@ public interface DataSource {
     Completable saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair);
     Observable<List<SavedRateRecord>> getAllSavedRecords();
     void swapRecord(String recordId);
+    void resetAllSavedRecords();
 
     void dispose();
 

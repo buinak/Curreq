@@ -73,6 +73,11 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
+    public void resetAllSavedRecords() {
+        database.resetAllSavedRecords();
+    }
+
+    @Override
     public boolean hasCurrencyRateRecords() {
         return database.hasCurrencyRateRecords();
     }

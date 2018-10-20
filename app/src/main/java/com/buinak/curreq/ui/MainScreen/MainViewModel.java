@@ -31,4 +31,8 @@ public class MainViewModel extends ViewModel {
         mainRepository.replaceRecordWithNew(recordId);
     }
 
+    public void onResetPressed(){
+        mainRepository.onResetPressed();
+    }
+
 }
