@@ -13,11 +13,10 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:clickable="true"
-        android:src="@drawable/ic_add_white_24dp"
+        app:srcCompat="@drawable/ic_add_white_24dp"
         app:elevation="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@color/colorAccent"
         app:useCompatPadding="false" />
 
     <Button

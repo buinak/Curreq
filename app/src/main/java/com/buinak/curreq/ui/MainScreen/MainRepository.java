@@ -14,34 +14,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.SingleSubject;
 
 public class MainRepository {
 
     private DataSource dataSource;
-
-    private Single<List<BitmapWrapper>> bitmapWrappers;
 
     private CompositeDisposable disposable;
 
     public MainRepository(DataSource dataSource) {
         this.dataSource = dataSource;
         disposable = new CompositeDisposable();
-        SingleSubject<List<BitmapWrapper>> singleSubject = SingleSubject.create();
-        bitmapWrappers = singleSubject;
-
-        disposable.add(dataSource.getAllBitmaps()
-                .subscribeOn(Schedulers.io())
-                .subscribe(singleSubject::onSuccess));
     }
 
     public LiveData<List<SavedRateRecordBitmapWrapper>> getSavedRatesLiveData(){
+
         MutableLiveData<List<SavedRateRecordBitmapWrapper>> liveData = new MutableLiveData<>();
         disposable.add(dataSource.getAllSavedRecords().subscribe(results -> {
-            disposable.add(bitmapWrappers.subscribe(bitmaps -> liveData.postValue(wrapRateRecords(bitmaps, results))));
+            disposable.add(dataSource.getAllBitmaps()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(bitmaps -> {
+                    if (bitmaps.size() != 0){
+                        if (bitmaps.get(0) != null) {
+                            liveData.postValue(wrapRateRecords(bitmaps, results));
+                        } else {
+                            liveData.postValue(null);
+                        }
+                    } else {
+                        liveData.postValue(null);
+                    }
+            }));
         }));
         return liveData;
     }

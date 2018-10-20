@@ -16,9 +16,11 @@ public class LocalDataSourceModule {
     }
 
     @Provides
+    @Singleton
     public LocalCacheHandler provideCacher(Context context) { return new LocalCacheHandler(context); }
 
     @Provides
+    @Singleton
     public CurrencyDatabase provideCurrencyDatabase() {
         return new CurrencyDatabase();
     }

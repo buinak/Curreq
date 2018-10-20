@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.CompletableSubject;
 
 public class LocalCacheHandler {
 
@@ -23,7 +21,6 @@ public class LocalCacheHandler {
 
     public LocalCacheHandler(Context context) {
         this.context = context;
-        bitmaps = new ArrayList<>();
     }
 
     public Completable initialiseBitmaps() {
@@ -45,7 +42,15 @@ public class LocalCacheHandler {
     }
 
     public List<BitmapWrapper> getBitmaps() {
-        return bitmaps;
+        if (bitmaps == null){
+            bitmaps = loadBitmaps();
+            return bitmaps;
+        } else if (bitmaps.get(0) == null){
+            bitmaps = loadBitmaps();
+            return bitmaps;
+        } else {
+            return bitmaps;
+        }
     }
 
     private List<BitmapWrapper> loadBitmaps() {

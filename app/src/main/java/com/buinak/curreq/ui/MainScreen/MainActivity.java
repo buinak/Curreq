@@ -8,11 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.buinak.curreq.R;
+import com.buinak.curreq.entities.CurreqEntity.SavedRateRecordBitmapWrapper;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
 import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesRecyclerViewAdapter;
 import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesViewHolder;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     Button button;
 
     private MainViewModel viewModel;
+    private List<SavedRateRecordBitmapWrapper> data;
+
+    private RatesRecyclerViewAdapter adapter;
+
 
     private static MainScreenObservableModule mainScreenObservableModule;
 
@@ -55,11 +63,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RatesRecyclerViewAdapter adapter = new RatesRecyclerViewAdapter();
+        adapter = new RatesRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
         viewModel.getSavedRateRecords().observe(this, results -> {
-            adapter.setRateRecords(results);
-            adapter.notifyDataSetChanged();
+            if (results != null) {
+                data = results;
+                adapter.setRateRecords(results);
+                adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(this, "GOT NULL", Toast.LENGTH_SHORT).show();
+            }
         });
 
         button.setOnClickListener(v -> viewModel.onResetPressed());
