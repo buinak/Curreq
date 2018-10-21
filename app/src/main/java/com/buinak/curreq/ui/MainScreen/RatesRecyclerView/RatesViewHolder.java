@@ -62,6 +62,9 @@ public class RatesViewHolder extends RecyclerView.ViewHolder{
         textViewCurrency.setText(record.getCurrencyRecord().getCode());
 
         String rate = String.valueOf(record.getRate()).substring(0, 5);
+        if (rate.charAt(4) == '.'){
+            rate = rate.substring(0, 4);
+        }
         textViewRate.setText(rate);
     }
 }

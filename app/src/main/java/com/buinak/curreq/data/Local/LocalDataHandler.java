@@ -25,21 +25,21 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     public Single<RateRequestRecord> getLatestRecord() {
-        return Single.just(database.getLatestRealmRecord());
+        return database.getLatestRealmRecord();
     }
 
     public Single<List<CurrencyRecord>> getCurrencyList() {
-        return Single.just(database.getAllCurrencies());
+        return database.getAllCurrencies();
     }
 
     @Override
     public Single<Bitmap> getBitmap(String code) {
-        return Single.just(localCacheHandler.getBitmap(code));
+        return localCacheHandler.getBitmap(code);
     }
 
     @Override
     public Single<List<BitmapWrapper>> getAllBitmaps() {
-        return Single.just(localCacheHandler.getBitmaps());
+        return localCacheHandler.getBitmaps();
     }
 
     @Override

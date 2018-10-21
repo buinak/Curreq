@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 public class LocalCacheHandler {
@@ -31,29 +32,27 @@ public class LocalCacheHandler {
     }
 
 
-    public Bitmap getBitmap(String code) {
+    public Single<Bitmap> getBitmap(String code) {
         for (BitmapWrapper wrapper :
                 bitmaps) {
             if (wrapper.getCode().equalsIgnoreCase(code)) {
-                return wrapper.getBitmap();
+                return Single.just(wrapper.getBitmap());
             }
         }
-        return bitmaps.get(0).getBitmap();
+        return Single.just(bitmaps.get(0).getBitmap());
     }
 
-    public List<BitmapWrapper> getBitmaps() {
+    public Single<List<BitmapWrapper>> getBitmaps() {
         if (bitmaps == null){
-            bitmaps = loadBitmaps();
-            return bitmaps;
+            return loadBitmaps().doOnSuccess(result -> bitmaps = result);
         } else if (bitmaps.get(0) == null){
-            bitmaps = loadBitmaps();
-            return bitmaps;
+            return loadBitmaps().doOnSuccess(result -> bitmaps = result);
         } else {
-            return bitmaps;
+            return Single.just(bitmaps);
         }
     }
 
-    private List<BitmapWrapper> loadBitmaps() {
+    private Single<List<BitmapWrapper>> loadBitmaps() {
         bitmaps = new ArrayList<>();
         for (String code :
                 Constants.PERMITTED_CODES) {
@@ -69,6 +68,6 @@ public class LocalCacheHandler {
             }
 
         }
-        return bitmaps;
+        return Single.just(bitmaps);
     }
 }

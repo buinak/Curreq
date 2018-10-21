@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
@@ -31,7 +32,7 @@ public class CurrencyDatabase {
     }
 
     @NonNull
-    public List<CurrencyRecord> getAllCurrencies() {
+    public Single<List<CurrencyRecord>> getAllCurrencies() {
         Realm realm = null;
         List<CurrencyRecord> currencyRecords = new ArrayList<>();
         try {
@@ -47,11 +48,11 @@ public class CurrencyDatabase {
                 realm.close();
             }
         }
-        return currencyRecords;
+        return Single.just(currencyRecords);
     }
 
     @NonNull
-    public RateRequestRecord getLatestRealmRecord() {
+    public Single<RateRequestRecord> getLatestRealmRecord() {
         Realm realm = null;
         RateRequestRecord record;
         try {
@@ -63,7 +64,7 @@ public class CurrencyDatabase {
                 realm.close();
             }
         }
-        return record;
+        return Single.just(record);
     }
 
     private RateRequestRecord processRecord(RealmRateRequestRecord record) {
@@ -204,7 +205,7 @@ public class CurrencyDatabase {
         }
     }
 
-    Observable<List<SavedRateRecord>> getAllSavedRecords() {
+    public Observable<List<SavedRateRecord>> getAllSavedRecords() {
         if (disposable != null){
             disposable.dispose();
             disposable = null;
