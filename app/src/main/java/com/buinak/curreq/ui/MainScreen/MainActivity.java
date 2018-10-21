@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.buinak.curreq.R;
 import com.buinak.curreq.entities.CurreqEntity.SavedRateRecordBitmapWrapper;
@@ -35,12 +34,11 @@ public class MainActivity extends AppCompatActivity {
     Button button;
 
     private MainViewModel viewModel;
-    private List<SavedRateRecordBitmapWrapper> data;
 
     private RatesRecyclerViewAdapter adapter;
 
-
     private static MainScreenObservableModule mainScreenObservableModule;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,33 +47,40 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        PublishSubject<String> publishSubject = PublishSubject.create();
-        mainScreenObservableModule = new MainScreenObservableModule(publishSubject);
-        Disposable disposable = publishSubject.subscribe(recordId -> {
-            viewModel.onRateRecordSwapped(recordId);
-        });
+        mainScreenObservableModule = new MainScreenObservableModule(PublishSubject.create());
+        disposable = mainScreenObservableModule.provideObservableClickedCurrencyRecords()
+                .subscribe(recordId -> viewModel.onRateRecordSwapped(recordId));
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        floatingActionButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddActivity.class);
-            startActivity(intent);
-        });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RatesRecyclerViewAdapter();
-        recyclerView.setAdapter(adapter);
+        initialiseRecyclerView();
         viewModel.getSavedRateRecords().observe(this, results -> {
             if (results != null) {
-                data = results;
-                adapter.setRateRecords(results);
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(this, "GOT NULL", Toast.LENGTH_SHORT).show();
+                updateRecyclerView(results);
             }
         });
 
+        floatingActionButton.setOnClickListener(v -> {
+            startAddActivity();
+        });
+
         button.setOnClickListener(v -> viewModel.onResetPressed());
+    }
+
+    private void updateRecyclerView(List<SavedRateRecordBitmapWrapper> results) {
+        adapter.setRateRecords(results);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void startAddActivity() {
+        Intent intent = new Intent(this, AddActivity.class);
+        startActivity(intent);
+    }
+
+    private void initialiseRecyclerView(){
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new RatesRecyclerViewAdapter();
+        recyclerView.setAdapter(adapter);
     }
 
 

@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 @Module
@@ -17,7 +18,13 @@ public class MainScreenObservableModule {
 
     @Provides
     @Singleton
-    PublishSubject<String> provideSubject(){
+    PublishSubject<String> provideSubject() {
+        return publishSubject;
+    }
+
+    @Provides
+    @Singleton
+    Observable<String> provideObservableClickedCurrencyRecords() {
         return publishSubject;
     }
 
