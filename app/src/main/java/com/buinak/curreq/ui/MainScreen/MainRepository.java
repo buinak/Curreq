@@ -6,9 +6,8 @@ import android.graphics.Bitmap;
 
 import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithBitmapsAndId;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +27,9 @@ public class MainRepository {
         disposable = new CompositeDisposable();
     }
 
-    public LiveData<List<CurrencyExchangeRateWithBitmapsAndId>> getSavedRatesLiveData(){
+    public LiveData<List<CurrencyExchangeRate>> getSavedRatesLiveData(){
 
-        MutableLiveData<List<CurrencyExchangeRateWithBitmapsAndId>> liveData = new MutableLiveData<>();
+        MutableLiveData<List<CurrencyExchangeRate>> liveData = new MutableLiveData<>();
         disposable.add(dataSource.getAllSavedRecords().subscribe(results -> {
             disposable.add(dataSource.getAllBitmaps()
                     .subscribeOn(Schedulers.io())
@@ -49,23 +48,23 @@ public class MainRepository {
         return liveData;
     }
 
-    private List<CurrencyExchangeRateWithBitmapsAndId> wrapRateRecords(List<CountryFlagBitmap> wrappers,
-                                                                       List<CurrencyExchangeRateWithId> records){
+    private List<CurrencyExchangeRate> wrapRateRecords(List<CountryFlagBitmap> wrappers,
+                                                                       List<CurrencyExchangeRate> records){
         HashMap<String, Bitmap> bitmapHashMap = new HashMap<>();
         for (CountryFlagBitmap wrapper :
                 wrappers) {
             bitmapHashMap.put(wrapper.getCode(), wrapper.getBitmap());
         }
-        List<CurrencyExchangeRateWithBitmapsAndId> currencyExchangeRateWithBitmapsAndIds = new ArrayList<>();
-        for (CurrencyExchangeRateWithId currencyExchangeRateWithId :
+        List<CurrencyExchangeRate> currencyExchangeRateWithBitmapsAndIds = new ArrayList<>();
+        for (CurrencyExchangeRate currencyExchangeRateWithId :
                 records) {
-            CurrencyCountryFlagWrapper baseCurrency = new CurrencyCountryFlagWrapper(currencyExchangeRateWithId.getBaseCurrency(),
+            Currency baseCurrency = new Currency(currencyExchangeRateWithId.getBaseCurrency(),
                     bitmapHashMap.get(currencyExchangeRateWithId.getBaseCurrency().getCode().substring(0, 2).toLowerCase()));
 
-            CurrencyCountryFlagWrapper currency = new CurrencyCountryFlagWrapper(currencyExchangeRateWithId.getCurrency(),
+            Currency currency = new Currency(currencyExchangeRateWithId.getCurrency(),
                     bitmapHashMap.get(currencyExchangeRateWithId.getCurrency().getCode().substring(0, 2).toLowerCase()));
 
-            CurrencyExchangeRateWithBitmapsAndId currencyExchangeRateWithBitmapsAndId = new CurrencyExchangeRateWithBitmapsAndId(currencyExchangeRateWithId.getId(),
+            CurrencyExchangeRate currencyExchangeRateWithBitmapsAndId = new CurrencyExchangeRate(currencyExchangeRateWithId.getId(),
                     baseCurrency, currency, currencyExchangeRateWithId.getRate());
             currencyExchangeRateWithBitmapsAndIds.add(currencyExchangeRateWithBitmapsAndId);
         }

@@ -7,8 +7,8 @@ import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
 import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
 import com.buinak.curreq.utils.RepositoryUtils;
 
 import java.util.List;
@@ -95,7 +95,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Observable<List<CurrencyExchangeRateWithId>> getAllSavedRecords() {
+    public Observable<List<CurrencyExchangeRate>> getAllSavedRecords() {
         return localDataSource.getAllSavedRecords();
     }
 

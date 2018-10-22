@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithBitmapsAndId;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.ui.MainScreen.MainActivity;
 
 import javax.inject.Inject;
@@ -40,7 +40,7 @@ public class RatesViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.imageButton)
     ImageButton imageButton;
 
-    private CurrencyExchangeRateWithBitmapsAndId record;
+    private CurrencyExchangeRate record;
 
     @Inject
     PublishSubject<String> publishSubject;
@@ -53,13 +53,13 @@ public class RatesViewHolder extends RecyclerView.ViewHolder{
         imageButton.setOnClickListener(v -> publishSubject.onNext(record.getId()));
     }
 
-    public void bindRate(CurrencyExchangeRateWithBitmapsAndId record){
+    public void bindRate(CurrencyExchangeRate record){
         this.record = record;
-        imageViewBaseCurrency.setImageBitmap(record.getBaseCurrencyRecord().getBitmap());
-        imageViewCurrency.setImageBitmap(record.getCurrencyRecord().getBitmap());
+        imageViewBaseCurrency.setImageBitmap(record.getBaseCurrency().getBitmap());
+        imageViewCurrency.setImageBitmap(record.getCurrency().getBitmap());
 
-        textViewBaseCurrency.setText(record.getBaseCurrencyRecord().getCode());
-        textViewCurrency.setText(record.getCurrencyRecord().getCode());
+        textViewBaseCurrency.setText(record.getBaseCurrency().getCode());
+        textViewCurrency.setText(record.getCurrency().getCode());
 
         String rate = String.valueOf(record.getRate()).substring(0, 5);
         if (rate.charAt(4) == '.'){

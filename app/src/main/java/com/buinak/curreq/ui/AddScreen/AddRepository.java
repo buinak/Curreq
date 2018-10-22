@@ -5,7 +5,6 @@ import android.util.Pair;
 
 import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
 
 import java.util.ArrayList;
@@ -33,10 +32,10 @@ public class AddRepository {
         finished = CompletableSubject.create();
     }
 
-    public Single<List<CurrencyCountryFlagWrapper>> getBitmappedCurrencyRecords(){
+    public Single<List<Currency>> getBitmappedCurrencyRecords(){
         return getCurrencyList()
                 .zipWith(getBitmaps(), (currencyRecords, bitmapWrappers) -> {
-            List<CurrencyCountryFlagWrapper> currencyRecordBitmapWrappers = new ArrayList<>();
+            List<Currency> currencyRecordBitmapWrappers = new ArrayList<>();
             for (Currency currency : currencyRecords) {
                 Bitmap bitmap = null;
                 for (CountryFlagBitmap countryFlagBitmap :  bitmapWrappers) {
@@ -45,7 +44,7 @@ public class AddRepository {
                         break;
                     }
                 }
-                currencyRecordBitmapWrappers.add(new CurrencyCountryFlagWrapper(currency, bitmap));
+                currencyRecordBitmapWrappers.add(new Currency(currency, bitmap));
             }
             return currencyRecordBitmapWrappers;
         });

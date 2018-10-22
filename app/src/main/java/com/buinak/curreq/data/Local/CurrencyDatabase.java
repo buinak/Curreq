@@ -6,7 +6,6 @@ import android.util.Pair;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
 import com.buinak.curreq.entities.RealmEntity.RealmCurrency;
 import com.buinak.curreq.entities.RealmEntity.RealmCurrencyExchangeRate;
 import com.buinak.curreq.entities.RealmEntity.RealmRequest;
@@ -114,7 +113,7 @@ public class CurrencyDatabase {
                             .findFirst()
                             .getId();
 
-                    list.add(new RealmCurrencyExchangeRate(currencyId, baseCurrencyId, currencyExchangeRate.getValue()));
+                    list.add(new RealmCurrencyExchangeRate(currencyId, baseCurrencyId, currencyExchangeRate.getRate()));
                 }
                 requestRecord.setRealmCurrencyExchangeRates(list);
 
@@ -205,7 +204,7 @@ public class CurrencyDatabase {
         }
     }
 
-    public Observable<List<CurrencyExchangeRateWithId>> getAllSavedRecords() {
+    public Observable<List<CurrencyExchangeRate>> getAllSavedRecords() {
         if (disposable != null){
             disposable.dispose();
             disposable = null;
@@ -214,12 +213,12 @@ public class CurrencyDatabase {
         disposable = new CompositeDisposable();
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmQuery<RealmAddedRate> records = realm.where(RealmAddedRate.class);
-            PublishSubject<List<CurrencyExchangeRateWithId>> publishSubject = PublishSubject.create();
+            PublishSubject<List<CurrencyExchangeRate>> publishSubject = PublishSubject.create();
             if (realm.isAutoRefresh()) {
                 disposable.add(records.findAllAsync()
                         .asFlowable()
                         .subscribe(list -> {
-                            List<CurrencyExchangeRateWithId> newList = new ArrayList<>(list.size());
+                            List<CurrencyExchangeRate> newList = new ArrayList<>(list.size());
                             for (RealmAddedRate result :
                                     list) {
                                 double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
@@ -227,7 +226,8 @@ public class CurrencyDatabase {
                                 Currency baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
                                 Currency currency = getCurrencyRecord(result.getCurrencyId());
 
-                                CurrencyExchangeRateWithId currencyExchangeRateWithId = new CurrencyExchangeRateWithId(result.getId(), baseCurrency, currency, rate);
+                                CurrencyExchangeRate currencyExchangeRateWithId =
+                                        new CurrencyExchangeRate(result.getId(), baseCurrency, currency, rate);
                                 newList.add(currencyExchangeRateWithId);
                             }
                             publishSubject.onNext(newList);
@@ -237,7 +237,7 @@ public class CurrencyDatabase {
                 disposable.add(records.findAll()
                         .asFlowable()
                         .subscribe(list -> {
-                            List<CurrencyExchangeRateWithId> newList = new ArrayList<>(list.size());
+                            List<CurrencyExchangeRate> newList = new ArrayList<>(list.size());
                             for (RealmAddedRate result :
                                     list) {
                                 double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
@@ -245,7 +245,8 @@ public class CurrencyDatabase {
                                 Currency baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
                                 Currency currency = getCurrencyRecord(result.getCurrencyId());
 
-                                CurrencyExchangeRateWithId currencyExchangeRateWithId = new CurrencyExchangeRateWithId(result.getId(), baseCurrency, currency, rate);
+                                CurrencyExchangeRate currencyExchangeRateWithId =
+                                        new CurrencyExchangeRate(result.getId(), baseCurrency, currency, rate);
                                 newList.add(currencyExchangeRateWithId);
                             }
                             publishSubject.onNext(newList);

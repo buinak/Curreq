@@ -10,7 +10,6 @@ import android.util.Pair;
 
 import com.buinak.curreq.R;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
 import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
 import com.buinak.curreq.utils.Constants;
@@ -75,7 +74,7 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
-    private void updateRecyclerView(List<List<CurrencyCountryFlagWrapper>> list) {
+    private void updateRecyclerView(List<List<Currency>> list) {
         adapter.setRows(list);
         adapter.notifyDataSetChanged();
     }

@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.buinak.curreq.application.CurreqApplication;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithBitmapsAndId;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class MainViewModel extends ViewModel {
     @Inject
     MainRepository mainRepository;
 
-    private LiveData<List<CurrencyExchangeRateWithBitmapsAndId>> savedRateRecords;
+    private LiveData<List<CurrencyExchangeRate>> savedRateRecords;
 
     public MainViewModel() {
         CurreqApplication.inject(this);
@@ -23,7 +23,7 @@ public class MainViewModel extends ViewModel {
         savedRateRecords = mainRepository.getSavedRatesLiveData();
     }
 
-    public LiveData<List<CurrencyExchangeRateWithBitmapsAndId>> getSavedRateRecords() {
+    public LiveData<List<CurrencyExchangeRate>> getSavedRateRecords() {
         return savedRateRecords;
     }
 

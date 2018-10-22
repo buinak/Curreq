@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
 import com.buinak.curreq.utils.ViewUtils;
@@ -40,7 +39,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
     @Inject
     PublishSubject<Currency> selectedCodesSubject;
 
-    private CurrencyCountryFlagWrapper currency;
+    private Currency currency;
 
 
     public CurrencyViewHolder(View itemView) {
@@ -81,7 +80,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
         constraintLayout.setMaxWidth(maxWidth);
     }
 
-    public void bindCurrency(CurrencyCountryFlagWrapper currency){
+    public void bindCurrency(Currency currency){
         this.currency = currency;
         textViewCurrency.setText(currency.getCode());
 

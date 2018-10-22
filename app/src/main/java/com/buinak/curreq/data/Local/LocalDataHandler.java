@@ -5,8 +5,8 @@ import android.util.Pair;
 
 import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
-    public Observable<List<CurrencyExchangeRateWithId>> getAllSavedRecords() {
+    public Observable<List<CurrencyExchangeRate>> getAllSavedRecords() {
         return database.getAllSavedRecords();
     }
 

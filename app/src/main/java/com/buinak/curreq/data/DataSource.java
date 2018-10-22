@@ -5,8 +5,8 @@ import android.util.Pair;
 
 import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public interface DataSource {
     Single<List<Currency>> requestFilteredCurrencyList();
 
     Completable saveRatePair(Pair<Currency, Currency> pair);
-    Observable<List<CurrencyExchangeRateWithId>> getAllSavedRecords();
+    Observable<List<CurrencyExchangeRate>> getAllSavedRecords();
     void swapRecord(String recordId);
     void resetAllSavedRecords();
 
