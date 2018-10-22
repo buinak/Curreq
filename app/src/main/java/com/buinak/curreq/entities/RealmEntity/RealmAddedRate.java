@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
 public class RealmAddedRate extends RealmObject {
 
     @PrimaryKey
-    String id = UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString();
 
     private String baseCurrencyId;
     private String currencyId;
