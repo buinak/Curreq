@@ -3,10 +3,10 @@ package com.buinak.curreq.data.Local;
 import android.graphics.Bitmap;
 import android.util.Pair;
 
-import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
-import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
+import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.Request;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ public class LocalDataHandler implements LocalDataSource{
         this.localCacheHandler = localCacheHandler;
     }
 
-    public Single<RateRequestRecord> getLatestRecord() {
+    public Single<Request> getLatestRecord() {
         return database.getLatestRealmRecord();
     }
 
-    public Single<List<CurrencyRecord>> getCurrencyList() {
+    public Single<List<Currency>> getCurrencyList() {
         return database.getAllCurrencies();
     }
 
@@ -38,12 +38,12 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
-    public Single<List<BitmapWrapper>> getAllBitmaps() {
+    public Single<List<CountryFlagBitmap>> getAllBitmaps() {
         return localCacheHandler.getBitmaps();
     }
 
     @Override
-    public Observable<List<SavedRateRecord>> getAllSavedRecords() {
+    public Observable<List<CurrencyExchangeRateWithId>> getAllSavedRecords() {
         return database.getAllSavedRecords();
     }
 
@@ -53,17 +53,17 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
-    public void saveRecord(RateRequestRecord record) {
+    public void saveRecord(Request record) {
         database.saveRecord(record);
     }
 
     @Override
-    public void saveCurrencies(List<CurrencyRecord> currencyRecordList) {
-        database.saveCurrencies(currencyRecordList);
+    public void saveCurrencies(List<Currency> currencyList) {
+        database.saveCurrencies(currencyList);
     }
 
     @Override
-    public void saveRate(Pair<CurrencyRecord, CurrencyRecord> pair) {
+    public void saveRate(Pair<Currency, Currency> pair) {
         database.saveRate(pair);
     }
 

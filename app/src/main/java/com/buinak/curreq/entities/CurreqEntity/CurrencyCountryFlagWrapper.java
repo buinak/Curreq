@@ -2,17 +2,17 @@ package com.buinak.curreq.entities.CurreqEntity;
 
 import android.graphics.Bitmap;
 
-public class CurrencyRecordBitmapWrapper extends CurrencyRecord{
+public class CurrencyCountryFlagWrapper extends Currency {
     private Bitmap bitmap;
 
     private String code;
     private String name;
 
-    public CurrencyRecordBitmapWrapper(CurrencyRecord currencyRecord, Bitmap bitmap) {
-        super(currencyRecord.getCode(), currencyRecord.getName());
+    public CurrencyCountryFlagWrapper(Currency currency, Bitmap bitmap) {
+        super(currency.getCode(), currency.getName());
 
-        this.code = currencyRecord.getCode();
-        this.name = currencyRecord.getName();
+        this.code = currency.getCode();
+        this.name = currency.getName();
 
         this.bitmap = bitmap;
     }

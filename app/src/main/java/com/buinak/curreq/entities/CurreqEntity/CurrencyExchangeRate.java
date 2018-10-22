@@ -1,22 +1,22 @@
 package com.buinak.curreq.entities.CurreqEntity;
 
-public class RateRecord {
+public class CurrencyExchangeRate {
 
-    private CurrencyRecord currency;
-    private CurrencyRecord baseCurrency;
+    private Currency currency;
+    private Currency baseCurrency;
     private Double value;
 
-    public RateRecord(CurrencyRecord currency, CurrencyRecord baseCurrency, Double value) {
+    public CurrencyExchangeRate(Currency currency, Currency baseCurrency, Double value) {
         this.currency = currency;
         this.baseCurrency = baseCurrency;
         this.value = value;
     }
 
-    public CurrencyRecord getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public CurrencyRecord getBaseCurrency() {
+    public Currency getBaseCurrency() {
         return baseCurrency;
     }
 
@@ -24,11 +24,11 @@ public class RateRecord {
         return value;
     }
 
-    public void setCurrency(CurrencyRecord currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 
-    public void setBaseCurrency(CurrencyRecord baseCurrency) {
+    public void setBaseCurrency(Currency baseCurrency) {
         this.baseCurrency = baseCurrency;
     }
 

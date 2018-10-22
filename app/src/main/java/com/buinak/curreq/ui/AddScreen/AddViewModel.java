@@ -6,8 +6,8 @@ import android.arch.lifecycle.ViewModel;
 import android.util.Pair;
 
 import com.buinak.curreq.application.CurreqApplication;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class AddViewModel extends ViewModel {
     @Inject
     AddRepository repository;
 
-    private MutableLiveData<List<CurrencyRecordBitmapWrapper>> currencyList;
+    private MutableLiveData<List<CurrencyCountryFlagWrapper>> currencyList;
     private MutableLiveData<Boolean> finished;
 
     private CompositeDisposable subscriptions;
@@ -50,7 +50,7 @@ public class AddViewModel extends ViewModel {
                 .subscribe(() -> finished.postValue(true)));
     }
 
-    public LiveData<List<CurrencyRecordBitmapWrapper>> getCurrencyLists() {
+    public LiveData<List<CurrencyCountryFlagWrapper>> getCurrencyLists() {
         return currencyList;
     }
 
@@ -58,7 +58,7 @@ public class AddViewModel extends ViewModel {
         return finished;
     }
 
-    public void onRatePairSelected(Pair<CurrencyRecord, CurrencyRecord> ratePair){
+    public void onRatePairSelected(Pair<Currency, Currency> ratePair){
         repository.saveRatePair(ratePair);
     }
 

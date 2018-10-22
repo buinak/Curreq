@@ -5,7 +5,7 @@ import java.util.UUID;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class RealmSavedRateRecord extends RealmObject {
+public class RealmAddedRate extends RealmObject {
 
     @PrimaryKey
     String id = UUID.randomUUID().toString();
@@ -13,12 +13,12 @@ public class RealmSavedRateRecord extends RealmObject {
     private String baseCurrencyId;
     private String currencyId;
 
-    public RealmSavedRateRecord(String baseCurrencyId, String currencyId) {
+    public RealmAddedRate(String baseCurrencyId, String currencyId) {
         this.baseCurrencyId = baseCurrencyId;
         this.currencyId = currencyId;
     }
 
-    public RealmSavedRateRecord() {
+    public RealmAddedRate() {
     }
 
     public String getBaseCurrencyId() {

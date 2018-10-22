@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
 import com.buinak.curreq.utils.ViewUtils;
 
@@ -38,9 +38,9 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
     private static final int DURATION = 250;
 
     @Inject
-    PublishSubject<CurrencyRecord> selectedCodesSubject;
+    PublishSubject<Currency> selectedCodesSubject;
 
-    private CurrencyRecordBitmapWrapper currency;
+    private CurrencyCountryFlagWrapper currency;
 
 
     public CurrencyViewHolder(View itemView) {
@@ -73,7 +73,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
                         DURATION);
                 isToggled = false;
             }
-            selectedCodesSubject.onNext(new CurrencyRecord(currency.getCode(), currency.getName()));
+            selectedCodesSubject.onNext(new Currency(currency.getCode(), currency.getName()));
         });
     }
 
@@ -81,7 +81,7 @@ public class CurrencyViewHolder extends RecyclerView.ViewHolder{
         constraintLayout.setMaxWidth(maxWidth);
     }
 
-    public void bindCurrency(CurrencyRecordBitmapWrapper currency){
+    public void bindCurrency(CurrencyCountryFlagWrapper currency){
         this.currency = currency;
         textViewCurrency.setText(currency.getCode());
 

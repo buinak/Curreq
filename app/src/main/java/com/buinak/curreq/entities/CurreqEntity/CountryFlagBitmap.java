@@ -2,11 +2,11 @@ package com.buinak.curreq.entities.CurreqEntity;
 
 import android.graphics.Bitmap;
 
-public class BitmapWrapper {
+public class CountryFlagBitmap {
     private String code;
     private Bitmap bitmap;
 
-    public BitmapWrapper(String code, Bitmap bitmap) {
+    public CountryFlagBitmap(String code, Bitmap bitmap) {
         this.code = code;
         this.bitmap = bitmap;
     }

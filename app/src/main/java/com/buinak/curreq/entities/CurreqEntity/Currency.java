@@ -4,11 +4,11 @@ package com.buinak.curreq.entities.CurreqEntity;
  * Created by Foreseer on 11-Oct-18.
  */
 
-public class CurrencyRecord {
+public class Currency {
     private String code;
     private String name;
 
-    public CurrencyRecord(String code, String name) {
+    public Currency(String code, String name) {
         this.code = code;
         this.name = name;
     }

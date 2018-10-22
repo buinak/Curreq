@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ import io.reactivex.subjects.SingleSubject;
 
 public class RowRecyclerViewAdapter extends RecyclerView.Adapter<RowViewHolder> {
 
-    private List<List<CurrencyRecordBitmapWrapper>> rows;
+    private List<List<CurrencyCountryFlagWrapper>> rows;
 
     private View view;
 
     private final SingleSubject<Integer> maxWidthSubject;
 
-    public RowRecyclerViewAdapter(List<List<CurrencyRecordBitmapWrapper>> rows) {
+    public RowRecyclerViewAdapter(List<List<CurrencyCountryFlagWrapper>> rows) {
         this.rows = rows;
         maxWidthSubject = SingleSubject.create();
     }
@@ -46,7 +46,7 @@ public class RowRecyclerViewAdapter extends RecyclerView.Adapter<RowViewHolder> 
         return rows.size();
     }
 
-    public void setRows(List<List<CurrencyRecordBitmapWrapper>> rows) {
+    public void setRows(List<List<CurrencyCountryFlagWrapper>> rows) {
         this.rows = rows;
     }
 }

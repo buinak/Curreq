@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 import android.util.Pair;
 
 import com.buinak.curreq.data.DataSource;
-import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,33 +33,33 @@ public class AddRepository {
         finished = CompletableSubject.create();
     }
 
-    public Single<List<CurrencyRecordBitmapWrapper>> getBitmappedCurrencyRecords(){
+    public Single<List<CurrencyCountryFlagWrapper>> getBitmappedCurrencyRecords(){
         return getCurrencyList()
                 .zipWith(getBitmaps(), (currencyRecords, bitmapWrappers) -> {
-            List<CurrencyRecordBitmapWrapper> currencyRecordBitmapWrappers = new ArrayList<>();
-            for (CurrencyRecord currencyRecord : currencyRecords) {
+            List<CurrencyCountryFlagWrapper> currencyRecordBitmapWrappers = new ArrayList<>();
+            for (Currency currency : currencyRecords) {
                 Bitmap bitmap = null;
-                for (BitmapWrapper bitmapWrapper :  bitmapWrappers) {
-                    if (bitmapWrapper.getCode().equalsIgnoreCase(currencyRecord.getCode().substring(0, 2))){
-                        bitmap = bitmapWrapper.getBitmap();
+                for (CountryFlagBitmap countryFlagBitmap :  bitmapWrappers) {
+                    if (countryFlagBitmap.getCode().equalsIgnoreCase(currency.getCode().substring(0, 2))){
+                        bitmap = countryFlagBitmap.getBitmap();
                         break;
                     }
                 }
-                currencyRecordBitmapWrappers.add(new CurrencyRecordBitmapWrapper(currencyRecord, bitmap));
+                currencyRecordBitmapWrappers.add(new CurrencyCountryFlagWrapper(currency, bitmap));
             }
             return currencyRecordBitmapWrappers;
         });
     }
 
-    public Single<List<BitmapWrapper>> getBitmaps(){
+    public Single<List<CountryFlagBitmap>> getBitmaps(){
         return dataSource.getAllBitmaps();
     }
 
-    public Single<List<CurrencyRecord>> getCurrencyList(){
+    public Single<List<Currency>> getCurrencyList(){
         return dataSource.requestFilteredCurrencyList();
     }
 
-    public void saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair){
+    public void saveRatePair(Pair<Currency, Currency> pair){
         disposable = dataSource.saveRatePair(pair)
                 .subscribe(() -> finished.onComplete(), e -> {
                     System.out.println();

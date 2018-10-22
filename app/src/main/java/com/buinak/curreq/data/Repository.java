@@ -5,10 +5,10 @@ import android.util.Pair;
 
 import com.buinak.curreq.data.Local.LocalDataSource;
 import com.buinak.curreq.data.Remote.RemoteDataSource;
-import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
-import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
+import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.Request;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
 import com.buinak.curreq.utils.RepositoryUtils;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Single<RateRequestRecord> requestRecord() {
+    public Single<Request> requestRecord() {
         if (localDataSource.hasCurrencyRateRecords()) {
             return localDataSource.getLatestRecord()
                     .subscribeOn(Schedulers.io());
@@ -51,7 +51,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Single<RateRequestRecord> requestNewRecord() {
+    public Single<Request> requestNewRecord() {
         if (remoteDataSource.isReady()) {
             return remoteDataSource.getRates()
                     .subscribeOn(Schedulers.io())
@@ -63,7 +63,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Single<List<CurrencyRecord>> requestFullCurrencyList() {
+    public Single<List<Currency>> requestFullCurrencyList() {
         if (localDataSource.hasCurrencyRecords()) {
             return localDataSource.getCurrencyList()
                     .subscribeOn(Schedulers.io());
@@ -75,7 +75,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Single<List<CurrencyRecord>> requestFilteredCurrencyList() {
+    public Single<List<Currency>> requestFilteredCurrencyList() {
 
         if (localDataSource.hasCurrencyRecords()) {
             return localDataSource.getCurrencyList()
@@ -90,12 +90,12 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Completable saveRatePair(Pair<CurrencyRecord, CurrencyRecord> pair) {
+    public Completable saveRatePair(Pair<Currency, Currency> pair) {
         return Completable.fromAction(() -> localDataSource.saveRate(pair));
     }
 
     @Override
-    public Observable<List<SavedRateRecord>> getAllSavedRecords() {
+    public Observable<List<CurrencyExchangeRateWithId>> getAllSavedRecords() {
         return localDataSource.getAllSavedRecords();
     }
 
@@ -133,11 +133,11 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Single<List<BitmapWrapper>> getAllBitmaps() {
+    public Single<List<CountryFlagBitmap>> getAllBitmaps() {
         return localDataSource.getAllBitmaps();
     }
 
-    private Single<RateRequestRecord> initialiseRemoteDataSourceAndGetResult() {
+    private Single<Request> initialiseRemoteDataSourceAndGetResult() {
         return remoteDataSource.getCurrencyList()
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess(currencyRecords -> localDataSource.saveCurrencies(currencyRecords))

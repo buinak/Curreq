@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Foreseer on 11-Oct-18.
  */
 
-public class RealmCurrencyRecord extends RealmObject {
+public class RealmCurrency extends RealmObject {
 
     @PrimaryKey
     private String id = UUID.randomUUID().toString();
@@ -17,12 +17,12 @@ public class RealmCurrencyRecord extends RealmObject {
     private String code;
     private String name;
 
-    public RealmCurrencyRecord(String code, String name) {
+    public RealmCurrency(String code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public RealmCurrencyRecord() {
+    public RealmCurrency() {
     }
 
     public String getId() {

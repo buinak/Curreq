@@ -3,10 +3,10 @@ package com.buinak.curreq.data.Local;
 import android.graphics.Bitmap;
 import android.util.Pair;
 
-import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
-import com.buinak.curreq.entities.CurreqEntity.SavedRateRecord;
+import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.Request;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithId;
 
 import java.util.List;
 
@@ -15,19 +15,19 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface LocalDataSource {
-    Single<RateRequestRecord> getLatestRecord();
-    Single<List<CurrencyRecord>> getCurrencyList();
+    Single<Request> getLatestRecord();
+    Single<List<Currency>> getCurrencyList();
 
     Single<Bitmap> getBitmap(String code);
-    Single<List<BitmapWrapper>> getAllBitmaps();
+    Single<List<CountryFlagBitmap>> getAllBitmaps();
 
-    Observable<List<SavedRateRecord>> getAllSavedRecords();
+    Observable<List<CurrencyExchangeRateWithId>> getAllSavedRecords();
 
     Completable cacheBitmaps();
 
-    void saveRecord(RateRequestRecord record);
-    void saveCurrencies(List<CurrencyRecord> currencyRecordList);
-    void saveRate(Pair<CurrencyRecord, CurrencyRecord> pair);
+    void saveRecord(Request record);
+    void saveCurrencies(List<Currency> currencyList);
+    void saveRate(Pair<Currency, Currency> pair);
 
     void swapRecord(String recordId);
 

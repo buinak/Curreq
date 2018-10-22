@@ -1,28 +1,28 @@
 package com.buinak.curreq.entities.CurreqEntity;
 
-public class SavedRateRecordBitmapWrapper {
+public class CurrencyExchangeRateWithBitmapsAndId {
 
     private String id;
-    private CurrencyRecordBitmapWrapper baseCurrencyRecord;
-    private CurrencyRecordBitmapWrapper currencyRecord;
+    private CurrencyCountryFlagWrapper baseCurrencyRecord;
+    private CurrencyCountryFlagWrapper currencyRecord;
 
     private double rate;
 
-    public SavedRateRecordBitmapWrapper(String id, CurrencyRecordBitmapWrapper baseCurrencyRecord, CurrencyRecordBitmapWrapper currencyRecord, double rate) {
+    public CurrencyExchangeRateWithBitmapsAndId(String id, CurrencyCountryFlagWrapper baseCurrencyRecord, CurrencyCountryFlagWrapper currencyRecord, double rate) {
         this.id = id;
         this.baseCurrencyRecord = baseCurrencyRecord;
         this.currencyRecord = currencyRecord;
         this.rate = rate;
     }
 
-    public SavedRateRecordBitmapWrapper() {
+    public CurrencyExchangeRateWithBitmapsAndId() {
     }
 
-    public CurrencyRecordBitmapWrapper getBaseCurrencyRecord() {
+    public CurrencyCountryFlagWrapper getBaseCurrencyRecord() {
         return baseCurrencyRecord;
     }
 
-    public CurrencyRecordBitmapWrapper getCurrencyRecord() {
+    public CurrencyCountryFlagWrapper getCurrencyRecord() {
         return currencyRecord;
     }
 
@@ -38,11 +38,11 @@ public class SavedRateRecordBitmapWrapper {
         this.id = id;
     }
 
-    public void setBaseCurrencyRecord(CurrencyRecordBitmapWrapper baseCurrencyRecord) {
+    public void setBaseCurrencyRecord(CurrencyCountryFlagWrapper baseCurrencyRecord) {
         this.baseCurrencyRecord = baseCurrencyRecord;
     }
 
-    public void setCurrencyRecord(CurrencyRecordBitmapWrapper currencyRecord) {
+    public void setCurrencyRecord(CurrencyCountryFlagWrapper currencyRecord) {
         this.currencyRecord = currencyRecord;
     }
 

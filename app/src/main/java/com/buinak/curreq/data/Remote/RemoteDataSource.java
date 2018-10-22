@@ -1,17 +1,17 @@
 package com.buinak.curreq.data.Remote;
 
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.Request;
 
 import java.util.List;
 
 import io.reactivex.Single;
 
 public interface RemoteDataSource {
-    Single<RateRequestRecord> getRates();
-    Single<List<CurrencyRecord>> getCurrencyList();
+    Single<Request> getRates();
+    Single<List<Currency>> getCurrencyList();
 
-    void setCurrencyList(List<CurrencyRecord> currencies);
+    void setCurrencyList(List<Currency> currencies);
 
     boolean isReady();
 }

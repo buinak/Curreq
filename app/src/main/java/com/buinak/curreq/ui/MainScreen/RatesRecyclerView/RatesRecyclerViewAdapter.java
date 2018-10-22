@@ -7,20 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.SavedRateRecordBitmapWrapper;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithBitmapsAndId;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RatesRecyclerViewAdapter extends RecyclerView.Adapter<RatesViewHolder> {
 
-    private List<SavedRateRecordBitmapWrapper> rateRecords;
+    private List<CurrencyExchangeRateWithBitmapsAndId> rateRecords;
 
     public RatesRecyclerViewAdapter() {
         rateRecords = new ArrayList<>();
     }
 
-    public void setRateRecords(List<SavedRateRecordBitmapWrapper> rateRecords) {
+    public void setRateRecords(List<CurrencyExchangeRateWithBitmapsAndId> rateRecords) {
         this.rateRecords = rateRecords;
     }
 

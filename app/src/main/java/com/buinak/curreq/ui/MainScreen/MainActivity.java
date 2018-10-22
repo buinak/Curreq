@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.SavedRateRecordBitmapWrapper;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRateWithBitmapsAndId;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
 import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesRecyclerViewAdapter;
 import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesViewHolder;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(v -> viewModel.onResetPressed());
     }
 
-    private void updateRecyclerView(List<SavedRateRecordBitmapWrapper> results) {
+    private void updateRecyclerView(List<CurrencyExchangeRateWithBitmapsAndId> results) {
         adapter.setRateRecords(results);
         adapter.notifyDataSetChanged();
     }

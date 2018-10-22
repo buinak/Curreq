@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.buinak.curreq.entities.CurreqEntity.BitmapWrapper;
+import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
 import com.buinak.curreq.utils.Constants;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class LocalCacheHandler {
 
     private Context context;
 
-    private List<BitmapWrapper> bitmaps;
+    private List<CountryFlagBitmap> bitmaps;
 
     public LocalCacheHandler(Context context) {
         this.context = context;
@@ -33,7 +33,7 @@ public class LocalCacheHandler {
 
 
     public Single<Bitmap> getBitmap(String code) {
-        for (BitmapWrapper wrapper :
+        for (CountryFlagBitmap wrapper :
                 bitmaps) {
             if (wrapper.getCode().equalsIgnoreCase(code)) {
                 return Single.just(wrapper.getBitmap());
@@ -42,7 +42,7 @@ public class LocalCacheHandler {
         return Single.just(bitmaps.get(0).getBitmap());
     }
 
-    public Single<List<BitmapWrapper>> getBitmaps() {
+    public Single<List<CountryFlagBitmap>> getBitmaps() {
         if (bitmaps == null){
             return loadBitmaps().doOnSuccess(result -> bitmaps = result);
         } else if (bitmaps.get(0) == null){
@@ -52,7 +52,7 @@ public class LocalCacheHandler {
         }
     }
 
-    private Single<List<BitmapWrapper>> loadBitmaps() {
+    private Single<List<CountryFlagBitmap>> loadBitmaps() {
         bitmaps = new ArrayList<>();
         for (String code :
                 Constants.PERMITTED_CODES) {
@@ -62,9 +62,9 @@ public class LocalCacheHandler {
             if (bitmap != null) {
                 Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, 100, 60, false);
                 bitmap.recycle();
-                bitmaps.add(new BitmapWrapper(code, newBitmap));
+                bitmaps.add(new CountryFlagBitmap(code, newBitmap));
             } else {
-                bitmaps.add(new BitmapWrapper(code, bitmap));
+                bitmaps.add(new CountryFlagBitmap(code, bitmap));
             }
 
         }

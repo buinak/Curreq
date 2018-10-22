@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
 import com.buinak.curreq.R;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecordBitmapWrapper;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyCountryFlagWrapper;
 import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyViewHolder;
 import com.buinak.curreq.ui.AddScreen.RowRecyclerView.RowRecyclerViewAdapter;
 import com.buinak.curreq.utils.Constants;
@@ -33,7 +33,7 @@ public class AddActivity extends AppCompatActivity {
 
     private AddViewModel viewModel;
 
-    private Observable<CurrencyRecord> selectedRates;
+    private Observable<Currency> selectedRates;
     private Disposable disposable;
 
     private static AddScreenObservablesModule addScreenObservablesModule;
@@ -75,7 +75,7 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
-    private void updateRecyclerView(List<List<CurrencyRecordBitmapWrapper>> list) {
+    private void updateRecyclerView(List<List<CurrencyCountryFlagWrapper>> list) {
         adapter.setRows(list);
         adapter.notifyDataSetChanged();
     }
@@ -84,7 +84,7 @@ public class AddActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        PublishSubject<CurrencyRecord> selectedRatesSubject = PublishSubject.create();
+        PublishSubject<Currency> selectedRatesSubject = PublishSubject.create();
         selectedRates = selectedRatesSubject;
         addScreenObservablesModule = new AddScreenObservablesModule(selectedRatesSubject);
 

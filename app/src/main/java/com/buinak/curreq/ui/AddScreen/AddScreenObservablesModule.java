@@ -1,6 +1,6 @@
 package com.buinak.curreq.ui.AddScreen;
 
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
 
 import javax.inject.Singleton;
 
@@ -10,15 +10,15 @@ import io.reactivex.subjects.PublishSubject;
 
 @Module
 public class AddScreenObservablesModule {
-    private PublishSubject<CurrencyRecord> subject;
+    private PublishSubject<Currency> subject;
 
-    public AddScreenObservablesModule(PublishSubject<CurrencyRecord> subject) {
+    public AddScreenObservablesModule(PublishSubject<Currency> subject) {
         this.subject = subject;
     }
 
     @Provides
     @Singleton
-    PublishSubject<CurrencyRecord> provideSubject(){
+    PublishSubject<Currency> provideSubject(){
         return subject;
     }
 }

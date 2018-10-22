@@ -3,9 +3,9 @@ package com.buinak.curreq.data.Remote;
 import com.buinak.curreq.data.Remote.Fixer.CurrencyListResponse;
 import com.buinak.curreq.data.Remote.Fixer.FixerIOApi;
 import com.buinak.curreq.data.Remote.Fixer.RateResponse;
-import com.buinak.curreq.entities.CurreqEntity.CurrencyRecord;
-import com.buinak.curreq.entities.CurreqEntity.RateRecord;
-import com.buinak.curreq.entities.CurreqEntity.RateRequestRecord;
+import com.buinak.curreq.entities.CurreqEntity.Currency;
+import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
+import com.buinak.curreq.entities.CurreqEntity.Request;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +19,7 @@ public class CurrencyRepository implements RemoteDataSource {
 
     private FixerIOApi fixerIOApi;
 
-    private Map<String, CurrencyRecord> currencyRecordMap;
+    private Map<String, Currency> currencyRecordMap;
 
     public CurrencyRepository(FixerIOApi fixerIOApi) {
         this.fixerIOApi = fixerIOApi;
@@ -27,7 +27,7 @@ public class CurrencyRepository implements RemoteDataSource {
     }
 
     @Override
-    public Single<RateRequestRecord> getRates(){
+    public Single<Request> getRates(){
         return fixerIOApi.getLatestRates(FixerIOApi.ACCESS_KEY)
                     .map(this::parseApiRateResponse);
     }
@@ -35,16 +35,16 @@ public class CurrencyRepository implements RemoteDataSource {
 
 
     @Override
-    public Single<List<CurrencyRecord>> getCurrencyList() {
+    public Single<List<Currency>> getCurrencyList() {
         return fixerIOApi.getCurrencyList(FixerIOApi.ACCESS_KEY)
                 .map(this::parseApiCurrencyListResponse);
     }
 
     @Override
-    public void setCurrencyList(List<CurrencyRecord> currencies) {
-        for (CurrencyRecord currencyRecord :
+    public void setCurrencyList(List<Currency> currencies) {
+        for (Currency currency :
                 currencies) {
-            currencyRecordMap.put(currencyRecord.getCode(), currencyRecord);
+            currencyRecordMap.put(currency.getCode(), currency);
         }
     }
 
@@ -53,20 +53,20 @@ public class CurrencyRepository implements RemoteDataSource {
         return (currencyRecordMap != null);
     }
 
-    private RateRequestRecord parseApiRateResponse(RateResponse response){
-        List<RateRecord> record = new ArrayList<>(response.getRates().entrySet().size());
-        CurrencyRecord baseCurrency = currencyRecordMap.get(FixerIOApi.BASE_CURRENCY);
+    private Request parseApiRateResponse(RateResponse response){
+        List<CurrencyExchangeRate> record = new ArrayList<>(response.getRates().entrySet().size());
+        Currency baseCurrency = currencyRecordMap.get(FixerIOApi.BASE_CURRENCY);
         for (Map.Entry<String, Double> entry :
                 response.getRates().entrySet()) {
-            CurrencyRecord currency = currencyRecordMap.get(entry.getKey());
-            record.add(new RateRecord(currency, baseCurrency, entry.getValue()));
+            Currency currency = currencyRecordMap.get(entry.getKey());
+            record.add(new CurrencyExchangeRate(currency, baseCurrency, entry.getValue()));
         }
 
-        return new RateRequestRecord(record, new Date());
+        return new Request(record, new Date());
     }
 
-    private List<CurrencyRecord> parseApiCurrencyListResponse(CurrencyListResponse response){
-        List<CurrencyRecord> currencyList = new ArrayList<>();
+    private List<Currency> parseApiCurrencyListResponse(CurrencyListResponse response){
+        List<Currency> currencyList = new ArrayList<>();
         boolean fillMap = false;
         if (currencyRecordMap == null || currencyRecordMap.size() == 0){
             currencyRecordMap = new HashMap<>();
@@ -74,10 +74,10 @@ public class CurrencyRepository implements RemoteDataSource {
         }
         for (Map.Entry<String, String> entry :
                 response.getCurrencyNames().entrySet()) {
-            CurrencyRecord currencyRecord = new CurrencyRecord(entry.getKey(), entry.getValue());
-            currencyList.add(currencyRecord);
+            Currency currency = new Currency(entry.getKey(), entry.getValue());
+            currencyList.add(currency);
             if (fillMap) {
-                currencyRecordMap.put(entry.getKey(), currencyRecord);
+                currencyRecordMap.put(entry.getKey(), currency);
             }
         }
         return currencyList;
