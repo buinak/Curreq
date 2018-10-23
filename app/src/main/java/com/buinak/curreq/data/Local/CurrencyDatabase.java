@@ -206,7 +206,7 @@ public class CurrencyDatabase {
     }
 
     public Observable<List<CurrencyExchangeRate>> getAllSavedRecords() {
-        if (disposable != null){
+        if (disposable != null) {
             disposable.dispose();
             disposable = null;
         }
@@ -214,22 +214,16 @@ public class CurrencyDatabase {
         disposable = new CompositeDisposable();
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmQuery<RealmAddedRate> rateQuery = realm.where(RealmAddedRate.class);
+            RealmQuery<RealmRequest> requestQuery = realm.where(RealmRequest.class);
             PublishSubject<List<CurrencyExchangeRate>> publishSubject = PublishSubject.create();
-            if (realm.isAutoRefresh()) {
-                disposable.add(rateQuery.findAllAsync()
-                        .asFlowable()
-                        .subscribe(list -> {
-                            publishSubject.onNext(getCurrencyExchangeRates(list));
-                        }));
-                return publishSubject;
-            } else {
-                disposable.add(rateQuery.findAllAsync()
-                        .asFlowable()
-                        .subscribe(list -> {
-                            publishSubject.onNext(getCurrencyExchangeRates(list));
-                        }));
-                return publishSubject;
-            }
+            disposable.add(rateQuery.findAllAsync()
+                    .asFlowable()
+                    .subscribe(list -> publishSubject.onNext(getCurrencyExchangeRates(list))));
+
+            disposable.add(requestQuery.findAllAsync()
+                    .asFlowable()
+                    .subscribe(rates -> publishSubject.onNext(getCurrencyExchangeRates(rateQuery.findAllAsync()))));
+            return publishSubject;
         }
     }
 
@@ -250,8 +244,8 @@ public class CurrencyDatabase {
         return newList;
     }
 
-    public void resetAllSavedRecords(){
-        try (Realm realm = Realm.getDefaultInstance()){
+    public void resetAllSavedRecords() {
+        try (Realm realm = Realm.getDefaultInstance()) {
             realm.executeTransaction(r -> {
                 r.where(RealmAddedRate.class).findAll().deleteAllFromRealm();
             });
@@ -290,7 +284,7 @@ public class CurrencyDatabase {
         return result;
     }
 
-    public void swapRecord(String recordId){
+    public void swapRecord(String recordId) {
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
@@ -302,9 +296,9 @@ public class CurrencyDatabase {
             record.setCurrencyId(baseCurrencyId);
             realm.commitTransaction();
         } finally {
-             if (realm != null){
-                 realm.close();
-             }
+            if (realm != null) {
+                realm.close();
+            }
         }
     }
 }
