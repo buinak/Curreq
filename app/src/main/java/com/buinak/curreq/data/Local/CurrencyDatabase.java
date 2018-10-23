@@ -12,6 +12,7 @@ import com.buinak.curreq.entities.RealmEntity.RealmRequest;
 import com.buinak.curreq.entities.RealmEntity.RealmAddedRate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -305,6 +306,18 @@ public class CurrencyDatabase {
             if (realm != null) {
                 realm.close();
             }
+        }
+    }
+
+    public Observable<Date> getLatestRecordDate() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            PublishSubject<Date> subject = PublishSubject.create();
+            disposable.add(realm.where(RealmRequest.class).findAllAsync()
+                    .asFlowable()
+                    .map(results -> results.last())
+                    .map(RealmRequest::getDate)
+                    .subscribe(subject::onNext));
+            return subject;
         }
     }
 }

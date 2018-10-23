@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,11 +17,13 @@ public class MainViewModel extends ViewModel {
     MainRepository mainRepository;
 
     private LiveData<List<CurrencyExchangeRate>> savedRateRecords;
+    private LiveData<Date> lastUpdatedDate;
 
     public MainViewModel() {
         CurreqApplication.inject(this);
 
         savedRateRecords = mainRepository.getSavedRatesLiveData();
+        lastUpdatedDate = mainRepository.getLastUpdatedLiveData();
     }
 
     public LiveData<List<CurrencyExchangeRate>> getSavedRateRecords() {
@@ -37,5 +40,9 @@ public class MainViewModel extends ViewModel {
 
     public void onUpdatePressed() {
         mainRepository.onUpdatePressed();
+    }
+
+    public LiveData<Date> getLastUpdatedDate() {
+        return lastUpdatedDate;
     }
 }

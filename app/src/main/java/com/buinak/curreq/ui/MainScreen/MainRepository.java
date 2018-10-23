@@ -10,6 +10,7 @@ import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class MainRepository {
     public LiveData<List<CurrencyExchangeRate>> getSavedRatesLiveData(){
 
         MutableLiveData<List<CurrencyExchangeRate>> liveData = new MutableLiveData<>();
-        disposable.add(dataSource.getAllSavedRecords().subscribe(results -> {
+        disposable.add(dataSource.getAllSavedRecordsObservable().subscribe(results -> {
             disposable.add(dataSource.getAllBitmaps()
                     .subscribeOn(Schedulers.io())
                     .subscribe(bitmaps -> {
@@ -82,5 +83,12 @@ public class MainRepository {
     public void onUpdatePressed() {
         dataSource.updateRecords()
                 .subscribe();
+    }
+
+    public LiveData<Date> getLastUpdatedLiveData() {
+        MutableLiveData<Date> mutableLiveData = new MutableLiveData<>();
+        disposable.add(dataSource.getLatestRecordDateObservable()
+                .subscribe(mutableLiveData::postValue));
+        return mutableLiveData;
     }
 }

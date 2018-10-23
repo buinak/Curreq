@@ -11,6 +11,7 @@ import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
 import com.buinak.curreq.utils.RepositoryUtils;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -68,6 +69,11 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public Observable<Date> getLatestRecordDateObservable() {
+        return localDataSource.getLatestRecordDate();
+    }
+
+    @Override
     public Single<List<Currency>> requestFullCurrencyList() {
         if (localDataSource.hasCurrencyRecords()) {
             return localDataSource.getCurrencyList()
@@ -100,7 +106,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Observable<List<CurrencyExchangeRate>> getAllSavedRecords() {
+    public Observable<List<CurrencyExchangeRate>> getAllSavedRecordsObservable() {
         return localDataSource.getAllSavedRecords();
     }
 

@@ -40,6 +40,17 @@
         app:layout_constraintEnd_toEndOf="@+id/RESET_REMOVE_DEBUG_BUTTON"
         app:layout_constraintStart_toStartOf="@+id/RESET_REMOVE_DEBUG_BUTTON" />
 
+    <TextView
+        android:id="@+id/testView_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/UPDATE_RATES_DEBUG_BUTTON"
+        app:layout_constraintEnd_toEndOf="@+id/UPDATE_RATES_DEBUG_BUTTON"
+        app:layout_constraintStart_toStartOf="@+id/UPDATE_RATES_DEBUG_BUTTON" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_screen_recycler_view"
         android:layout_width="0dp"

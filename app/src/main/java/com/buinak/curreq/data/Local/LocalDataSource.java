@@ -8,6 +8,7 @@ import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -35,4 +36,6 @@ public interface LocalDataSource {
 
     boolean hasCurrencyRateRecords();
     boolean hasCurrencyRecords();
+
+    Observable<Date> getLatestRecordDate();
 }

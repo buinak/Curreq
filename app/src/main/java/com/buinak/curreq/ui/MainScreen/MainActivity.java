@@ -7,7 +7,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.buinak.curreq.R;
@@ -15,6 +19,7 @@ import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
 import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesRecyclerViewAdapter;
 import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesViewHolder;
+import com.buinak.curreq.ui.SettingsScreen.SettingsActivity;
 
 import java.util.List;
 
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.UPDATE_RATES_DEBUG_BUTTON)
     Button updateButton;
+
+    @BindView(R.id.testView_date)
+    TextView textViewDate;
 
     private MainViewModel viewModel;
 
@@ -65,12 +73,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        viewModel.getLastUpdatedDate().observe(this, date -> {
+            if (date != null) {
+                textViewDate.setText(date.toString());
+            }
+        });
+
         floatingActionButton.setOnClickListener(v -> {
             startAddActivity();
         });
 
         resetButton.setOnClickListener(v -> viewModel.onResetPressed());
         updateButton.setOnClickListener(v -> viewModel.onUpdatePressed());
+
     }
 
     private void updateRecyclerView(List<CurrencyExchangeRate> results) {
@@ -89,6 +104,21 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings){
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public static void inject(RatesViewHolder viewHolder) {
         DaggerMainComponent.builder()

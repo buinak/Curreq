@@ -8,6 +8,7 @@ import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -19,6 +20,7 @@ public interface DataSource {
     Single<Request> requestRecord();
     Single<Request> requestNewRecord();
     Completable updateRecords();
+    Observable<Date> getLatestRecordDateObservable();
 
     Completable initialiseRepositoryIfFirstStart();
     Completable initialiseBitmaps();
@@ -30,7 +32,7 @@ public interface DataSource {
     Single<List<Currency>> requestFilteredCurrencyList();
 
     Completable saveRatePair(Pair<Currency, Currency> pair);
-    Observable<List<CurrencyExchangeRate>> getAllSavedRecords();
+    Observable<List<CurrencyExchangeRate>> getAllSavedRecordsObservable();
     void swapRecord(String recordId);
     void resetAllSavedRecords();
 

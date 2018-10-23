@@ -8,6 +8,7 @@ import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.entities.CurreqEntity.Request;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -85,5 +86,10 @@ public class LocalDataHandler implements LocalDataSource{
     @Override
     public boolean hasCurrencyRecords() {
         return database.hasCurrencyRecords();
+    }
+
+    @Override
+    public Observable<Date> getLatestRecordDate() {
+        return database.getLatestRecordDate();
     }
 }
