@@ -213,50 +213,41 @@ public class CurrencyDatabase {
 
         disposable = new CompositeDisposable();
         try (Realm realm = Realm.getDefaultInstance()) {
+            RealmQuery<RealmAddedRate> rateQuery = realm.where(RealmAddedRate.class);
             PublishSubject<List<CurrencyExchangeRate>> publishSubject = PublishSubject.create();
             if (realm.isAutoRefresh()) {
-                disposable.add(realm.asFlowable()
-                        .subscribe(realmResult -> {
-                            List<RealmAddedRate> list = realmResult.where(RealmAddedRate.class).findAll();
-                            List<CurrencyExchangeRate> newList = new ArrayList<>(list.size());
-                            for (RealmAddedRate result :
-                                    list) {
-                                double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
-
-                                Currency baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
-                                Currency currency = getCurrencyRecord(result.getCurrencyId());
-
-                                CurrencyExchangeRate currencyExchangeRateWithId =
-                                        new CurrencyExchangeRate(result.getId(), baseCurrency, currency, rate);
-                                newList.add(currencyExchangeRateWithId);
-                            }
-                            publishSubject.onNext(newList);
+                disposable.add(rateQuery.findAllAsync()
+                        .asFlowable()
+                        .subscribe(list -> {
+                            publishSubject.onNext(getCurrencyExchangeRates(list));
                         }));
                 return publishSubject;
             } else {
-                disposable.add(realm.asFlowable()
-                        .subscribe(realmResult -> {
-                            List<RealmAddedRate> list = realmResult.where(RealmAddedRate.class).findAll();
-                            List<CurrencyExchangeRate> newList = new ArrayList<>(list.size());
-                            for (RealmAddedRate result :
-                                    list) {
-                                double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
-
-                                Currency baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
-                                Currency currency = getCurrencyRecord(result.getCurrencyId());
-
-                                CurrencyExchangeRate currencyExchangeRateWithId =
-                                        new CurrencyExchangeRate(result.getId(), baseCurrency, currency, rate);
-                                newList.add(currencyExchangeRateWithId);
-                            }
-                            publishSubject.onNext(newList);
-                        }, e -> {
-                            System.out.println();
-                            System.out.println();
+                disposable.add(rateQuery.findAllAsync()
+                        .asFlowable()
+                        .subscribe(list -> {
+                            publishSubject.onNext(getCurrencyExchangeRates(list));
                         }));
                 return publishSubject;
             }
         }
+    }
+
+    @NonNull
+    private List<CurrencyExchangeRate> getCurrencyExchangeRates(List<RealmAddedRate> list) {
+        List<CurrencyExchangeRate> newList = new ArrayList<>(list.size());
+        for (RealmAddedRate result :
+                list) {
+            double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
+
+            Currency baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
+            Currency currency = getCurrencyRecord(result.getCurrencyId());
+
+            CurrencyExchangeRate currencyExchangeRateWithId =
+                    new CurrencyExchangeRate(result.getId(), baseCurrency, currency, rate);
+            newList.add(currencyExchangeRateWithId);
+        }
+        return newList;
     }
 
     public void resetAllSavedRecords(){
