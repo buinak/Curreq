@@ -80,6 +80,7 @@ public class MainRepository {
     }
 
     public void onUpdatePressed() {
-        dataSource.requestNewRecord().subscribe();
+        dataSource.updateRecords()
+                .subscribe();
     }
 }

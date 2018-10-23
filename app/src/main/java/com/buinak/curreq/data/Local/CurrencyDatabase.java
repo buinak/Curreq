@@ -14,6 +14,7 @@ import com.buinak.curreq.entities.RealmEntity.RealmAddedRate;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
@@ -215,15 +216,20 @@ public class CurrencyDatabase {
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmQuery<RealmAddedRate> rateQuery = realm.where(RealmAddedRate.class);
             RealmQuery<RealmRequest> requestQuery = realm.where(RealmRequest.class);
-            PublishSubject<List<CurrencyExchangeRate>> publishSubject = PublishSubject.create();
-            disposable.add(rateQuery.findAllAsync()
-                    .asFlowable()
-                    .subscribe(list -> publishSubject.onNext(getCurrencyExchangeRates(list))));
 
-            disposable.add(requestQuery.findAllAsync()
+            PublishSubject<List<CurrencyExchangeRate>> subject = PublishSubject.create();
+            Flowable<List<CurrencyExchangeRate>> normalFlowable = rateQuery.findAllAsync()
                     .asFlowable()
-                    .subscribe(rates -> publishSubject.onNext(getCurrencyExchangeRates(rateQuery.findAllAsync()))));
-            return publishSubject;
+                    .map(this::getCurrencyExchangeRates);
+
+            Flowable<List<CurrencyExchangeRate>> rateUpdateFlowable = requestQuery.findAllAsync()
+                    .asFlowable()
+                    .map(rates -> getCurrencyExchangeRates(rateQuery.findAllAsync()));
+
+            disposable.add(normalFlowable.mergeWith(rateUpdateFlowable)
+                    .subscribe(subject::onNext));
+
+            return subject;
         }
     }
 

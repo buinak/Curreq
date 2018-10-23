@@ -63,6 +63,11 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public Completable updateRecords() {
+        return Completable.fromSingle(requestNewRecord());
+    }
+
+    @Override
     public Single<List<Currency>> requestFullCurrencyList() {
         if (localDataSource.hasCurrencyRecords()) {
             return localDataSource.getCurrencyList()

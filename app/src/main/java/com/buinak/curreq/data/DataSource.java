@@ -18,6 +18,7 @@ public interface DataSource {
 
     Single<Request> requestRecord();
     Single<Request> requestNewRecord();
+    Completable updateRecords();
 
     Completable initialiseRepositoryIfFirstStart();
     Completable initialiseBitmaps();
