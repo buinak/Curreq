@@ -78,4 +78,8 @@ public class MainRepository {
     public void onResetPressed(){
         dataSource.resetAllSavedRecords();
     }
+
+    public void onUpdatePressed() {
+        dataSource.requestNewRecord().subscribe();
+    }
 }

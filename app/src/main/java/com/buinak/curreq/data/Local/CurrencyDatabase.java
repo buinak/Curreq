@@ -98,6 +98,7 @@ public class CurrencyDatabase {
     public void saveRecord(Request record) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.executeTransaction(r -> {
+                r.where(RealmRequest.class).findAll().deleteAllFromRealm();
                 RealmRequest requestRecord = new RealmRequest();
                 requestRecord.setDate(record.getDate());
                 RealmList<RealmCurrencyExchangeRate> list = new RealmList<>();
@@ -212,12 +213,11 @@ public class CurrencyDatabase {
 
         disposable = new CompositeDisposable();
         try (Realm realm = Realm.getDefaultInstance()) {
-            RealmQuery<RealmAddedRate> records = realm.where(RealmAddedRate.class);
             PublishSubject<List<CurrencyExchangeRate>> publishSubject = PublishSubject.create();
             if (realm.isAutoRefresh()) {
-                disposable.add(records.findAllAsync()
-                        .asFlowable()
-                        .subscribe(list -> {
+                disposable.add(realm.asFlowable()
+                        .subscribe(realmResult -> {
+                            List<RealmAddedRate> list = realmResult.where(RealmAddedRate.class).findAll();
                             List<CurrencyExchangeRate> newList = new ArrayList<>(list.size());
                             for (RealmAddedRate result :
                                     list) {
@@ -234,9 +234,9 @@ public class CurrencyDatabase {
                         }));
                 return publishSubject;
             } else {
-                disposable.add(records.findAll()
-                        .asFlowable()
-                        .subscribe(list -> {
+                disposable.add(realm.asFlowable()
+                        .subscribe(realmResult -> {
+                            List<RealmAddedRate> list = realmResult.where(RealmAddedRate.class).findAll();
                             List<CurrencyExchangeRate> newList = new ArrayList<>(list.size());
                             for (RealmAddedRate result :
                                     list) {

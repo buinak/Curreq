@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.buinak.curreq.R;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
@@ -31,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     @BindView(R.id.RESET_REMOVE_DEBUG_BUTTON)
-    Button button;
+    Button resetButton;
+
+    @BindView(R.id.UPDATE_RATES_DEBUG_BUTTON)
+    Button updateButton;
 
     private MainViewModel viewModel;
 
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         initialiseRecyclerView();
         viewModel.getSavedRateRecords().observe(this, results -> {
             if (results != null) {
+                Toast.makeText(this, "UPDATED!!", Toast.LENGTH_SHORT).show();
                 updateRecyclerView(results);
             }
         });
@@ -64,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
             startAddActivity();
         });
 
-        button.setOnClickListener(v -> viewModel.onResetPressed());
+        resetButton.setOnClickListener(v -> viewModel.onResetPressed());
+        updateButton.setOnClickListener(v -> viewModel.onUpdatePressed());
     }
 
     private void updateRecyclerView(List<CurrencyExchangeRate> results) {

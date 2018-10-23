@@ -35,4 +35,7 @@ public class MainViewModel extends ViewModel {
         mainRepository.onResetPressed();
     }
 
+    public void onUpdatePressed() {
+        mainRepository.onUpdatePressed();
+    }
 }
