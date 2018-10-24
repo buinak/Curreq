@@ -11,13 +11,19 @@ import dagger.Provides;
 public class LocalDataSourceModule {
     @Provides
     @Singleton
-    public LocalDataSource provideLocalDataSource(LocalCacheHandler localCacheHandler, CurrencyDatabase currencyDatabase) {
-        return new LocalDataHandler(currencyDatabase, localCacheHandler);
+    public LocalDataSource provideLocalDataSource(LocalCacheHandler localCacheHandler,
+                                                  CurrencyDatabase currencyDatabase,
+                                                  PreferencesRepository preferencesRepository) {
+        return new LocalDataHandler(currencyDatabase, localCacheHandler, preferencesRepository);
     }
 
     @Provides
     @Singleton
     public LocalCacheHandler provideCacher(Context context) { return new LocalCacheHandler(context); }
+
+    @Provides
+    @Singleton
+    PreferencesRepository providePreferencesRepository(Context context) { return new PreferencesRepository(context); }
 
     @Provides
     @Singleton

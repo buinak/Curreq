@@ -17,25 +17,27 @@ import io.reactivex.Single;
 
 public interface DataSource {
 
-    Single<Request> requestRecord();
+    //// REMOTE REPO
     Single<Request> requestNewRecord();
     Completable updateRecords();
-    Observable<Date> getLatestRecordDateObservable();
 
+    //LOCAL/REMOTE
+    Single<Request> requestRecord();
     Completable initialiseRepositoryIfFirstStart();
-    Completable initialiseBitmaps();
-
-    Single<Bitmap> getBitmap(String code);
-    Single<List<CountryFlagBitmap>> getAllBitmaps();
-
     Single<List<Currency>> requestFullCurrencyList();
     Single<List<Currency>> requestFilteredCurrencyList();
 
+    //// LOCAL REPO
+    Single<Bitmap> getBitmap(String code);
+    Single<List<CountryFlagBitmap>> getAllBitmaps();
+    Observable<Date> getLatestRecordDateObservable();
+    Completable initialiseBitmaps();
     Completable saveRatePair(Pair<Currency, Currency> pair);
+
+    boolean isDailyUpdatesOn();
+    void setDailyUpdates(Boolean dailyUpdates);
+
     Observable<List<CurrencyExchangeRate>> getAllSavedRecordsObservable();
     void swapRecord(String recordId);
     void resetAllSavedRecords();
-
-    void dispose();
-
 }

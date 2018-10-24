@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -28,29 +29,28 @@ public class MainRepository {
         disposable = new CompositeDisposable();
     }
 
-    public LiveData<List<CurrencyExchangeRate>> getSavedRatesLiveData(){
-
+    public MutableLiveData<List<CurrencyExchangeRate>> getSavedRatesLiveData() {
         MutableLiveData<List<CurrencyExchangeRate>> liveData = new MutableLiveData<>();
         disposable.add(dataSource.getAllSavedRecordsObservable().subscribe(results -> {
             disposable.add(dataSource.getAllBitmaps()
                     .subscribeOn(Schedulers.io())
                     .subscribe(bitmaps -> {
-                    if (bitmaps.size() != 0){
-                        if (bitmaps.get(0) != null) {
-                            liveData.postValue(wrapRateRecords(bitmaps, results));
+                        if (bitmaps.size() != 0) {
+                            if (bitmaps.get(0) != null) {
+                                liveData.postValue(wrapRateRecords(bitmaps, results));
+                            } else {
+                                liveData.postValue(null);
+                            }
                         } else {
                             liveData.postValue(null);
                         }
-                    } else {
-                        liveData.postValue(null);
-                    }
-            }));
+                    }));
         }));
         return liveData;
     }
 
     private List<CurrencyExchangeRate> wrapRateRecords(List<CountryFlagBitmap> wrappers,
-                                                                       List<CurrencyExchangeRate> records){
+                                                       List<CurrencyExchangeRate> records) {
         HashMap<String, Bitmap> bitmapHashMap = new HashMap<>();
         for (CountryFlagBitmap wrapper :
                 wrappers) {
@@ -72,11 +72,11 @@ public class MainRepository {
         return currencyExchangeRateWithBitmapsAndIds;
     }
 
-    public void replaceRecordWithNew(String recordId){
+    public void replaceRecordWithNew(String recordId) {
         dataSource.swapRecord(recordId);
     }
 
-    public void onResetPressed(){
+    public void onResetPressed() {
         dataSource.resetAllSavedRecords();
     }
 
@@ -88,7 +88,20 @@ public class MainRepository {
     public LiveData<Date> getLastUpdatedLiveData() {
         MutableLiveData<Date> mutableLiveData = new MutableLiveData<>();
         disposable.add(dataSource.getLatestRecordDateObservable()
-                .subscribe(mutableLiveData::postValue));
+                        .subscribe(mutableLiveData::postValue));
         return mutableLiveData;
+    }
+
+    public void checkDailyUpdates(){
+        if (dataSource.isDailyUpdatesOn()) {
+            disposable.add(dataSource.getLatestRecordDateObservable()
+                    .subscribe(date -> {
+                        long DAY_IN_MS = 1000 * 60 * 60 * 24;
+                        Date dayAgo = new Date(System.currentTimeMillis() - DAY_IN_MS);
+                        if (date.getTime() < dayAgo.getTime()) {
+                            dataSource.updateRecords().subscribe();
+                        }
+                    }));
+        }
     }
 }

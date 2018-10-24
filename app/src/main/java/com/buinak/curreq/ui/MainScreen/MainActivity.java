@@ -59,12 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        mainScreenObservableModule = new MainScreenObservableModule(PublishSubject.create());
-        disposable = mainScreenObservableModule.provideObservableClickedCurrencyRecords()
-                .subscribe(recordId -> viewModel.onRateRecordSwapped(recordId));
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
+        viewModel.onBind();
         initialiseRecyclerView();
         viewModel.getSavedRateRecords().observe(this, results -> {
             if (results != null) {
@@ -78,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
                 textViewDate.setText(date.toString());
             }
         });
+
+        mainScreenObservableModule = new MainScreenObservableModule(PublishSubject.create());
+        disposable = mainScreenObservableModule.provideObservableClickedCurrencyRecords()
+                .subscribe(recordId -> viewModel.onRateRecordSwapped(recordId));
 
         floatingActionButton.setOnClickListener(v -> {
             startAddActivity();

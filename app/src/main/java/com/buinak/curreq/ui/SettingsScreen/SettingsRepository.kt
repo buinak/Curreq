@@ -6,8 +6,11 @@ import io.reactivex.disposables.CompositeDisposable
 class SettingsRepository (private val dataSource: DataSource) {
     val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    fun test(){
-        println()
-        println()
+    init {
+        val isDailyUpdatesOn: Boolean = dataSource.isDailyUpdatesOn
     }
+
+    fun setDailyUpdates(boolean: Boolean) = dataSource.setDailyUpdates(boolean)
+
+    fun isDailyUpdatesOn(): Boolean = dataSource.isDailyUpdatesOn
 }

@@ -1,6 +1,7 @@
 package com.buinak.curreq.ui.MainScreen;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.buinak.curreq.application.CurreqApplication;
@@ -10,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.disposables.Disposable;
 
 public class MainViewModel extends ViewModel {
 
@@ -24,6 +27,10 @@ public class MainViewModel extends ViewModel {
 
         savedRateRecords = mainRepository.getSavedRatesLiveData();
         lastUpdatedDate = mainRepository.getLastUpdatedLiveData();
+    }
+
+    public void onBind() {
+        mainRepository.checkDailyUpdates();
     }
 
     public LiveData<List<CurrencyExchangeRate>> getSavedRateRecords() {

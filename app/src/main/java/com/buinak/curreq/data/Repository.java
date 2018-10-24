@@ -106,6 +106,16 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public boolean isDailyUpdatesOn() {
+        return localDataSource.isDailyUpdatesOn();
+    }
+
+    @Override
+    public void setDailyUpdates(Boolean dailyUpdates) {
+        localDataSource.setDailyUpdates(dailyUpdates);
+    }
+
+    @Override
     public Observable<List<CurrencyExchangeRate>> getAllSavedRecordsObservable() {
         return localDataSource.getAllSavedRecords();
     }
@@ -156,12 +166,4 @@ public class Repository implements DataSource {
                 .doOnSuccess(result -> localDataSource.saveRecord(result));
     }
 
-
-    @Override
-    public void dispose() {
-        if (disposable != null) {
-            disposable.dispose();
-            disposable = null;
-        }
-    }
 }

@@ -19,10 +19,14 @@ public class LocalDataHandler implements LocalDataSource{
 
     private CurrencyDatabase database;
     private LocalCacheHandler localCacheHandler;
+    private PreferencesRepository preferencesRepository;
 
-    public LocalDataHandler(CurrencyDatabase database, LocalCacheHandler localCacheHandler) {
+    public LocalDataHandler(CurrencyDatabase database,
+                            LocalCacheHandler localCacheHandler,
+                            PreferencesRepository preferencesRepository) {
         this.database = database;
         this.localCacheHandler = localCacheHandler;
+        this.preferencesRepository = preferencesRepository;
     }
 
     public Single<Request> getLatestRecord() {
@@ -91,5 +95,15 @@ public class LocalDataHandler implements LocalDataSource{
     @Override
     public Observable<Date> getLatestRecordDate() {
         return database.getLatestRecordDate();
+    }
+
+    @Override
+    public boolean isDailyUpdatesOn() {
+        return preferencesRepository.isDailyUpdatesOn();
+    }
+
+    @Override
+    public void setDailyUpdates(Boolean dailyUpdates) {
+        preferencesRepository.setDailyUpdates(dailyUpdates);
     }
 }

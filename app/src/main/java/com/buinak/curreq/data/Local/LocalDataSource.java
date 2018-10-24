@@ -38,4 +38,7 @@ public interface LocalDataSource {
     boolean hasCurrencyRecords();
 
     Observable<Date> getLatestRecordDate();
+
+    boolean isDailyUpdatesOn();
+    void setDailyUpdates(Boolean dailyUpdates);
 }

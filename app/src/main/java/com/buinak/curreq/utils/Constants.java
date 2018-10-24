@@ -10,6 +10,8 @@ public class Constants {
 
     public static final int ADD_SCREEN_AMOUNT_OF_ROWS_PER_SCREEN = 4;
 
+    public static final String SETTINGS_PREFERENCES = "settings";
+
     public static final List<String> PERMITTED_CODES = Arrays.asList("AUD", "BGN", "BRL", "CAD", "CNY", "CHF", "CZK", "DKK", "EUR", "GBP", "HRK",
             "HUF", "INR", "JPY", "KRW", "NOK", "PLN", "RON", "RUB", "SEK", "USD");
 

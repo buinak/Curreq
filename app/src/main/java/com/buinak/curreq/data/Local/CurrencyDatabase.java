@@ -19,6 +19,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -28,8 +29,10 @@ import io.realm.RealmResults;
 public class CurrencyDatabase {
 
     private CompositeDisposable disposable;
+    private Observable<Date> dateObservable;
 
     public CurrencyDatabase() {
+        disposable = new CompositeDisposable();
     }
 
     @NonNull
@@ -310,14 +313,17 @@ public class CurrencyDatabase {
     }
 
     public Observable<Date> getLatestRecordDate() {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            PublishSubject<Date> subject = PublishSubject.create();
-            disposable.add(realm.where(RealmRequest.class).findAllAsync()
-                    .asFlowable()
-                    .map(results -> results.last())
-                    .map(RealmRequest::getDate)
-                    .subscribe(subject::onNext));
-            return subject;
+            try (Realm realm = Realm.getDefaultInstance()) {
+                BehaviorSubject dateObservable = BehaviorSubject.create();
+                this.dateObservable = dateObservable;
+                disposable.add(realm.where(RealmRequest.class).findAllAsync()
+                        .asFlowable()
+                        .map(results -> results.last())
+                        .map(RealmRequest::getDate)
+                        .subscribe(date -> {
+                            dateObservable.onNext(date);
+                        }));
+                return dateObservable;
+            }
         }
-    }
 }
