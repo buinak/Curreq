@@ -15,7 +15,7 @@ import io.realm.RealmConfiguration;
 public class CurreqApplication extends Application {
 
     private static ApplicationComponent repositoryComponent;
-    private static ApplicationModule applicationModule;
+    private static ContextModule contextModule;
 
     public static final String DATABASE_NAME = "curreq_db.realm";
 
@@ -30,10 +30,10 @@ public class CurreqApplication extends Application {
                 .build();
         Realm.setDefaultConfiguration(databaseConfig);
 
-        applicationModule = new ApplicationModule(this);
+        contextModule = new ContextModule(this);
 
         repositoryComponent = DaggerApplicationComponent.builder()
-                .applicationModule(applicationModule)
+                .contextModule(contextModule)
                 .build();
     }
 
