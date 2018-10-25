@@ -29,7 +29,6 @@ import io.realm.RealmResults;
 public class CurrencyDatabase {
 
     private CompositeDisposable disposable;
-    private Observable<Date> dateObservable;
 
     public CurrencyDatabase() {
         disposable = new CompositeDisposable();
@@ -315,7 +314,6 @@ public class CurrencyDatabase {
     public Observable<Date> getLatestRecordDate() {
             try (Realm realm = Realm.getDefaultInstance()) {
                 BehaviorSubject dateObservable = BehaviorSubject.create();
-                this.dateObservable = dateObservable;
                 disposable.add(realm.where(RealmRequest.class).findAllAsync()
                         .asFlowable()
                         .map(results -> results.last())

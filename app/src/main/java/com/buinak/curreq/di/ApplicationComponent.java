@@ -3,7 +3,7 @@ package com.buinak.curreq.di;
 import android.content.Context;
 
 import com.buinak.curreq.application.ContextModule;
-import com.buinak.curreq.data.RepositoryModule;
+import com.buinak.curreq.data.DataRepositoriesModule;
 import com.buinak.curreq.ui.AddScreen.AddRepository;
 import com.buinak.curreq.ui.AddScreen.AddViewModel;
 import com.buinak.curreq.ui.LoadingScreen.LoadingRepository;
@@ -17,7 +17,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
-@Component (modules = {RepositoryModule.class, ApplicationRepositoriesModule.class, ContextModule.class})
+@Component (modules = {DataRepositoriesModule.class, ApplicationRepositoriesModule.class, ContextModule.class})
 @Singleton
 public interface ApplicationComponent {
     AddRepository provideAddRepository();

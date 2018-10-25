@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +23,11 @@ import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesViewHolder;
 import com.buinak.curreq.ui.SettingsScreen.SettingsActivity;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -39,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.RESET_REMOVE_DEBUG_BUTTON)
     Button resetButton;
 
-    @BindView(R.id.UPDATE_RATES_DEBUG_BUTTON)
-    Button updateButton;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.testView_date)
     TextView textViewDate;
@@ -85,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         resetButton.setOnClickListener(v -> viewModel.onResetPressed());
-        updateButton.setOnClickListener(v -> viewModel.onUpdatePressed());
-
+        swipeRefreshLayout.setOnRefreshListener(() -> viewModel.onUpdatePressed());
+        viewModel.getIsUpdating().observe(this, isUpdating -> swipeRefreshLayout.setRefreshing(isUpdating));
     }
 
     private void updateRecyclerView(List<CurrencyExchangeRate> results) {

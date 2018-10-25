@@ -11,7 +11,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module (includes = {LocalDataSourceModule.class, RemoteDataSourceModule.class})
-public class RepositoryModule {
+public class DataRepositoriesModule {
 
     @Provides
     @Singleton

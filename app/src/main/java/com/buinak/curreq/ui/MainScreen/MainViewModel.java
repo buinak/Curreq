@@ -21,12 +21,17 @@ public class MainViewModel extends ViewModel {
 
     private LiveData<List<CurrencyExchangeRate>> savedRateRecords;
     private LiveData<Date> lastUpdatedDate;
+    private MutableLiveData<Boolean> isUpdating;
 
     public MainViewModel() {
         CurreqApplication.inject(this);
 
         savedRateRecords = mainRepository.getSavedRatesLiveData();
+        savedRateRecords.observeForever(r -> isUpdating.postValue(false));
+
         lastUpdatedDate = mainRepository.getLastUpdatedLiveData();
+        isUpdating = new MutableLiveData<>();
+        isUpdating.postValue(false);
     }
 
     public void onBind() {
@@ -47,9 +52,14 @@ public class MainViewModel extends ViewModel {
 
     public void onUpdatePressed() {
         mainRepository.onUpdatePressed();
+        isUpdating.postValue(true);
     }
 
     public LiveData<Date> getLastUpdatedDate() {
         return lastUpdatedDate;
+    }
+
+    public MutableLiveData<Boolean> getIsUpdating() {
+        return isUpdating;
     }
 }
