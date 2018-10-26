@@ -25,103 +25,116 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageView_baseCurrency"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/es" />
-
-
-            <TextView
-                android:id="@+id/textView_baseCurrency"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout_baseCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="Euro"
-                android:textColor="@color/colorAccent"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView_baseCurrency"
-                app:layout_constraintStart_toEndOf="@+id/imageView_baseCurrency"
-                app:layout_constraintTop_toTopOf="@+id/imageView_baseCurrency" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textView_baseCurrencyAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:text="1"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_baseCurrency"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton"
-                app:layout_constraintStart_toEndOf="@+id/textView_baseCurrency"
-                app:layout_constraintTop_toTopOf="@+id/textView_baseCurrency" />
+                <ImageView
+                    android:id="@+id/imageView_baseCurrency"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/es" />
+
+                <TextView
+                    android:id="@+id/textView_baseCurrency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:text="Euro"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageView_baseCurrency"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/imageButton_swap"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@color/colorPrimaryLight"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout_baseCurrency"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_swap_horiz_black_24dp" />
+                app:srcCompat="@drawable/ic_cached_black_24dp" />
 
-            <ImageView
-                android:id="@+id/imageView_currency"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout_currency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageButton_swap"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imageView_currency"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/es" />
+
+                <TextView
+                    android:id="@+id/textView_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:text="Euro"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageView_currency"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textView_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/es" />
-
-            <TextView
-                android:id="@+id/textView_currency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:text="Euro"
+                android:text="1.154"
                 android:textColor="@color/colorAccent"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView_baseCurrency"
-                app:layout_constraintEnd_toStartOf="@+id/imageView_currency"
-                app:layout_constraintTop_toTopOf="@+id/imageView_baseCurrency" />
-
-            <TextView
-                android:id="@+id/textView_currencyAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:text="5"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_baseCurrency"
-                app:layout_constraintEnd_toStartOf="@+id/textView_currency"
-                app:layout_constraintStart_toEndOf="@+id/imageButton"
-                app:layout_constraintTop_toTopOf="@+id/textView_baseCurrency" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 

@@ -2,7 +2,10 @@ package com.buinak.curreq.utils;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v7.widget.CardView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,5 +41,32 @@ public class ViewUtils {
                 colourTo);
         backgroundColorAnimator.setDuration(duration);
         backgroundColorAnimator.start();
+    }
+
+    //dynamically outputs the needed textsize to fit all the text in the desired width
+    public static void correctTextSize(TextView textView, int desiredWidth, boolean sizingUp)
+    {
+        Paint paint = new Paint();
+        Rect bounds = new Rect();
+
+        paint.setTypeface(textView.getTypeface());
+        float textSize;
+        if (sizingUp) {
+            textSize = 100F;
+        } else {
+            textSize = textView.getTextSize();
+        }
+        paint.setTextSize(textSize);
+        String text = textView.getText().toString();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+
+        while (bounds.width() > desiredWidth)
+        {
+            textSize--;
+            paint.setTextSize(textSize);
+            paint.getTextBounds(text, 0, text.length(), bounds);
+        }
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 }
