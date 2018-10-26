@@ -17,6 +17,8 @@ import io.reactivex.Single;
 
 public class CurrencyRepository implements RemoteDataSource {
 
+    //TODO: requests shouldn't be spammable too frequently, make a limitation to like one per day
+
     private FixerIOApi fixerIOApi;
 
     private Map<String, Currency> currencyRecordMap;

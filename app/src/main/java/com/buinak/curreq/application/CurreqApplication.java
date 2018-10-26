@@ -19,6 +19,8 @@ public class CurreqApplication extends Application {
 
     public static final String DATABASE_NAME = "curreq_db.realm";
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();

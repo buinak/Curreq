@@ -1,6 +1,5 @@
 package com.buinak.curreq.data.Local;
 
-import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import com.buinak.curreq.entities.CurreqEntity.Currency;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;

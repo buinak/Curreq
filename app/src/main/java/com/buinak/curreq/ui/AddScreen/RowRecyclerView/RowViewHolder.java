@@ -1,7 +1,5 @@
 package com.buinak.curreq.ui.AddScreen.RowRecyclerView;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -11,6 +9,8 @@ import com.buinak.curreq.ui.AddScreen.CurrencyRecyclerView.CurrencyRecyclerViewA
 
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.subjects.SingleSubject;

@@ -1,11 +1,11 @@
 package com.buinak.curreq.ui.LoadingScreen;
 
-import android.support.annotation.NonNull;
 
 import com.buinak.curreq.data.DataSource;
 
 import java.util.Date;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;

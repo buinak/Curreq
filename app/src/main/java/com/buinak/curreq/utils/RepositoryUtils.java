@@ -1,11 +1,12 @@
 package com.buinak.curreq.utils;
 
-import android.support.annotation.NonNull;
 
 import com.buinak.curreq.entities.CurreqEntity.Currency;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 public class RepositoryUtils {
     @NonNull

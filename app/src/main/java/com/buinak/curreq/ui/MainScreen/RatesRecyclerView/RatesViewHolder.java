@@ -1,11 +1,7 @@
 package com.buinak.curreq.ui.MainScreen.RatesRecyclerView;
 
-import android.graphics.Color;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.cardview.widget.CardView;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,10 +9,11 @@ import android.widget.TextView;
 import com.buinak.curreq.R;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.ui.MainScreen.MainActivity;
-import com.buinak.curreq.utils.ViewUtils;
 
 import javax.inject.Inject;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.subjects.PublishSubject;

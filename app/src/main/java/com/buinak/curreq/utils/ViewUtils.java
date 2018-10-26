@@ -4,10 +4,11 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.v7.widget.CardView;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
 
 public class ViewUtils {
     private ViewUtils() {

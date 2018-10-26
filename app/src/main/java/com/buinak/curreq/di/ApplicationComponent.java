@@ -20,17 +20,8 @@ import dagger.Component;
 @Component (modules = {DataRepositoriesModule.class, ApplicationRepositoriesModule.class, ContextModule.class})
 @Singleton
 public interface ApplicationComponent {
-    AddRepository provideAddRepository();
     void inject(AddViewModel viewModel);
-
-    LoadingRepository provideLoadingRepository();
     void inject(LoadingViewModel viewModel);
-
-    MainRepository provideMainRepository();
     void inject(MainViewModel viewModel);
-
-    SettingsRepository provideSettingsRepository();
     void inject(SettingsViewModel viewModel);
-
-    Context provideContext();
 }

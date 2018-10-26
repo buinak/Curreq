@@ -1,8 +1,8 @@
 package com.buinak.curreq.ui.MainScreen;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.buinak.curreq.application.CurreqApplication;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.disposables.Disposable;
 
 public class MainViewModel extends ViewModel {
 
