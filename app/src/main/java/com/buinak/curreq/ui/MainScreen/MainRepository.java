@@ -2,6 +2,7 @@ package com.buinak.curreq.ui.MainScreen;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import android.graphics.Bitmap;
 
 import com.buinak.curreq.data.DataSource;
@@ -14,8 +15,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class MainRepository {
 
@@ -23,8 +26,14 @@ public class MainRepository {
 
     private CompositeDisposable disposable;
 
+    private PublishSubject<Boolean> isUpdating;
+    private PublishSubject<String> messages;
+
     public MainRepository(DataSource dataSource) {
         this.dataSource = dataSource;
+        isUpdating = PublishSubject.create();
+        messages = PublishSubject.create();
+
         disposable = new CompositeDisposable();
     }
 
@@ -80,18 +89,34 @@ public class MainRepository {
     }
 
     public void onUpdatePressed() {
-        dataSource.updateRecords()
-                .subscribe();
+        long DAY_IN_MS = 1000 * 60 * 60 * 24;
+        disposable.add(dataSource.getLatestRecordDateObservable()
+                .subscribe(date -> {
+                    if (System.currentTimeMillis() - date.getTime() < DAY_IN_MS) {
+                        isUpdating.onNext(false);
+                        messages.onNext("Updates more frequently than daily are not allowed!");
+                    } else {
+                        disposable.add(dataSource.updateRecords()
+                                .subscribe(() -> {
+                                    isUpdating.onNext(false);
+                                    messages.onNext("Update successful!");
+                                }));
+                    }
+                }));
+    }
+
+    public Observable<Boolean> getIsUpdating() {
+        return isUpdating;
     }
 
     public LiveData<Date> getLastUpdatedLiveData() {
         MutableLiveData<Date> mutableLiveData = new MutableLiveData<>();
         disposable.add(dataSource.getLatestRecordDateObservable()
-                        .subscribe(mutableLiveData::postValue));
+                .subscribe(mutableLiveData::postValue));
         return mutableLiveData;
     }
 
-    public void checkDailyUpdates(){
+    public void checkDailyUpdates() {
         if (dataSource.isDailyUpdatesOn()) {
             disposable.add(dataSource.getLatestRecordDateObservable()
                     .subscribe(date -> {
@@ -102,5 +127,9 @@ public class MainRepository {
                         }
                     }));
         }
+    }
+
+    public PublishSubject<String> getMessages() {
+        return messages;
     }
 }

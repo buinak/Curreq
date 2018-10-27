@@ -1,14 +1,18 @@
 package com.buinak.curreq.ui.MainScreen;
 
+import android.content.Intent;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.TextView;
 
 import com.buinak.curreq.R;
 import com.buinak.curreq.ui.AddScreen.AddActivity;
+import com.buinak.curreq.ui.LoadingScreen.LoadingActivity;
 import com.buinak.curreq.ui.SettingsScreen.SettingsActivity;
 
 import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -70,6 +74,7 @@ public class MainActivityTest {
     @Test
     public void clickingExtendedMenuIcon_shouldShowMenu(){
         onView(withId(R.id.menu_android)).perform(click());
+
         onView(withText("Settings")).check(matches(isDisplayed()));
     }
 
@@ -99,6 +104,5 @@ public class MainActivityTest {
         String newDate = dateView.getText().toString();
 
         assertNotEquals(oldDate, newDate);
-
     }
 }

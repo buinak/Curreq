@@ -2,6 +2,7 @@ package com.buinak.curreq.ui.MainScreen;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -63,14 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.onBind();
         initialiseRecyclerView();
-        viewModel.getSavedRateRecords().observe(this, results -> {
+        viewModel.getSavedRateRecords()
+                .observe(this, results -> {
             if (results != null) {
-                Toast.makeText(this, "UPDATED!!", Toast.LENGTH_SHORT).show();
                 updateRecyclerView(results);
             }
         });
 
-        viewModel.getLastUpdatedDate().observe(this, date -> {
+        viewModel.getLastUpdatedDate()
+                .observe(this, date -> {
             if (date != null) {
                 textViewDate.setText(date.toString());
             }
@@ -80,13 +82,12 @@ public class MainActivity extends AppCompatActivity {
         disposable = mainScreenObservableModule.provideObservableClickedCurrencyRecords()
                 .subscribe(recordId -> viewModel.onRateRecordSwapped(recordId));
 
-        floatingActionButton.setOnClickListener(v -> {
-            startAddActivity();
-        });
+        floatingActionButton.setOnClickListener(v -> startAddActivity());
 
         resetButton.setOnClickListener(v -> viewModel.onResetPressed());
         swipeRefreshLayout.setOnRefreshListener(() -> viewModel.onUpdatePressed());
         viewModel.getIsUpdating().observe(this, isUpdating -> swipeRefreshLayout.setRefreshing(isUpdating));
+        viewModel.getToastLiveData().observe(this, string -> Toast.makeText(this, string, Toast.LENGTH_LONG).show());
     }
 
     private void updateRecyclerView(List<CurrencyExchangeRate> results) {
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void initialiseRecyclerView(){
+    private void initialiseRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RatesRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
