@@ -9,16 +9,20 @@ import com.buinak.curreq.data.DataSource;
 import com.buinak.curreq.entities.CurreqEntity.CountryFlagBitmap;
 import com.buinak.curreq.entities.CurreqEntity.Currency;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
+import com.buinak.curreq.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+
+import static com.buinak.curreq.utils.Constants.DAY_IN_MS;
 
 public class MainRepository {
 
@@ -89,17 +93,16 @@ public class MainRepository {
     }
 
     public void onUpdatePressed() {
-        long DAY_IN_MS = 1000 * 60 * 60 * 24;
         disposable.add(dataSource.getLatestRecordDateObservable()
                 .subscribe(date -> {
                     if (System.currentTimeMillis() - date.getTime() < DAY_IN_MS) {
                         isUpdating.onNext(false);
-                        messages.onNext("Updates more frequently than daily are not allowed!");
+                        messages.onNext(Constants.TOO_FREQUENT_UPDATES_STRING);
                     } else {
                         disposable.add(dataSource.updateRecords()
                                 .subscribe(() -> {
                                     isUpdating.onNext(false);
-                                    messages.onNext("Update successful!");
+                                    messages.onNext(Constants.UPDATE_SUCCESSFUL_STRING);
                                 }));
                     }
                 }));
@@ -120,7 +123,6 @@ public class MainRepository {
         if (dataSource.isDailyUpdatesOn()) {
             disposable.add(dataSource.getLatestRecordDateObservable()
                     .subscribe(date -> {
-                        long DAY_IN_MS = 1000 * 60 * 60 * 24;
                         Date dayAgo = new Date(System.currentTimeMillis() - DAY_IN_MS);
                         if (date.getTime() < dayAgo.getTime()) {
                             dataSource.updateRecords().subscribe();
