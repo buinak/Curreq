@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.buinak.curreq.ui.MainScreen.RatesRecyclerView.RatesViewHolder;
 import com.buinak.curreq.ui.SettingsScreen.SettingsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -45,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.testView_date)
     TextView textViewDate;
+
+    @BindView(R.id.imageButton_settings)
+    ImageButton imageButtonSettings;
 
     private MainViewModel viewModel;
 
@@ -74,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getLastUpdatedDate()
                 .observe(this, date -> {
             if (date != null) {
-                textViewDate.setText(date.toString());
+                String dateString = new SimpleDateFormat("dd.MM HH:mm").format(date);
+                textViewDate.setText(dateString);
             }
         });
 
@@ -83,11 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(recordId -> viewModel.onRateRecordSwapped(recordId));
 
         floatingActionButton.setOnClickListener(v -> startAddActivity());
-
         resetButton.setOnClickListener(v -> viewModel.onResetPressed());
         swipeRefreshLayout.setOnRefreshListener(() -> viewModel.onUpdatePressed());
+        imageButtonSettings.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
+
         viewModel.getIsUpdating().observe(this, isUpdating -> swipeRefreshLayout.setRefreshing(isUpdating));
         viewModel.getToastLiveData().observe(this, string -> Toast.makeText(this, string, Toast.LENGTH_LONG).show());
+
     }
 
     private void updateRecyclerView(List<CurrencyExchangeRate> results) {
@@ -104,22 +112,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RatesRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public static void inject(RatesViewHolder viewHolder) {

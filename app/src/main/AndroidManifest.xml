@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainScreen.MainActivity" />
+        <activity android:name=".ui.MainScreen.MainActivity" android:theme="@style/DarkActivityThemeNoActionBar"/>
 
         <activity
             android:name=".ui.AddScreen.AddActivity"
