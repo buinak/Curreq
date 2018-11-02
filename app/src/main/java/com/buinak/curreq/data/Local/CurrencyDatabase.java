@@ -165,21 +165,23 @@ public class CurrencyDatabase {
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmCurrency realmBaseCurrency = realm.where(RealmCurrency.class)
                     .equalTo("id", baseCurrencyId)
-                    .findFirst();
+                    .findAll()
+                    .last();
             RealmCurrency realmCurrency = realm.where(RealmCurrency.class)
                     .equalTo("id", currencyId)
-                    .findFirst();
+                    .findAll()
+                    .last();
 
             if (realmBaseCurrency.getCode().equalsIgnoreCase("EUR")) {
                 double rate = realm.where(RealmCurrencyExchangeRate.class)
                         .equalTo("currencyId", currencyId)
-                        .findFirst()
+                        .findAll().last()
                         .getValue();
                 return rate;
             } else if (realmCurrency.getCode().equalsIgnoreCase("EUR")) {
                 double initRate = realm.where(RealmCurrencyExchangeRate.class)
                         .equalTo("currencyId", baseCurrencyId)
-                        .findFirst()
+                        .findAll().last()
                         .getValue();
                 double rate = 1 / initRate;
                 return rate;
@@ -187,12 +189,12 @@ public class CurrencyDatabase {
 
                 double realmBaseRecord = realm.where(RealmCurrencyExchangeRate.class)
                         .equalTo("currencyId", baseCurrencyId)
-                        .findFirst()
+                        .findAll().last()
                         .getValue();
 
                 double realmCurrencyRecord = realm.where(RealmCurrencyExchangeRate.class)
                         .equalTo("currencyId", currencyId)
-                        .findFirst()
+                        .findAll().last()
                         .getValue();
 
                 return realmCurrencyRecord / realmBaseRecord;
