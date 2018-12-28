@@ -30,6 +30,9 @@ public interface DataSource {
     //// LOCAL REPO
     Single<Bitmap> getBitmap(String code);
     Single<List<CountryFlagBitmap>> getAllBitmaps();
+
+    Single<Boolean> refreshRecords();
+
     Observable<Date> getLatestRecordDateObservable();
     Completable initialiseBitmaps();
     Completable saveRatePair(Pair<Currency, Currency> pair);

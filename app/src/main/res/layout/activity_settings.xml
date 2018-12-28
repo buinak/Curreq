@@ -18,4 +18,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText_debugPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toStartOf="@+id/button_changePassword"
+        app:layout_constraintStart_toStartOf="@+id/settings_auto_updates_checkbox"
+        app:layout_constraintTop_toBottomOf="@+id/settings_auto_updates_checkbox" />
+
+    <Button
+        android:id="@+id/button_changePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:includeFontPadding="false"
+        android:text="Change Password"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/settings_auto_updates_checkbox"
+        app:layout_constraintTop_toBottomOf="@+id/settings_auto_updates_checkbox" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

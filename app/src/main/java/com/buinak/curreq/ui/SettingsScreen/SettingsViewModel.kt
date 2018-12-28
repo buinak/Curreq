@@ -19,4 +19,5 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun dailyUpdatesChanged(boolean: Boolean) = repository.setDailyUpdates(boolean)
+    fun passwordChanged(password: String) = repository.setPassword(password)
 }

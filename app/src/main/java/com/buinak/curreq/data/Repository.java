@@ -19,6 +19,9 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.SingleSubject;
+
+import static com.buinak.curreq.utils.Constants.DAY_IN_MS;
 
 public class Repository implements DataSource {
 
@@ -67,6 +70,26 @@ public class Repository implements DataSource {
     @Override
     public Completable updateRecords() {
         return Completable.fromSingle(requestNewRecord());
+    }
+
+    @Override
+    public Single<Boolean> refreshRecords() {
+        SingleSubject<Boolean> subject = SingleSubject.create();
+        disposable.add(localDataSource.isPasswordCorrect().subscribe(result -> {
+            if (result) {
+                disposable.add(requestNewRecord().subscribe(d -> subject.onSuccess(true)));
+            } else {
+                disposable.add(getLatestRecordDateObservable().subscribe(date -> {
+                    if (System.currentTimeMillis() - date.getTime() < DAY_IN_MS) {
+                        subject.onSuccess(false);
+                    } else {
+                        disposable.add(requestNewRecord().subscribe(d -> subject.onSuccess(true)));
+                    }
+                }));
+            }
+        }));
+
+        return subject;
     }
 
     @Override

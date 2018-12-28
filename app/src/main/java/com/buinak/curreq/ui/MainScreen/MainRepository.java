@@ -93,29 +93,14 @@ public class MainRepository {
     }
 
     public void onUpdatePressed() {
-        disposable.add(dataSource.getLatestRecordDateObservable()
-                .subscribe(date -> {
-                    if (System.currentTimeMillis() - date.getTime() < DAY_IN_MS) {
-                        disposable.add(dataSource.isDebugPasswordCorrect().subscribe(result -> {
-                            if (result) {
-                                disposable.add(dataSource.updateRecords()
-                                        .subscribe(() -> {
-                                            isUpdating.onNext(false);
-                                            messages.onNext(Constants.UPDATE_SUCCESSFUL_STRING);
-                                        }));
-                            } else {
-                                isUpdating.onNext(false);
-                                messages.onNext(Constants.TOO_FREQUENT_UPDATES_STRING);
-                            }
-                        }));
-                    } else {
-                        disposable.add(dataSource.updateRecords()
-                                .subscribe(() -> {
-                                    isUpdating.onNext(false);
-                                    messages.onNext(Constants.UPDATE_SUCCESSFUL_STRING);
-                                }));
-                    }
-                }));
+        disposable.add(dataSource.refreshRecords().subscribe(result -> {
+            isUpdating.onNext(false);
+            if (result) {
+                messages.onNext(Constants.UPDATE_SUCCESSFUL_STRING);
+            } else {
+                messages.onNext(Constants.TOO_FREQUENT_UPDATES_STRING);
+            }
+        }));
     }
 
     public Observable<Boolean> getIsUpdating() {
