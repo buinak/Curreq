@@ -34,6 +34,9 @@ public interface DataSource {
     Completable initialiseBitmaps();
     Completable saveRatePair(Pair<Currency, Currency> pair);
 
+    Completable saveDebugPassword(String password);
+    Single<Boolean> isDebugPasswordCorrect();
+
     boolean isDailyUpdatesOn();
     void setDailyUpdates(Boolean dailyUpdates);
 

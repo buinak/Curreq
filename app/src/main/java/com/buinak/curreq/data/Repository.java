@@ -107,6 +107,16 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public Completable saveDebugPassword(String password) {
+        return Completable.fromAction(() -> localDataSource.savePassword(password));
+    }
+
+    @Override
+    public Single<Boolean> isDebugPasswordCorrect() {
+        return localDataSource.isPasswordCorrect();
+    }
+
+    @Override
     public boolean isDailyUpdatesOn() {
         return localDataSource.isDailyUpdatesOn();
     }

@@ -38,6 +38,11 @@ public class LocalDataHandler implements LocalDataSource{
     }
 
     @Override
+    public Single<Boolean> isPasswordCorrect() {
+        return preferencesRepository.isDebugPasswordCorrect();
+    }
+
+    @Override
     public Single<Bitmap> getBitmap(String code) {
         return localCacheHandler.getBitmap(code);
     }
@@ -70,6 +75,11 @@ public class LocalDataHandler implements LocalDataSource{
     @Override
     public void saveRate(Pair<Currency, Currency> pair) {
         database.saveRate(pair);
+    }
+
+    @Override
+    public void savePassword(String password) {
+        preferencesRepository.saveDebugPassword(password);
     }
 
     @Override

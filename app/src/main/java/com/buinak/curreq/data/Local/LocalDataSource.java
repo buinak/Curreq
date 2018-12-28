@@ -18,6 +18,7 @@ import io.reactivex.Single;
 public interface LocalDataSource {
     Single<Request> getLatestRecord();
     Single<List<Currency>> getCurrencyList();
+    Single<Boolean> isPasswordCorrect();
 
     Single<Bitmap> getBitmap(String code);
     Single<List<CountryFlagBitmap>> getAllBitmaps();
@@ -29,6 +30,7 @@ public interface LocalDataSource {
     void saveRecord(Request record);
     void saveCurrencies(List<Currency> currencyList);
     void saveRate(Pair<Currency, Currency> pair);
+    void savePassword(String password);
 
     void swapRecord(String recordId);
 

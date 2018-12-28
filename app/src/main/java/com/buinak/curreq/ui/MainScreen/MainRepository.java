@@ -96,8 +96,18 @@ public class MainRepository {
         disposable.add(dataSource.getLatestRecordDateObservable()
                 .subscribe(date -> {
                     if (System.currentTimeMillis() - date.getTime() < DAY_IN_MS) {
-                        isUpdating.onNext(false);
-                        messages.onNext(Constants.TOO_FREQUENT_UPDATES_STRING);
+                        disposable.add(dataSource.isDebugPasswordCorrect().subscribe(result -> {
+                            if (result) {
+                                disposable.add(dataSource.updateRecords()
+                                        .subscribe(() -> {
+                                            isUpdating.onNext(false);
+                                            messages.onNext(Constants.UPDATE_SUCCESSFUL_STRING);
+                                        }));
+                            } else {
+                                isUpdating.onNext(false);
+                                messages.onNext(Constants.TOO_FREQUENT_UPDATES_STRING);
+                            }
+                        }));
                     } else {
                         disposable.add(dataSource.updateRecords()
                                 .subscribe(() -> {
