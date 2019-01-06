@@ -78,7 +78,7 @@ public class MainRepository {
                     bitmapHashMap.get(currencyExchangeRateWithId.getCurrency().getCode().substring(0, 2).toLowerCase()));
 
             CurrencyExchangeRate currencyExchangeRateWithBitmapsAndId = new CurrencyExchangeRate(currencyExchangeRateWithId.getId(),
-                    baseCurrency, currency, currencyExchangeRateWithId.getRate());
+                    baseCurrency, currency, currencyExchangeRateWithId.getRate(), currencyExchangeRateWithId.getPreviousRate());
             currencyExchangeRateWithBitmapsAndIds.add(currencyExchangeRateWithBitmapsAndId);
         }
         return currencyExchangeRateWithBitmapsAndIds;

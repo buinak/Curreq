@@ -91,7 +91,7 @@ public class CurrencyDatabase {
                     Currency currency = new Currency(currencyRecord.getCode(),
                             currencyRecord.getName());
 
-                    records.add(new CurrencyExchangeRate(currency, baseCurrency, rateRecord.getValue()));
+                    records.add(new CurrencyExchangeRate(null, currency, baseCurrency, rateRecord.getValue(), null));
                 }
                 newRecord.setCurrencyExchangeRates(records);
             }
@@ -202,6 +202,47 @@ public class CurrencyDatabase {
         }
     }
 
+    private double getPreviousRate(String baseCurrencyId, String currencyId) {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            RealmCurrency realmBaseCurrency = realm.where(RealmCurrency.class)
+                    .equalTo("id", baseCurrencyId)
+                    .findAll()
+                    .last();
+            RealmCurrency realmCurrency = realm.where(RealmCurrency.class)
+                    .equalTo("id", currencyId)
+                    .findAll()
+                    .last();
+
+            if (realmBaseCurrency.getCode().equalsIgnoreCase("EUR")) {
+                RealmResults<RealmCurrencyExchangeRate> rates = realm.where(RealmCurrencyExchangeRate.class)
+                        .equalTo("currencyId", currencyId)
+                        .findAll();
+                if (rates.size() <= 1) return -1;
+                return rates.get(rates.size() - 2).getValue();
+            } else if (realmCurrency.getCode().equalsIgnoreCase("EUR")) {
+                RealmResults<RealmCurrencyExchangeRate> rates = realm.where(RealmCurrencyExchangeRate.class)
+                        .equalTo("currencyId", baseCurrencyId)
+                        .findAll();
+                if (rates.size() <= 1) return -1;
+                double initRate = rates.get(rates.size() - 2).getValue();
+                double rate = 1 / initRate;
+                return rate;
+            } else {
+                RealmResults<RealmCurrencyExchangeRate> ratesBase = realm.where(RealmCurrencyExchangeRate.class)
+                        .equalTo("currencyId", baseCurrencyId)
+                        .findAll();
+                RealmResults<RealmCurrencyExchangeRate> ratesTarget = realm.where(RealmCurrencyExchangeRate.class)
+                        .equalTo("currencyId", currencyId)
+                        .findAll();
+                if (ratesBase.size() <= 1) return -1;
+                double realmBaseRecord = ratesBase.get(ratesBase.size() - 2).getValue();
+                double realmCurrencyRecord = ratesTarget.get(ratesTarget.size() - 2).getValue();
+
+                return realmCurrencyRecord / realmBaseRecord;
+            }
+        }
+    }
+
     private Currency getCurrencyRecord(String currencyId) {
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmCurrency realmCurrency = realm.where(RealmCurrency.class)
@@ -244,12 +285,13 @@ public class CurrencyDatabase {
         for (RealmAddedRate result :
                 list) {
             double rate = getRate(result.getBaseCurrencyId(), result.getCurrencyId());
+            double previousRate = getPreviousRate(result.getBaseCurrencyId(), result.getCurrencyId());
 
             Currency baseCurrency = getCurrencyRecord(result.getBaseCurrencyId());
             Currency currency = getCurrencyRecord(result.getCurrencyId());
 
             CurrencyExchangeRate currencyExchangeRateWithId =
-                    new CurrencyExchangeRate(result.getId(), baseCurrency, currency, rate);
+                    new CurrencyExchangeRate(result.getId(), baseCurrency, currency, rate, previousRate);
             newList.add(currencyExchangeRateWithId);
         }
         return newList;

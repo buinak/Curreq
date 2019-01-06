@@ -61,7 +61,7 @@ public class CurrencyRepository implements RemoteDataSource {
         for (Map.Entry<String, Double> entry :
                 response.getRates().entrySet()) {
             Currency currency = currencyRecordMap.get(entry.getKey());
-            record.add(new CurrencyExchangeRate(currency, baseCurrency, entry.getValue()));
+            record.add(new CurrencyExchangeRate(null, currency, baseCurrency, entry.getValue(), null));
         }
 
         return new Request(record, new Date());

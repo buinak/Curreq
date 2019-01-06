@@ -1,6 +1,7 @@
 package com.buinak.curreq.ui.MainScreen.RatesRecyclerView;
 
 import androidx.cardview.widget.CardView;
+
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,11 +15,12 @@ import javax.inject.Inject;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.subjects.PublishSubject;
 
-public class RatesViewHolder extends RecyclerView.ViewHolder{
+public class RatesViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.main_screen_rate_item_card_view)
     CardView cardView;
@@ -37,6 +39,9 @@ public class RatesViewHolder extends RecyclerView.ViewHolder{
 
     @BindView(R.id.textView_rate)
     TextView textViewRate;
+
+    @BindView(R.id.textView_percentage)
+    TextView textViewDifferencePercentage;
 
     @BindView(R.id.constraintLayout_baseCurrency)
     ConstraintLayout constraintLayoutBaseCurrency;
@@ -58,7 +63,7 @@ public class RatesViewHolder extends RecyclerView.ViewHolder{
         imageButton.setOnClickListener(v -> publishSubject.onNext(record.getId()));
     }
 
-    public void bindRate(CurrencyExchangeRate record){
+    public void bindRate(CurrencyExchangeRate record) {
         this.record = record;
         imageViewBaseCurrency.setImageBitmap(record.getBaseCurrency().getBitmap());
         imageViewCurrency.setImageBitmap(record.getCurrency().getBitmap());
@@ -67,8 +72,19 @@ public class RatesViewHolder extends RecyclerView.ViewHolder{
         textViewCurrency.setText(record.getCurrency().getCode());
 
         String rate = String.valueOf(record.getRate()).substring(0, 5);
-        if (rate.charAt(4) == '.'){
+        if (rate.charAt(4) == '.') {
             rate = rate.substring(0, 4);
+        }
+        if (record.getPreviousRate() == null) {
+            textViewDifferencePercentage.setVisibility(View.GONE);
+        } else if (record.getPreviousRate() == null)
+            textViewDifferencePercentage.setVisibility(View.GONE);
+        else {
+            double percentage = (record.getRate() / (record.getPreviousRate() / 100)) - 100;
+            String percentageString = String.valueOf(percentage);
+            if (!percentageString.startsWith("-")) percentageString = "+" + percentageString;
+            percentageString = percentageString.substring(0, 5) + "%";
+            textViewDifferencePercentage.setText(percentageString);
         }
         textViewRate.setText(rate);
     }
