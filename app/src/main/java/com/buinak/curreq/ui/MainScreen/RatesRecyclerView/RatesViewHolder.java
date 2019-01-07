@@ -85,8 +85,12 @@ public class RatesViewHolder extends RecyclerView.ViewHolder {
                 String percentageString = String.valueOf(percentage);
                 if (!percentageString.startsWith("-")) percentageString = "+" + percentageString;
                 percentageString = percentageString.substring(0, 5) + "%";
-                textViewDifferencePercentage.setVisibility(View.VISIBLE);
-                textViewDifferencePercentage.setText(percentageString);
+                if (!percentageString.substring(1, percentageString.length() - 1).equals("0.00")) {
+                    textViewDifferencePercentage.setVisibility(View.VISIBLE);
+                    textViewDifferencePercentage.setText(percentageString);
+                } else {
+                    textViewDifferencePercentage.setVisibility(View.GONE);
+                }
             } else {
                 textViewDifferencePercentage.setVisibility(View.GONE);
             }
