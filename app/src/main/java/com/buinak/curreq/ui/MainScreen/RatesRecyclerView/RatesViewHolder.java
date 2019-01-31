@@ -1,20 +1,19 @@
 package com.buinak.curreq.ui.MainScreen.RatesRecyclerView;
 
-import androidx.cardview.widget.CardView;
-
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.buinak.curreq.R;
 import com.buinak.curreq.entities.CurreqEntity.CurrencyExchangeRate;
 import com.buinak.curreq.ui.MainScreen.MainActivity;
 
 import javax.inject.Inject;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

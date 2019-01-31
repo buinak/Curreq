@@ -11,7 +11,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/DarkActivityTheme">
+        android:theme="@style/DarkActivityTheme"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.SettingsScreen.SettingsActivity"
             android:parentActivityName=".ui.MainScreen.MainActivity" />
