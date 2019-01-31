@@ -78,6 +78,8 @@ public class RatesViewHolder extends RecyclerView.ViewHolder {
             textViewDifferencePercentage.setVisibility(View.GONE);
         } else if (record.getPreviousRate() == null)
             textViewDifferencePercentage.setVisibility(View.GONE);
+          else if (record.getPreviousRate() == -1.0)
+            textViewDifferencePercentage.setVisibility(View.GONE);
         else {
             double percentage = (record.getRate() / (record.getPreviousRate() / 100)) - 100;
             if (percentage != 0) {
